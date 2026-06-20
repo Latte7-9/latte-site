@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Latte Admin</title>
+<title>Latte 管理后台</title>
 <style>
 *{box-sizing:border-box}
 body{font-family:-apple-system,sans-serif;background:#f8f7f5;margin:0;padding:1rem 1rem 4rem;color:#333;line-height:1.6}
@@ -47,121 +47,121 @@ button{cursor:pointer;font-family:inherit}
 </head>
 <body>
 <div class="toolbar" id="rtb">
-<button data-tag="b"><b>B</b></button>
-<button data-tag="i"><i>I</i></button>
+<button data-tag="b"><b>粗</b></button>
+<button data-tag="i"><i>斜</i></button>
 <span class="sep"></span>
-<button data-tag="br">BR</button>
-<button data-tag="p">P</button>
+<button data-tag="br">换行</button>
+<button data-tag="p">段落</button>
 <span class="sep"></span>
-<button data-tag="h3">H3</button>
-<button data-tag="blockquote">Q</button>
+<button data-tag="h3">标题</button>
+<button data-tag="blockquote">引用</button>
 <span class="sep"></span>
-<button data-tag="mark">Hi</button>
-<button data-tag="a">Link</button>
+<button data-tag="mark">高亮</button>
+<button data-tag="a">链接</button>
 </div>
 
 <div class="wrap">
-<div id="status" class="status sinfo">Connect to GitHub</div>
+<div id="status" class="status sinfo">连接到 GitHub</div>
 
 <div class="card" id="loginBox">
-<h2>Connect</h2>
-<label>Repo</label><input id="repo" value="Latte7-9/latte-site">
-<label>Token</label><input id="token" type="password" placeholder="ghp_...">
-<button class="btn" onclick="login()">Connect</button>
+<h2>连接</h2>
+<label>仓库</label><input id="repo" value="Latte7-9/latte-site">
+<label>令牌</label><input id="token" type="password" placeholder="ghp_...">
+<button class="btn" onclick="login()">连接</button>
 </div>
 
 <div id="panel" style="display:none">
 
 <div class="tabs" id="tabs">
-<button class="tab on" data-tab="site">Site</button>
-<button class="tab" data-tab="photo">Photo</button>
-<button class="tab" data-tab="books">Books</button>
-<button class="tab" data-tab="hobbies">Hobbies</button>
-<button class="tab" data-tab="hiking">Hiking</button>
-<button class="tab" data-tab="blog">Blog</button>
-<button class="tab" data-tab="guestbook">Guestbook</button>
-<button class="tab" data-tab="images">Images</button>
+<button class="tab on" data-tab="site">网站</button>
+<button class="tab" data-tab="photo">摄影</button>
+<button class="tab" data-tab="books">书籍</button>
+<button class="tab" data-tab="hobbies">兴趣</button>
+<button class="tab" data-tab="hiking">登山</button>
+<button class="tab" data-tab="blog">博客</button>
+<button class="tab" data-tab="guestbook">留言板</button>
+<button class="tab" data-tab="images">图片</button>
 </div>
 
 <div class="tc on" id="tab-site"><div class="card">
-<h2>Site Content</h2>
-<label>Name</label><input id="sName">
-<label>Tagline</label><input id="sTagline">
-<label>About</label><textarea id="sAbout" rows="2" data-rich></textarea>
-<label>Email</label><input id="sEmail">
-<hr><div class="sub">Currently</div>
-<div class="row"><div><label>Reading</label><input id="sReading"></div><div><label>Listening</label><input id="sListening"></div></div>
-<div class="row"><div><label>Learning</label><input id="sLearning"></div><div><label>Working on</label><input id="sWorkingOn"></div></div>
+<h2>网站内容</h2>
+<label>姓名</label><input id="sName">
+<label>标语</label><input id="sTagline">
+<label>关于</label><textarea id="sAbout" rows="2" data-rich></textarea>
+<label>邮箱</label><input id="sEmail">
+<hr><div class="sub">当下</div>
+<div class="row"><div><label>在读</label><input id="sReading"></div><div><label>在听</label><input id="sListening"></div></div>
+<div class="row"><div><label>在学</label><input id="sLearning"></div><div><label>在做</label><input id="sWorkingOn"></div></div>
 <hr>
-<label>Homepage Books (Title | Author | Cover)</label>
+<label>首页书籍（书名 | 作者 | 封面）</label>
 <textarea id="sBooks" rows="3"></textarea>
-<span class="hint">Upload covers in Images tab first</span>
-<button class="btn" onclick="saveSite()">Save</button>
+<span class="hint">先在图片标签页上传封面</span>
+<button class="btn" onclick="saveSite()">保存</button>
 <div class="msg" id="msgSite"></div>
 </div></div>
 
 <div class="tc" id="tab-photo"><div class="card">
-<h2>Photo Albums</h2>
+<h2>摄影图集</h2>
 <div id="photoList"></div>
-<button class="btn btnsm" onclick="addAlbum()">+ New Album</button>
-<button class="btn" onclick="savePhoto()" style="margin-left:0.5rem">Save</button>
+<button class="btn btnsm" onclick="addAlbum()">+ 新建图集</button>
+<button class="btn" onclick="savePhoto()" style="margin-left:0.5rem">保存</button>
 <div class="msg" id="msgPhoto"></div>
 </div></div>
 
 <div class="tc" id="tab-books"><div class="card">
-<h2>Books</h2>
-<div class="sub">Format: Title | Author | Review (one per line)</div>
-<h3>Read</h3><textarea id="bRead" rows="3"></textarea>
-<h3>Reading</h3><textarea id="bReading" rows="2"></textarea>
-<h3>Want to Read</h3><textarea id="bWantRead" rows="2"></textarea>
-<button class="btn" onclick="saveBooks()">Save</button>
+<h2>书籍</h2>
+<div class="sub">格式：书名 | 作者 | 感想（每行一本）</div>
+<h3>已读</h3><textarea id="bRead" rows="3"></textarea>
+<h3>正在阅读</h3><textarea id="bReading" rows="2"></textarea>
+<h3>想要阅读</h3><textarea id="bWantRead" rows="2"></textarea>
+<button class="btn" onclick="saveBooks()">保存</button>
 <div class="msg" id="msgBooks"></div>
 </div></div>
 
 <div class="tc" id="tab-hobbies"><div class="card">
-<h2>Hobbies</h2>
-<div class="sub">One per line</div>
+<h2>兴趣爱好</h2>
+<div class="sub">每行一个</div>
 <textarea id="hList" rows="6"></textarea>
-<button class="btn" onclick="saveHobbies()">Save</button>
+<button class="btn" onclick="saveHobbies()">保存</button>
 <div class="msg" id="msgHobbies"></div>
 </div></div>
 
 <div class="tc" id="tab-hiking"><div class="card">
-<h2>Hiking</h2>
-<div class="sub">Climbed: Name | Date | Note</div>
+<h2>登山</h2>
+<div class="sub">已登：名称 | 日期 | 备注</div>
 <textarea id="hkClimbed" rows="3"></textarea>
-<h3>Want to Climb</h3><div class="sub">Name | Reason</div>
+<h3>想要征服</h3><div class="sub">名称 | 理由</div>
 <textarea id="hkWant" rows="2"></textarea>
-<h3>Journal</h3><textarea id="hkJournal" rows="3" data-rich></textarea>
-<h3>Images (one path per line)</h3><textarea id="hkImages" rows="2"></textarea>
-<button class="btn" onclick="saveHiking()">Save</button>
+<h3>随笔</h3><textarea id="hkJournal" rows="3" data-rich></textarea>
+<h3>图片（每行一个路径）</h3><textarea id="hkImages" rows="2"></textarea>
+<button class="btn" onclick="saveHiking()">保存</button>
 <div class="msg" id="msgHiking"></div>
 </div></div>
 
 <div class="tc" id="tab-blog"><div class="card">
-<h2>Blog</h2>
-<div class="sub">Create and edit blog posts. HTML pages auto-generated on save.</div>
+<h2>博客</h2>
+<div class="sub">创建和编辑博客文章。保存时自动生成 HTML 页面。</div>
 <div id="blogList"></div>
-<button class="btn btnsm" onclick="addBlog()">+ New</button>
-<button class="btn" onclick="saveBlog()" style="margin-left:0.5rem">Save All</button>
+<button class="btn btnsm" onclick="addBlog()">+ 新建</button>
+<button class="btn" onclick="saveBlog()" style="margin-left:0.5rem">保存全部</button>
 <div class="msg" id="msgBlog"></div>
 </div></div>
 
 <div class="tc" id="tab-guestbook"><div class="card">
-<h2>Guestbook</h2>
-<div class="sub">View and delete visitor comments</div>
+<h2>留言板</h2>
+<div class="sub">查看和删除访客留言</div>
 <div id="gbList"></div>
-<button class="btndel" onclick="loadGuestbook()" style="margin-bottom:0.5rem">Refresh</button>
-<button class="btn" onclick="saveGuestbook()">Save Changes</button>
+<button class="btndel" onclick="loadGuestbook()" style="margin-bottom:0.5rem">刷新</button>
+<button class="btn" onclick="saveGuestbook()">保存更改</button>
 <div class="msg" id="msgGuestbook"></div>
 </div></div>
 
 <div class="tc" id="tab-images"><div class="card">
-<h2>Image Upload</h2>
+<h2>图片上传</h2>
 <input type="file" id="imgFile" accept="image/*" style="margin-bottom:0.5rem">
-<button class="btn btnsm" onclick="uploadImg()">Upload</button>
+<button class="btn btnsm" onclick="uploadImg()">上传</button>
 <div class="msg" id="msgImg"></div>
-<h3>Uploaded</h3><div id="imgList"></div>
+<h3>已上传</h3><div id="imgList"></div>
 </div></div>
 
 </div>
