@@ -436,6 +436,15 @@ function renderGeoGuestbook() {
     
     var isNew = (i === 0 && geoNewIdx === 0);
     var startY = isNew ? -size - 10 : 30 + Math.floor(i / cols) * 90 + Math.random() * 30;
+    // Direct click handler - reliable fallback
+    el.addEventListener('click', function(ev) {
+      ev.stopPropagation();
+      var s = geoShapes[i];
+      if (!s) return;
+      var inn = document.querySelector('[data-geo] .geo-inner');
+      if (!inn) return;
+      showGeoInfo(s, inn);
+    });
     geoShapes.push({
       el: el, type: shapeType, color: color,
       x: 30 + (i % cols) * (W / cols) + Math.random() * 20,
@@ -679,7 +688,7 @@ function showGeoInfo(shape, inner) {
   var rect = inner.getBoundingClientRect();
   var top = shape.y + shape.size/2 + 5;
   var left = Math.max(10, Math.min(rect.width - 260, shape.x - 120));
-  if (top + 120 > 420) top = shape.y - 130;
+  var maxH = inner.clientHeight || 420; if (top + 130 > maxH) top = shape.y - 140;
   geoInfo.style.top = top + 'px';
   geoInfo.style.left = left + 'px';
 }
