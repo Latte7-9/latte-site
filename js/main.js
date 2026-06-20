@@ -431,7 +431,7 @@ function renderGeoGuestbook() {
     var bg = 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.5) 0%, ' + color + '99 60%, ' + color + 'cc 100%)';
     el.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;clip-path:url(#' + clipId + ');-webkit-clip-path:url(#' + clipId + ');background:' + bg + ';opacity:0.88;box-shadow:0 3px 12px rgba(0,0,0,0.07),inset 0 1px 0 rgba(255,255,255,0.3);transition:transform 0.1s,opacity 0.5s;z-index:1';
     el.setAttribute('data-idx', i);
-    el.title = c.name || '匿名';
+    el.title = (c.name || '匿名') + '│' + (c.text || '').substring(0, 60);
     inner.appendChild(el);
     
     var isNew = (i === 0 && geoNewIdx === 0);
@@ -675,25 +675,29 @@ document.addEventListener('touchend', function(e) {
 });
 
 function showGeoInfo(shape, inner) {
-  if (!geoInfo) {
-    geoInfo = document.createElement('div');
-    geoInfo.className = 'geo-info';
-    geoInfo.innerHTML = '<div class="geo-info-inner"></div>';
-    if (inner) inner.appendChild(geoInfo);
-    else return;
-  }
+  // Remove any existing popup
+  var existing = document.querySelector('.geo-popup-on');
+  if (existing) existing.parentElement.removeChild(existing);
+  
   var c = shape.comment;
-  geoInfo.innerHTML = '<div class="geo-info-inner"><button class="geo-info-close" onclick="this.parentElement.parentElement.classList.remove(\'on\')">×</button><strong style="color:' + shape.color + '">' + (c.name || '匿名') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p></div>';
-  geoInfo.classList.add('on');
+  var popup = document.createElement('div');
+  popup.className = 'geo-popup-on';
+  popup.innerHTML = '<button class="geo-popup-close" onclick="this.parentElement.remove()">×</button><strong style="color:' + shape.color + '">' + (c.name || '匿名') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p>';
+  popup.style.cssText = 'position:absolute;width:240px;background:rgba(30,35,50,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:14px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.3);padding:1.2rem;z-index:9999;font-size:0.85rem;color:#e0e4ec;pointer-events:auto';
+  
   var rect = inner.getBoundingClientRect();
   var top = shape.y + shape.size/2 + 5;
   var left = Math.max(10, Math.min(rect.width - 260, shape.x - 120));
-  var maxH = inner.clientHeight || 420; if (top + 130 > maxH) top = shape.y - 140;
-  geoInfo.style.top = top + 'px';
-  geoInfo.style.left = left + 'px';
-}
-
-async function submitGuestbook(name, text) {
+  var maxH = inner.clientHeight || 420;
+  if (top + 150 > maxH) top = shape.y - 150;
+  if (top < 0) top = 10;
+  popup.style.top = top + 'px';
+  popup.style.left = left + 'px';
+  
+  inner.appendChild(popup);
+  // Auto-remove after 8 seconds
+  setTimeout(function() { if (popup.parentElement) popup.remove(); }, 8000);
+}async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
   geoNewIdx = 0;
