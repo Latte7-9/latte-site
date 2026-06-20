@@ -306,10 +306,10 @@ var geoContainerH = 420;
 
 // Pastel palette for shapes
 var GEO_COLORS = [
-  "#b8ccd8","#c4d4e0","#a8c0d4","#bcd0dc","#c0c8d4",
-  "#c8b8c4","#d4c8d0","#b8c4cc","#ccd0d8","#c0ccd4",
-  "#d8cfc4","#c8d0c8","#ccc0d0","#bcc8d0","#d0ccc4",
-  "#c4c8d0","#d0c8cc","#bcc4cc","#c8ccd4","#ccc8c0"
+  "#5b9bd5","#e8915c","#6cbe8a","#d47a8c","#5da8c4",
+  "#e0a56b","#7fb8c8","#c47a9e","#68a8b4","#d89c78",
+  "#8cb8c0","#c88c7c","#74b0c8","#d4908a","#80a8c0",
+  "#c098a8","#90b0c4","#b090a0","#7ca8c8","#c4a090"
 ];
 var RIBBON_COLORS = [
   "#d4c8c0","#c8d0d4","#d0ccc8","#ccd0cc","#d8d0cc",
@@ -452,8 +452,8 @@ function renderGeoGuestbook() {
     var rEl = document.createElement('div');
     rEl.className = 'geo-ribbon';
     var rColor = RIBBON_COLORS[r % RIBBON_COLORS.length];
-    var rw = 18 + Math.random() * 22;
-    var rh = 8 + Math.random() * 14;
+    var rw = 8 + Math.random() * 12;
+    var rh = 4 + Math.random() * 8;
     var rx = Math.floor(Math.random() * 100);
     var ry = Math.floor(Math.random() * 60);
     // Create wavy ribbon effect with border-radius
@@ -666,7 +666,13 @@ document.addEventListener('touchend', function(e) {
 });
 
 function showGeoInfo(shape, inner) {
-  if (!geoInfo) return;
+  if (!geoInfo) {
+    geoInfo = document.createElement('div');
+    geoInfo.className = 'geo-info';
+    geoInfo.innerHTML = '<div class="geo-info-inner"></div>';
+    if (inner) inner.appendChild(geoInfo);
+    else return;
+  }
   var c = shape.comment;
   geoInfo.innerHTML = '<div class="geo-info-inner"><button class="geo-info-close" onclick="this.parentElement.parentElement.classList.remove(\'on\')">×</button><strong style="color:' + shape.color + '">' + (c.name || '匿名') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p></div>';
   geoInfo.classList.add('on');
