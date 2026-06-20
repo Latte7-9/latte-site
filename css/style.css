@@ -459,4 +459,10 @@ footer::before {
 .geo-shape:hover { filter: brightness(1.15); z-index: 5 !important; cursor: grab; }
 .geo-shape:active { cursor: grabbing; }
 .geo-info { position: absolute; width: 240px; background: rgba(30,35,50,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 12px 40px rgba(0,0,0,0.3); padding: 1.2rem; z-index: 50; display: none; font-size: 0.85rem; color: #e0e4ec; }
-@keyframes geoInfoIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes geoInfoIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); }
+
+.geo-popup-on { animation: geoPopIn 0.25s ease; }
+.geo-popup-close { position: absolute; top: 0.5rem; right: 0.8rem; background: none; border: none; font-size: 1.4rem; color: rgba(255,255,255,0.5); cursor: pointer; line-height: 1; }
+.geo-popup-close:hover { color: #fff; }
+@keyframes geoPopIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+ }
