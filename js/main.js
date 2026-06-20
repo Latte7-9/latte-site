@@ -605,10 +605,7 @@ document.addEventListener('mouseup', function(e) {
   if (!inner) return;
   if (geoMouse.drag && geoMouse.down) {
     var shape = geoMouse.drag;
-    var dx = shape.x - geoMouse.startX;
-    var dy = shape.y - geoMouse.startY;
-    var moved = Math.sqrt(dx*dx + dy*dy) > 8;
-    if (!moved) showGeoInfo(shape, inner);
+    showGeoInfo(shape, inner);
     shape.el.style.zIndex = 1;
     shape.el.style.transition = 'transform 0.1s';
     inner.style.cursor = 'grab';
@@ -659,13 +656,8 @@ document.addEventListener('touchmove', function(e) {
 document.addEventListener('touchend', function(e) {
   if (geoMouse.drag && geoMouse.down) {
     var shape = geoMouse.drag;
-    var dx = shape.x - geoMouse.startX;
-    var dy = shape.y - geoMouse.startY;
-    var moved = Math.sqrt(dx*dx + dy*dy) > 8;
-    if (!moved) {
-      var inner = document.querySelector('[data-geo] .geo-inner');
-      if (inner) showGeoInfo(shape, inner);
-    }
+    var inner = document.querySelector('[data-geo] .geo-inner');
+    if (inner) showGeoInfo(shape, inner);
     shape.el.style.zIndex = 1;
     shape.el.style.transition = 'transform 0.1s';
   }
