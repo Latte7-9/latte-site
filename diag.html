@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latte - Diag</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="diag" style="position:fixed;top:0;left:0;right:0;background:#ff0;color:#000;padding:10px;z-index:99999;font-size:14px;white-space:pre-wrap;"></div>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">Latte</a>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="blog/">博客</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container fade-in" id="hero-container"><p>Loading hero...</p></div>
+</section>
+
+<section class="about">
+  <div class="container fade-in" id="about-container"><p>Loading about...</p></div>
+</section>
+
+<section class="interests">
+  <div class="container fade-in">
+    <div class="section-label">兴趣</div>
+    <div class="interest-grid" id="interest-grid"><p>Loading interests...</p></div>
+  </div>
+</section>
+
+<footer><div class="container"><span>&copy; 2026 Latte</span></div></footer>
+
+<script>
+var diag = document.getElementById('diag');
+function log(msg) { diag.textContent += msg + '\n'; }
+
+log('Page loaded');
+
+// Test 1: Can we access DOM?
+log('hero-container: ' + !!document.getElementById('hero-container'));
+log('about-container: ' + !!document.getElementById('about-container'));
+
+// Test 2: Try fetch
+fetch('data/site.json?v=' + Date.now())
+  .then(function(r) { 
+    log('fetch status: ' + r.status); 
+    return r.json(); 
+  })
+  .then(function(data) {
+    log('JSON parsed OK');
+    log('name: ' + data.name);
+    log('tagline: ' + data.tagline);
+    
+    // Test 3: innerHTML
+    var hero = document.getElementById('hero-container');
+    hero.innerHTML = '<h1>你好，我是 ' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
+    log('Hero innerHTML set');
+    
+    var about = document.getElementById('about-container');
+    about.innerHTML = '<div class="section-label">关于</div><p>' + data.about + '</p>';
+    log('About innerHTML set');
+    
+    // Show interests
+    var grid = document.getElementById('interest-grid');
+    if (data.interests) {
+      grid.innerHTML = data.interests.map(function(i) {
+        return '<a class="interest-card" href="' + i.page + '">' + i.name + '</a>';
+      }).join('');
+      log('Interests: ' + data.interests.length + ' cards rendered');
+    }
+    
+    log('ALL DONE - check page content');
+  })
+  .catch(function(e) {
+    log('ERROR: ' + e.message);
+    log('Stack: ' + e.stack);
+  });
+  
+log('Script execution started (async...)');
+</script>
+</body>
+</html>

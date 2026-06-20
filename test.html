@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Test</title></head>
+<body>
+<h1>JS测试</h1>
+<button type="button" onclick="test()">点我测试</button>
+<div id="result"></div>
+<script>
+function test() {
+  document.getElementById("result").textContent = "JS运行成功！" + new Date();
+  try {
+    sessionStorage.setItem("test", "hello");
+    document.getElementById("result").textContent += " storage OK";
+    fetch("https://api.github.com/repos/Latte7-9/latte-site/contents/data/site.json")
+      .then(function(r) { return r.json(); })
+      .then(function(d) { document.getElementById("result").textContent += " API OK sha:" + d.sha.substring(0,8); })
+      .catch(function(e) { document.getElementById("result").textContent += " API ERR:" + e.message; });
+  } catch(e) {
+    document.getElementById("result").textContent += " ERR:" + e.message;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "posts": [
+    {
+      "id": "welcome",
+      "title": "欢迎来到我的网站",
+      "date": "2026-06-19",
+      "summary": "这是我的第一篇博客，记录搭建个人网站的过程与想法。",
+      "file": "welcome.html"
+    },
+    {
+      "id": "taishan",
+      "title": "第一次夜爬泰山",
+      "date": "2025-05-20",
+      "summary": "凌晨两点出发，头灯的光只够照亮脚下三米——但山顶的日出让一切都值得。",
+      "file": "taishan-night.html"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latte</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">Latte</a>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="blog/">博客</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container fade-in"></div>
+</section>
+
+<section class="about">
+  <div class="container fade-in"></div>
+</section>
+
+<section class="currently">
+  <div class="container fade-in"></div>
+</section>
+
+<section class="blog-preview">
+  <div class="container fade-in">
+    <div class="section-label">博客</div>
+    <div class="blog-list" id="homeBlogList"></div>
+    <a class="view-all" href="blog/">查看全部 &rarr;</a>
+  </div>
+</section>
+
+<section class="interests">
+  <div class="container fade-in">
+    <div class="section-label">兴趣</div>
+    <div class="interest-grid"></div>
+  </div>
+</section>
+
+<section class="books">
+  <div class="container fade-in">
+    <div class="section-label">最近在读</div>
+    <div class="book-list"></div>
+  </div>
+</section>
+
+<section class="guestbook">
+  <div class="container fade-in">
+    <div class="section-label">留言板</div>
+    <div class="guestbook-list" id="guestbookList"></div>
+    <form class="guestbook-form" id="guestbookForm">
+      <input type="text" id="gbName" placeholder="你的名字（选填）" maxlength="30">
+      <textarea id="gbText" placeholder="说点什么吧..." rows="3" required maxlength="500"></textarea>
+      <button type="submit">留言</button>
+    </form>
+    <div class="guestbook-msg" id="gbMsg"></div>
+  </div>
+</section>
+
+<section class="contact">
+  <div class="container fade-in">
+    <div class="section-label">联系</div>
+    <div class="contact-links"></div>
+  </div>
+</section>
+
+<div class="geo-strip">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none">
+    <polygon points="0,80 180,35 180,80" fill="#e8f0f7"/>
+    <polygon points="180,35 350,60 350,80 180,80" fill="#eef4f8"/>
+    <polygon points="350,60 520,20 520,80 350,80" fill="#e8f0f7"/>
+    <polygon points="520,20 690,50 690,80 520,80" fill="#eef4f8"/>
+    <polygon points="690,50 860,25 860,80 690,80" fill="#e8f0f7"/>
+    <polygon points="860,25 1030,55 1030,80 860,80" fill="#eef4f8"/>
+    <polygon points="1030,55 1200,30 1200,80 1030,80" fill="#e8f0f7"/>
+    <line x1="0" y1="80" x2="1200" y2="80" stroke="#eee" stroke-width="1"/>
+  </svg>
+</div>
+
+<footer>
+  <div class="container"><span>&copy; 2026 Latte</span></div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="返回顶部"><svg viewBox="0 0 16 16" fill="none"><path d="M3 10l5-5 5 5" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+
+<script>window.onerror=function(m,s,l,c,e){var d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:10px;z-index:99999;font-size:14px;white-space:pre-wrap";d.textContent="JS ERROR: "+m+" at "+s+":"+l+":"+c;document.body.prepend(d);};console.log=function(){var a=document.createElement("div");a.style.cssText="background:#ff0;color:#000;padding:4px;font-size:12px";a.textContent=Array.from(arguments).join(" ");var p=document.getElementById("diag-log");if(p)p.appendChild(a);};</script>
+<script src="js/main.js"></script>
+</body>
+</html>

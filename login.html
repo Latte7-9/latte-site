@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latte 管理</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #f8f7f5; margin: 0; padding: 2rem; color: #333; }
+.wrap { max-width: 500px; margin: 3rem auto; background: #fff; padding: 2rem; border-radius: 12px; border: 1px solid #eee; }
+h2 { font-weight: 400; margin: 0 0 0.5rem; }
+.sub { font-size: 0.85rem; color: #999; margin-bottom: 1.5rem; }
+label { display: block; font-size: 0.8rem; color: #666; margin: 1rem 0 0.2rem; }
+input { width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+button { width: 100%; margin-top: 1.2rem; padding: 0.7rem; background: #333; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.msg { margin-top: 1rem; font-size: 0.85rem; text-align: center; min-height: 1.5rem; }
+.err { color: #c62828; }
+.ok { color: #2e7d32; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h2>Latte 内容管理</h2>
+<p class="sub">连接 GitHub 以编辑网站内容</p>
+<form id="loginForm">
+<label>仓库</label>
+<input id="repo" value="Latte7-9/latte-site" placeholder="Latte7-9/latte-site">
+<label>Token</label>
+<input id="token" type="password" placeholder="ghp_...">
+<button type="submit">连接</button>
+</form>
+<div class="msg" id="msg"></div>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  var msg = document.getElementById("msg");
+  var repo = document.getElementById("repo").value.trim();
+  var token = document.getElementById("token").value.trim();
+  if (!repo || !token) {
+    msg.className = "msg err";
+    msg.textContent = "请填写仓库和 Token";
+    return;
+  }
+  try {
+    sessionStorage.setItem("mgmt", JSON.stringify({ r: repo, t: token }));
+    msg.className = "msg ok";
+    msg.textContent = "已连接！跳转中...";
+    setTimeout(function() { window.location.href = "manage.html"; }, 800);
+  } catch(err) {
+    msg.className = "msg err";
+    msg.textContent = "存储失败: " + err.message;
+  }
+});
+</script>
+</body>
+</html>

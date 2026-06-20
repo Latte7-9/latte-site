@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Latte Admin</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#f8f7f5;margin:0;padding:1rem 1rem 4rem;color:#333;line-height:1.6}
+.wrap{max-width:700px;margin:0 auto}
+.card{background:#fff;border-radius:12px;padding:1.8rem;margin-bottom:1rem;border:1px solid #eee}
+h2{font-weight:400;font-size:1.2rem;margin:0 0 0.3rem;color:#1a1a1a}
+h3{font-weight:400;font-size:0.95rem;margin:1.3rem 0 0.5rem;color:#555;border-top:1px solid #f0f0f0;padding-top:1rem}
+.sub{font-size:0.8rem;color:#aaa;margin-bottom:1rem}
+label{display:block;font-size:0.78rem;color:#999;margin:0.7rem 0 0.15rem}
+input,textarea{width:100%;padding:0.55rem 0.7rem;border:1px solid #e0e0e0;border-radius:8px;font-size:0.88rem;font-family:inherit}
+textarea{resize:vertical;min-height:60px}
+button{cursor:pointer;font-family:inherit}
+.btn{display:inline-block;padding:0.55rem 1.2rem;background:#333;color:#fff;border:none;border-radius:8px;font-size:0.85rem;margin-top:0.5rem}
+.btn:hover{background:#555}
+.btnsm{padding:0.3rem 0.8rem;font-size:0.75rem;background:#888}
+.btnsm:hover{background:#666}
+.btndel{background:transparent;border:1px solid #f0d0d0;color:#b71c1c;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.75rem}
+.btndel:hover{background:#fef0f0}
+.status{padding:0.6rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:0.85rem}
+.sinfo{background:#e3f0fd;color:#1565c0}
+.sok{background:#e8f5e9;color:#2e7d32}
+.serr{background:#ffebee;color:#c62828}
+.row{display:flex;gap:0.5rem;flex-wrap:wrap}
+.row>div{flex:1;min-width:140px}
+.tabs{display:flex;gap:0;margin-bottom:0.8rem;border-bottom:1px solid #eee;overflow-x:auto}
+.tab{padding:0.4rem 0.8rem;cursor:pointer;border:none;background:transparent;font-size:0.82rem;color:#999;font-family:inherit;white-space:nowrap}
+.tab.on{color:#1a1a1a;border-bottom:2px solid #333;margin-bottom:-1px}
+.tc{display:none}
+.tc.on{display:block}
+.msg{font-size:0.8rem;margin-top:0.4rem}
+.msgok{color:#2e7d32}
+.msgerr{color:#c62828}
+.acard,.bpost{background:#fafaf8;border:1px solid #eee;border-radius:8px;padding:1rem;margin-bottom:0.8rem}
+.hint{font-size:0.72rem;color:#bbb;margin-top:0.2rem}
+.toolbar{display:none;position:fixed;z-index:1000;background:#2a2a2a;border-radius:10px;padding:0.3rem 0.5rem;gap:0.2rem;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.toolbar.on{display:flex}
+.toolbar button{background:transparent;border:none;color:#ccc;padding:0.3rem 0.5rem;border-radius:4px;cursor:pointer;font-size:0.8rem}
+.toolbar button:hover{background:#444;color:#fff}
+.toolbar .sep{width:1px;background:#444;margin:0 0.2rem;height:18px}
+</style>
+</head>
+<body>
+<div class="toolbar" id="rtb">
+<button data-tag="b"><b>B</b></button>
+<button data-tag="i"><i>I</i></button>
+<span class="sep"></span>
+<button data-tag="br">BR</button>
+<button data-tag="p">P</button>
+<span class="sep"></span>
+<button data-tag="h3">H3</button>
+<button data-tag="blockquote">Q</button>
+<span class="sep"></span>
+<button data-tag="mark">Hi</button>
+<button data-tag="a">Link</button>
+</div>
+
+<div class="wrap">
+<div id="status" class="status sinfo">Connect to GitHub</div>
+
+<div class="card" id="loginBox">
+<h2>Connect</h2>
+<label>Repo</label><input id="repo" value="Latte7-9/latte-site">
+<label>Token</label><input id="token" type="password" placeholder="ghp_...">
+<button class="btn" onclick="login()">Connect</button>
+</div>
+
+<div id="panel" style="display:none">
+
+<div class="tabs" id="tabs">
+<button class="tab on" data-tab="site">Site</button>
+<button class="tab" data-tab="photo">Photo</button>
+<button class="tab" data-tab="books">Books</button>
+<button class="tab" data-tab="hobbies">Hobbies</button>
+<button class="tab" data-tab="hiking">Hiking</button>
+<button class="tab" data-tab="blog">Blog</button>
+<button class="tab" data-tab="guestbook">Guestbook</button>
+<button class="tab" data-tab="images">Images</button>
+</div>
+
+<div class="tc on" id="tab-site"><div class="card">
+<h2>Site Content</h2>
+<label>Name</label><input id="sName">
+<label>Tagline</label><input id="sTagline">
+<label>About</label><textarea id="sAbout" rows="2" data-rich></textarea>
+<label>Email</label><input id="sEmail">
+<hr><div class="sub">Currently</div>
+<div class="row"><div><label>Reading</label><input id="sReading"></div><div><label>Listening</label><input id="sListening"></div></div>
+<div class="row"><div><label>Learning</label><input id="sLearning"></div><div><label>Working on</label><input id="sWorkingOn"></div></div>
+<hr>
+<label>Homepage Books (Title | Author | Cover)</label>
+<textarea id="sBooks" rows="3"></textarea>
+<span class="hint">Upload covers in Images tab first</span>
+<button class="btn" onclick="saveSite()">Save</button>
+<div class="msg" id="msgSite"></div>
+</div></div>
+
+<div class="tc" id="tab-photo"><div class="card">
+<h2>Photo Albums</h2>
+<div id="photoList"></div>
+<button class="btn btnsm" onclick="addAlbum()">+ New Album</button>
+<button class="btn" onclick="savePhoto()" style="margin-left:0.5rem">Save</button>
+<div class="msg" id="msgPhoto"></div>
+</div></div>
+
+<div class="tc" id="tab-books"><div class="card">
+<h2>Books</h2>
+<div class="sub">Format: Title | Author | Review (one per line)</div>
+<h3>Read</h3><textarea id="bRead" rows="3"></textarea>
+<h3>Reading</h3><textarea id="bReading" rows="2"></textarea>
+<h3>Want to Read</h3><textarea id="bWantRead" rows="2"></textarea>
+<button class="btn" onclick="saveBooks()">Save</button>
+<div class="msg" id="msgBooks"></div>
+</div></div>
+
+<div class="tc" id="tab-hobbies"><div class="card">
+<h2>Hobbies</h2>
+<div class="sub">One per line</div>
+<textarea id="hList" rows="6"></textarea>
+<button class="btn" onclick="saveHobbies()">Save</button>
+<div class="msg" id="msgHobbies"></div>
+</div></div>
+
+<div class="tc" id="tab-hiking"><div class="card">
+<h2>Hiking</h2>
+<div class="sub">Climbed: Name | Date | Note</div>
+<textarea id="hkClimbed" rows="3"></textarea>
+<h3>Want to Climb</h3><div class="sub">Name | Reason</div>
+<textarea id="hkWant" rows="2"></textarea>
+<h3>Journal</h3><textarea id="hkJournal" rows="3" data-rich></textarea>
+<h3>Images (one path per line)</h3><textarea id="hkImages" rows="2"></textarea>
+<button class="btn" onclick="saveHiking()">Save</button>
+<div class="msg" id="msgHiking"></div>
+</div></div>
+
+<div class="tc" id="tab-blog"><div class="card">
+<h2>Blog</h2>
+<div class="sub">Create and edit blog posts. HTML pages auto-generated on save.</div>
+<div id="blogList"></div>
+<button class="btn btnsm" onclick="addBlog()">+ New</button>
+<button class="btn" onclick="saveBlog()" style="margin-left:0.5rem">Save All</button>
+<div class="msg" id="msgBlog"></div>
+</div></div>
+
+<div class="tc" id="tab-guestbook"><div class="card">
+<h2>Guestbook</h2>
+<div class="sub">View and delete visitor comments</div>
+<div id="gbList"></div>
+<button class="btndel" onclick="loadGuestbook()" style="margin-bottom:0.5rem">Refresh</button>
+<button class="btn" onclick="saveGuestbook()">Save Changes</button>
+<div class="msg" id="msgGuestbook"></div>
+</div></div>
+
+<div class="tc" id="tab-images"><div class="card">
+<h2>Image Upload</h2>
+<input type="file" id="imgFile" accept="image/*" style="margin-bottom:0.5rem">
+<button class="btn btnsm" onclick="uploadImg()">Upload</button>
+<div class="msg" id="msgImg"></div>
+<h3>Uploaded</h3><div id="imgList"></div>
+</div></div>
+
+</div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

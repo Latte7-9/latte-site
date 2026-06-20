@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Latte 管理</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#f8f7f5;margin:0;padding:1rem 1rem 4rem;color:#333;line-height:1.6}
+.wrap{max-width:700px;margin:0 auto}
+.card{background:#fff;border-radius:12px;padding:1.8rem;margin-bottom:1rem;border:1px solid #eee}
+h2{font-weight:400;font-size:1.2rem;margin:0 0 0.3rem;color:#1a1a1a}
+h3{font-weight:400;font-size:0.95rem;margin:1.3rem 0 0.5rem;color:#555;border-top:1px solid #f0f0f0;padding-top:1rem}
+.sub{font-size:0.8rem;color:#aaa;margin-bottom:1rem}
+label{display:block;font-size:0.78rem;color:#999;margin:0.7rem 0 0.15rem}
+input,textarea{width:100%;padding:0.55rem 0.7rem;border:1px solid #e0e0e0;border-radius:8px;font-size:0.88rem;font-family:inherit}
+textarea{resize:vertical;min-height:60px}
+button{cursor:pointer;font-family:inherit}
+.btn-save{display:inline-block;padding:0.55rem 1.2rem;background:#333;color:#fff;border:none;border-radius:8px;font-size:0.85rem;margin-top:0.5rem}
+.btn-save:hover{background:#555}
+.btn-sm{padding:0.3rem 0.8rem;font-size:0.75rem;background:#888}
+.btn-sm:hover{background:#666}
+.btn-del{background:transparent;border:1px solid #f0d0d0;color:#b71c1c;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.75rem}
+.btn-del:hover{background:#fef0f0}
+.status-bar{padding:0.6rem 1rem;border-radius:8px;margin-bottom:1rem;font-size:0.85rem}
+.s-info{background:#e3f0fd;color:#1565c0}
+.s-ok{background:#e8f5e9;color:#2e7d32}
+.s-err{background:#ffebee;color:#c62828}
+.row{display:flex;gap:0.5rem;flex-wrap:wrap}
+.row>div{flex:1;min-width:140px}
+.tabs{display:flex;gap:0;margin-bottom:0.8rem;border-bottom:1px solid #eee;overflow-x:auto}
+.tab{padding:0.4rem 0.8rem;cursor:pointer;border:none;background:transparent;font-size:0.82rem;color:#999;font-family:inherit;white-space:nowrap}
+.tab.active{color:#1a1a1a;border-bottom:2px solid #333;margin-bottom:-1px}
+.tc{display:none}
+.tc.active{display:block}
+.msg{font-size:0.8rem;margin-top:0.4rem}
+.m-ok{color:#2e7d32}
+.m-err{color:#c62828}
+.album-card,.blog-post{background:#fafaf8;border:1px solid #eee;border-radius:8px;padding:1rem;margin-bottom:0.8rem}
+.hint{font-size:0.72rem;color:#bbb;margin-top:0.2rem}
+.rich-toolbar{display:none;position:fixed;z-index:1000;background:#2a2a2a;border-radius:10px;padding:0.3rem 0.5rem;gap:0.2rem;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.rich-toolbar.on{display:flex}
+.rich-toolbar button{background:transparent;border:none;color:#ccc;padding:0.3rem 0.5rem;border-radius:4px;cursor:pointer;font-size:0.8rem}
+.rich-toolbar button:hover{background:#444;color:#fff}
+.rich-toolbar .sep{width:1px;background:#444;margin:0 0.2rem;height:18px}
+</style>
+</head>
+<body>
+<div class="rich-toolbar" id="rtb">
+<button data-tag="b"><b>B</b></button>
+<button data-tag="i"><i>I</i></button>
+<span class="sep"></span>
+<button data-tag="br">↵</button>
+<button data-tag="p">¶</button>
+<span class="sep"></span>
+<button data-tag="h3">H3</button>
+<button data-tag="blockquote">❝</button>
+<span class="sep"></span>
+<button data-tag="mark"><span style="background:#fff3a0;padding:0 2px">A</span></button>
+<button data-tag="a">🔗</button>
+</div>
+
+<div class="wrap">
+<div id="status" class="status-bar s-info">请输入 Token 连接</div>
+
+<div class="card" id="loginBox">
+<h2>连接 GitHub</h2>
+<label>仓库</label><input id="repo" value="Latte7-9/latte-site">
+<label>Token</label><input id="token" type="password" placeholder="ghp_...">
+<button class="btn-save" onclick="login()">连接</button>
+</div>
+
+<div id="panel" style="display:none">
+
+<div class="tabs" id="tabs">
+<button class="tab active" data-tab="site">网站</button>
+<button class="tab" data-tab="photo">摄影</button>
+<button class="tab" data-tab="books">书籍</button>
+<button class="tab" data-tab="hobbies">三分钟热度</button>
+<button class="tab" data-tab="hiking">登山</button>
+<button class="tab" data-tab="blog">博客</button>
+<button class="tab" data-tab="guestbook">留言板</button>
+<button class="tab" data-tab="images">图片</button>
+</div>
+
+<div class="tc active" id="tab-site"><div class="card">
+<h2>网站内容</h2>
+<label>姓名</label><input id="sName">
+<label>简介</label><input id="sTagline">
+<label>关于</label><textarea id="sAbout" rows="2" data-rich></textarea>
+<label>邮箱</label><input id="sEmail">
+<hr><div class="sub">当下状态</div>
+<div class="row"><div><label>在读</label><input id="sReading"></div><div><label>在听</label><input id="sListening"></div></div>
+<div class="row"><div><label>在学</label><input id="sLearning"></div><div><label>在做</label><input id="sWorkingOn"></div></div>
+<hr>
+<label>首页书籍（书名 | 作者 | 封面路径）</label>
+<textarea id="sBooks" rows="3"></textarea>
+<span class="hint">封面请先在「图片」tab上传</span>
+<button class="btn-save" onclick="saveSite()">保存</button>
+<div class="msg" id="msgSite"></div>
+</div></div>
+
+<div class="tc" id="tab-photo"><div class="card">
+<h2>摄影图集</h2>
+<div id="photoList"></div>
+<button class="btn-save btn-sm" onclick="addAlbum()">+ 新建图集</button>
+<button class="btn-save" onclick="savePhoto()" style="margin-left:0.5rem">保存</button>
+<div class="msg" id="msgPhoto"></div>
+</div></div>
+
+<div class="tc" id="tab-books"><div class="card">
+<h2>书籍管理</h2>
+<div class="sub">格式：书名 | 作者 | 感想（一行一本）</div>
+<h3>已读</h3><textarea id="bRead" rows="3"></textarea>
+<h3>正在阅读</h3><textarea id="bReading" rows="2"></textarea>
+<h3>想要阅读</h3><textarea id="bWantRead" rows="2"></textarea>
+<button class="btn-save" onclick="saveBooks()">保存</button>
+<div class="msg" id="msgBooks"></div>
+</div></div>
+
+<div class="tc" id="tab-hobbies"><div class="card">
+<h2>三分钟热度</h2>
+<div class="sub">一行一个爱好</div>
+<textarea id="hList" rows="6"></textarea>
+<button class="btn-save" onclick="saveHobbies()">保存</button>
+<div class="msg" id="msgHobbies"></div>
+</div></div>
+
+<div class="tc" id="tab-hiking"><div class="card">
+<h2>登山管理</h2>
+<div class="sub">已登：山名 | 日期 | 感想</div>
+<textarea id="hkClimbed" rows="3"></textarea>
+<h3>想要征服</h3><div class="sub">山名 | 理由</div>
+<textarea id="hkWant" rows="2"></textarea>
+<h3>登山随笔</h3><textarea id="hkJournal" rows="3" data-rich></textarea>
+<h3>登山图片（一行一个路径）</h3><textarea id="hkImages" rows="2"></textarea>
+<button class="btn-save" onclick="saveHiking()">保存</button>
+<div class="msg" id="msgHiking"></div>
+</div></div>
+
+<div class="tc" id="tab-blog"><div class="card">
+<h2>博客管理</h2>
+<div class="sub">新建、编辑文章。保存后自动生成文章页面。</div>
+<div id="blogList"></div>
+<button class="btn-save btn-sm" onclick="addBlog()">+ 新建</button>
+<button class="btn-save" onclick="saveBlog()" style="margin-left:0.5rem">保存全部</button>
+<div class="msg" id="msgBlog"></div>
+</div></div>
+
+<div class="tc" id="tab-guestbook"><div class="card">
+<h2>留言板管理</h2>
+<div class="sub">查看和删除访客留言</div>
+<div id="gbList"></div>
+<button class="btn-del" onclick="loadGuestbook()" style="margin-bottom:0.5rem">刷新</button>
+<button class="btn-save" onclick="saveGuestbook()">保存更改</button>
+<div class="msg" id="msgGuestbook"></div>
+</div></div>
+
+<div class="tc" id="tab-images"><div class="card">
+<h2>图片上传</h2>
+<input type="file" id="imgFile" accept="image/*" style="margin-bottom:0.5rem">
+<button class="btn-save btn-sm" onclick="uploadImg()">上传</button>
+<div class="msg" id="msgImg"></div>
+<h3>已上传图片</h3><div id="imgList"></div>
+</div></div>
+
+</div>
+</div>
+
+<script>
+// ---- GLOBALS ----
+var R="", T="", site=null, blog=null, gbData=[];
+
+function d(b){return decodeURIComponent(escape(atob(b.replace(/\s/g,""))));}
+function e(s){return btoa(unescape(encodeURIComponent(s)));}
+function h(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function api(m,p,c,sha){
+  var url="https://api.github.com/repos/"+R+"/contents/"+p;
+  var hdrs={"Authorization":"Bearer "+T,"Accept":"application/vnd.github+json"};
+  var body=null;
+  if(m==="PUT"){
+    body={message:"Update "+p,content:e(c)};
+    if(sha)body.sha=sha;
+  }
+  return fetch(url,{method:m,headers:hdrs,body:body?JSON.stringify(body):null})
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});
+}
+
+// ---- LOGIN ----
+function login(){
+  R=document.getElementById("repo").value.trim();
+  T=document.getElementById("token").value.trim();
+  if(!R||!T){alert("请填写仓库和Token");return;}
+  var s=document.getElementById("status");
+  s.textContent="连接中...";s.className="status-bar s-info";
+  sessionStorage.setItem("mgmt",JSON.stringify({r:R,t:T}));
+  
+  api("GET","data/site.json").then(function(j){
+    site=JSON.parse(d(j.content));
+    return api("GET","data/blog.json");
+  }).then(function(j){
+    blog=JSON.parse(d(j.content));
+  }).catch(function(){
+    blog={posts:[]};
+  }).then(function(){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("panel").style.display="block";
+    fillAll();
+    s.textContent="已连接";s.className="status-bar s-ok";
+  }).catch(function(err){
+    s.textContent="连接失败: "+err.message;s.className="status-bar s-err";
+  });
+}
+
+// ---- TABS ----
+document.getElementById("tabs").addEventListener("click",function(e){
+  var btn=e.target.closest(".tab");
+  if(!btn)return;
+  var name=btn.getAttribute("data-tab");
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
+  btn.classList.add("active");
+  document.querySelectorAll(".tc").forEach(function(t){t.classList.remove("active");});
+  document.getElementById("tab-"+name).classList.add("active");
+});
+
+// ---- FILL ALL ----
+function fillAll(){
+  // Site
+  document.getElementById("sName").value=site.name||"";
+  document.getElementById("sTagline").value=site.tagline||"";
+  document.getElementById("sAbout").value=site.about||"";
+  document.getElementById("sEmail").value=(site.contact&&site.contact.email)||"";
+  if(site.currently){
+    document.getElementById("sReading").value=site.currently.reading||"";
+    document.getElementById("sListening").value=site.currently.listening||"";
+    document.getElementById("sLearning").value=site.currently.learning||"";
+    document.getElementById("sWorkingOn").value=site.currently.workingOn||"";
+  }
+  if(site.books)document.getElementById("sBooks").value=site.books.map(function(b){return b.title+" | "+b.author+" | "+(b.cover||"");}).join("\n");
+  fillPhoto();fillBooks();fillHobbies();fillHiking();fillBlog();loadGuestbook();loadImgs();
+}
+
+// ---- SITE ----
+function saveSite(){
+  site.name=document.getElementById("sName").value;
+  site.tagline=document.getElementById("sTagline").value;
+  site.about=document.getElementById("sAbout").value;
+  if(!site.contact)site.contact={};
+  site.contact.email=document.getElementById("sEmail").value;
+  if(!site.currently)site.currently={};
+  site.currently.reading=document.getElementById("sReading").value;
+  site.currently.listening=document.getElementById("sListening").value;
+  site.currently.learning=document.getElementById("sLearning").value;
+  site.currently.workingOn=document.getElementById("sWorkingOn").value;
+  var bl=document.getElementById("sBooks").value.split("\n").filter(function(l){return l.trim();});
+  site.books=bl.map(function(l){var p=l.split("|");return{title:(p[0]||"").trim(),author:(p[1]||"").trim(),cover:(p[2]||"").trim()};});
+  api("GET","data/site.json").then(function(j){
+    return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);
+  }).then(function(){msg("msgSite","ok","已保存");})
+  .catch(function(err){msg("msgSite","err","失败: "+err.message);});
+}
+
+// ---- PHOTO ----
+function fillPhoto(){
+  var it=site.interests.find(function(i){return i.name==="摄影";});
+  if(!it||!it.albums)it={albums:[]};
+  var hh="";
+  (it.albums||[]).forEach(function(a,i){
+    hh+='<div class="album-card"><h4>图集 '+(i+1)+'</h4>';
+    hh+='<label>名称</label><input class="an" value="'+h(a.name||'')+'">';
+    hh+='<label>描述</label><input class="ad" value="'+h(a.description||'')+'">';
+    hh+='<label>封面路径</label><input class="ac" value="'+h(a.cover||'')+'">';
+    hh+='<label>图片（一行一个）</label><textarea class="ai" rows="2">'+(a.images||[]).join("\n")+'</textarea>';
+    hh+='<label>随笔</label><textarea class="aj" rows="2" data-rich>'+h(a.journal||'')+'</textarea>';
+    hh+='<button class="btn-del" onclick="delAlbum('+i+')">删除</button></div>';
+  });
+  document.getElementById("photoList").innerHTML=hh;
+}
+function addAlbum(){
+  var it=site.interests.find(function(i){return i.name==="摄影";});
+  if(!it){it={name:"摄影",icon:"camera",page:"interests/photography.html",albums:[]};site.interests.push(it);}
+  it.albums.push({name:"",description:"",cover:"",images:[],journal:""});
+  fillPhoto();
+}
+function delAlbum(i){site.interests.find(function(x){return x.name==="摄影";}).albums.splice(i,1);fillPhoto();}
+function savePhoto(){
+  var it=site.interests.find(function(i){return i.name==="摄影";});
+  if(!it){it={name:"摄影",icon:"camera",page:"interests/photography.html",albums:[]};site.interests.push(it);}
+  it.albums=[];
+  document.querySelectorAll(".album-card").forEach(function(card){
+    it.albums.push({name:card.querySelector(".an").value,description:card.querySelector(".ad").value,cover:card.querySelector(".ac").value,images:card.querySelector(".ai").value.split("\n").filter(function(l){return l.trim();}),journal:card.querySelector(".aj").value});
+  });
+  api("GET","data/site.json").then(function(j){
+    return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);
+  }).then(function(){msg("msgPhoto","ok","已保存");fillPhoto();})
+  .catch(function(err){msg("msgPhoto","err","失败: "+err.message);});
+}
+
+// ---- BOOKS ----
+function fillBooks(){
+  var it=site.interests.find(function(i){return i.name==="书籍";});
+  if(!it)return;
+  function f(arr){return(arr||[]).map(function(b){return b.title+" | "+b.author+" | "+(b.review||"");}).join("\n");}
+  document.getElementById("bRead").value=f(it.read);
+  document.getElementById("bReading").value=f(it.reading);
+  document.getElementById("bWantRead").value=f(it.wantToRead);
+}
+function saveBooks(){
+  var it=site.interests.find(function(i){return i.name==="书籍";});
+  if(!it){it={name:"书籍",icon:"book",page:"interests/books.html"};site.interests.push(it);}
+  function p(txt){return txt.split("\n").filter(function(l){return l.trim();}).map(function(l){var x=l.split("|");return{title:(x[0]||"").trim(),author:(x[1]||"").trim(),review:(x[2]||"").trim()};});}
+  it.read=p(document.getElementById("bRead").value);
+  it.reading=p(document.getElementById("bReading").value);
+  it.wantToRead=p(document.getElementById("bWantRead").value);
+  api("GET","data/site.json").then(function(j){
+    return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);
+  }).then(function(){msg("msgBooks","ok","已保存");})
+  .catch(function(err){msg("msgBooks","err","失败: "+err.message);});
+}
+
+// ---- HOBBIES ----
+function fillHobbies(){
+  var it=site.interests.find(function(i){return i.name==="三分钟热度";});
+  if(it&&it.hobbies)document.getElementById("hList").value=it.hobbies.join("\n");
+}
+function saveHobbies(){
+  var it=site.interests.find(function(i){return i.name==="三分钟热度";});
+  if(!it){it={name:"三分钟热度",icon:"sparkle",page:"interests/hobbies.html"};site.interests.push(it);}
+  it.hobbies=document.getElementById("hList").value.split("\n").filter(function(l){return l.trim();});
+  api("GET","data/site.json").then(function(j){
+    return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);
+  }).then(function(){msg("msgHobbies","ok","已保存");})
+  .catch(function(err){msg("msgHobbies","err","失败: "+err.message);});
+}
+
+// ---- HIKING ----
+function fillHiking(){
+  var it=site.interests.find(function(i){return i.name==="登山";});
+  if(!it)return;
+  function f(arr,k1,k2){return(arr||[]).map(function(b){return b.name+" | "+(b[k1]||"")+" | "+(b[k2]||"");}).join("\n");}
+  document.getElementById("hkClimbed").value=f(it.climbed,"date","note");
+  document.getElementById("hkWant").value=f(it.wantToClimb,"reason","reason");
+  document.getElementById("hkJournal").value=it.journal||"";
+  document.getElementById("hkImages").value=(it.images||[]).join("\n");
+}
+function saveHiking(){
+  var it=site.interests.find(function(i){return i.name==="登山";});
+  if(!it){it={name:"登山",icon:"mountain",page:"interests/hiking.html"};site.interests.push(it);}
+  function p(txt,k1,k2){return txt.split("\n").filter(function(l){return l.trim();}).map(function(l){var x=l.split("|");var o={};o.name=(x[0]||"").trim();o[k1]=(x[1]||"").trim();o[k2]=(x[2]||"").trim();return o;});}
+  it.climbed=p(document.getElementById("hkClimbed").value,"date","note");
+  it.wantToClimb=p(document.getElementById("hkWant").value,"reason","reason");
+  it.journal=document.getElementById("hkJournal").value;
+  it.images=document.getElementById("hkImages").value.split("\n").filter(function(l){return l.trim();});
+  api("GET","data/site.json").then(function(j){
+    return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);
+  }).then(function(){msg("msgHiking","ok","已保存");})
+  .catch(function(err){msg("msgHiking","err","失败: "+err.message);});
+}
+
+// ---- BLOG ----
+function fillBlog(){
+  if(!blog||!blog.posts)blog={posts:[]};
+  var hh="";
+  blog.posts.forEach(function(p,i){
+    hh+='<div class="blog-post">';
+    hh+='<label>标题</label><input class="bt" value="'+h(p.title||'')+'">';
+    hh+='<label>日期</label><input class="bd" type="date" value="'+(p.date||'')+'">';
+    hh+='<label>摘要</label><input class="bs" value="'+h(p.summary||'')+'">';
+    hh+='<label>文件名 (.html)</label><input class="bf" value="'+h(p.file||'')+'">';
+    hh+='<label>内容</label><textarea class="bc" rows="6" data-rich>'+h(p.content||'')+'</textarea>';
+    hh+='<button class="btn-del" onclick="delBlog('+i+')">删除</button></div>';
+  });
+  document.getElementById("blogList").innerHTML=hh||'<div style="color:#ccc;padding:1rem 0">暂无文章</div>';
+}
+function addBlog(){
+  if(!blog.posts)blog.posts=[];
+  blog.posts.push({title:"新文章",date:new Date().toISOString().slice(0,10),summary:"",file:"post-"+Date.now()+".html",content:""});
+  fillBlog();
+}
+function delBlog(i){blog.posts.splice(i,1);fillBlog();}
+function saveBlog(){
+  var cards=document.querySelectorAll(".blog-post");
+  blog.posts=[];
+  cards.forEach(function(card){
+    blog.posts.push({title:card.querySelector(".bt").value,date:card.querySelector(".bd").value,summary:card.querySelector(".bs").value,file:card.querySelector(".bf").value,content:card.querySelector(".bc").value});
+  });
+  
+  api("GET","data/blog.json").then(function(j){
+    return api("PUT","data/blog.json",JSON.stringify(blog,null,2),j.sha);
+  }).then(function(){
+    // Generate HTML files
+    var done=0;
+    function next(i){
+      if(i>=blog.posts.length){msg("msgBlog","ok","已保存 "+done+" 篇");fillBlog();return;}
+      var p=blog.posts[i];
+      var pH="<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n<title>"+h(p.title)+" - Latte</title>\n<link rel=\"stylesheet\" href=\"../../css/style.css\">\n</head>\n<body>\n<nav class=\"site-nav\"><div class=\"nav-inner\"><a class=\"nav-brand\" href=\"../../index.html\">Latte</a><ul class=\"nav-links\"><li><a href=\"../../index.html\">首页</a></li><li><a href=\"../../blog/\">博客</a></li></ul></div></nav>\n<article class=\"blog-article\"><div class=\"container\"><div class=\"blog-post-header\"><p class=\"blog-post-date\">"+p.date+"</p><h1>"+h(p.title)+"</h1></div><div class=\"blog-post-content\">"+(p.content||"")+"</div><p class=\"blog-back\"><a href=\"../../blog/\">&larr; 返回博客</a></p></div></article>\n<footer><div class=\"container\"><span>&copy; 2026 Latte</span></div></footer>\n<script src=\"../../js/main.js\"></script>\n</body>\n</html>";
+      api("GET","blog/posts/"+p.file).then(function(j){
+        return api("PUT","blog/posts/"+p.file,pH,j.sha);
+      }).catch(function(){
+        return api("PUT","blog/posts/"+p.file,pH,null);
+      }).then(function(){done++;next(i+1);})
+      .catch(function(){done++;next(i+1);});
+    }
+    next(0);
+  }).catch(function(err){msg("msgBlog","err","失败: "+err.message);});
+}
+
+// ---- GUESTBOOK ----
+function loadGuestbook(){
+  api("GET","data/comments.json").then(function(j){
+    gbData=JSON.parse(d(j.content));if(!Array.isArray(gbData))gbData=[];renderGb();
+  }).catch(function(){gbData=[];renderGb();});
+}
+function renderGb(){
+  var hh="";
+  gbData.forEach(function(c,i){
+    hh+='<div style="background:#fafaf8;border:1px solid #eee;border-radius:8px;padding:0.8rem;margin-bottom:0.5rem">';
+    hh+='<div style="display:flex;justify-content:space-between"><strong>'+h(c.name||"匿名")+'</strong>';
+    hh+='<button class="btn-del" onclick="delGb('+i+')">删除</button></div>';
+    hh+='<div style="font-size:0.72rem;color:#bbb">'+(c.date||"")+'</div>';
+    hh+='<p style="margin:0.3rem 0 0">'+h(c.text||"")+'</p></div>';
+  });
+  document.getElementById("gbList").innerHTML=hh||'<span style="color:#ccc">暂无留言</span>';
+}
+function delGb(i){gbData.splice(i,1);renderGb();}
+function saveGuestbook(){
+  api("GET","data/comments.json").then(function(j){
+    return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),j.sha);
+  }).catch(function(){
+    return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),null);
+  }).then(function(){msg("msgGuestbook","ok","已保存");loadGuestbook();})
+  .catch(function(err){msg("msgGuestbook","err","失败: "+err.message);});
+}
+
+// ---- IMAGES ----
+function uploadImg(){
+  var file=document.getElementById("imgFile").files[0];
+  if(!file){alert("请选择图片");return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var b64=e.target.result.split(",")[1];
+    document.getElementById("msgImg").textContent="上传中...";document.getElementById("msgImg").className="msg m-ok";
+    api("GET","images/"+file.name).then(function(j){
+      return api("PUT","images/"+file.name,b64,j.sha);
+    }).catch(function(){
+      return api("PUT","images/"+file.name,b64,null);
+    }).then(function(){
+      document.getElementById("msgImg").textContent="已上传: images/"+file.name;
+      loadImgs();
+    }).catch(function(err){
+      document.getElementById("msgImg").textContent="失败: "+err.message;document.getElementById("msgImg").className="msg m-err";
+    });
+  };
+  reader.readAsDataURL(file);
+}
+function loadImgs(){
+  fetch("https://api.github.com/repos/"+R+"/contents/images",{headers:{"Authorization":"Bearer "+T}})
+  .then(function(r){if(!r.ok)throw new Error("");return r.json();})
+  .then(function(files){
+    var hh="";
+    files.forEach(function(f){if(f.type==="file"&&/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))hh+='<img src="'+f.download_url+'" style="max-width:80px;max-height:80px;border-radius:6px;margin:0.3rem" title="'+f.name+'"><code style="font-size:0.72rem">images/'+f.name+'</code><br>';});
+    document.getElementById("imgList").innerHTML=hh||'<span style="color:#ccc">暂无</span>';
+  }).catch(function(){document.getElementById("imgList").innerHTML='<span style="color:#ccc">暂无</span>';});
+}
+
+// ---- UTIL ----
+function msg(id,type,text){
+  var el=document.getElementById(id);
+  el.textContent=text;el.className="msg m-"+type;
+}
+
+// ---- RICH TEXT ----
+(function(){
+  var ta=null,tb=document.getElementById("rtb");if(!tb)return;
+  document.addEventListener("focusin",function(e){
+    if(e.target.tagName==="TEXTAREA"&&e.target.hasAttribute("data-rich")){
+      ta=e.target;var r=e.target.getBoundingClientRect();
+      tb.style.left=Math.max(5,r.left)+"px";
+      tb.style.top=Math.max(5,r.top+window.scrollY-44)+"px";
+      tb.classList.add("on");
+    }
+  });
+  document.addEventListener("click",function(e){
+    if(!e.target.closest("[data-rich]")&&!e.target.closest("#rtb")){tb.classList.remove("on");ta=null;}
+  });
+  tb.addEventListener("click",function(e){
+    var btn=e.target.closest("button");if(!btn||!ta)return;e.preventDefault();
+    var tag=btn.getAttribute("data-tag");if(!tag)return;
+    var s=ta.selectionStart,n=ta.selectionEnd;
+    var v=ta.value,sel=v.substring(s,n);
+    var w=["",""];
+    switch(tag){
+      case"b":w=["<strong>","</strong>"];break;
+      case"i":w=["<em>","</em>"];break;
+      case"br":w=["","<br>"];sel="";break;
+      case"p":w=["<p>","</p>"];break;
+      case"h3":w=["<h3>","</h3>"];break;
+      case"blockquote":w=["<blockquote><p>","</p></blockquote>"];break;
+      case"mark":w=["<mark>","</mark>"];break;
+      case"a":var url=prompt("链接地址:","https://");if(!url)return;w=['<a href="'+url+'">',"</a>"];break;
+    }
+    var rep=w[0]+sel+w[1];
+    ta.value=v.substring(0,s)+rep+v.substring(n);
+    var np=s+w[0].length+sel.length+(tag==="br"?4:0);
+    ta.focus();ta.setSelectionRange(np,np);ta.dispatchEvent(new Event("input",{bubbles:true}));
+  });
+})();
+
+// ---- AUTO LOGIN ----
+(function(){
+  var s=sessionStorage.getItem("mgmt");
+  if(s){try{var c=JSON.parse(s);R=c.r;T=c.t;login();}catch(e){}}
+})();
+</script>
+</body>
+</html>
