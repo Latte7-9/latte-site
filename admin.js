@@ -1,4 +1,4 @@
-var R="",T="",site=null,blog=null,gbData=[];
+﻿var R="",T="",site=null,blog=null,gbData=[];
 
 function db(b){return decodeURIComponent(escape(atob(b.replace(/\s/g,""))));}
 function eb(s){return btoa(unescape(encodeURIComponent(s)));}
@@ -20,9 +20,9 @@ function msg(id,type,text){
 function login(){
   R=document.getElementById("repo").value.trim();
   T=document.getElementById("token").value.trim();
-  if(!R||!T){alert("Fill in both fields");return;}
+  if(!R||!T){alert("请填写所有字段");return;}
   var s=document.getElementById("status");
-  s.textContent="Connecting...";s.className="status sinfo";
+  s.textContent="连接中...";s.className="status sinfo";
   sessionStorage.setItem("mgmt",JSON.stringify({r:R,t:T}));
   api("GET","data/site.json").then(function(j){
     site=JSON.parse(db(j.content));
@@ -35,9 +35,9 @@ function login(){
     document.getElementById("loginBox").style.display="none";
     document.getElementById("panel").style.display="block";
     fillAll();
-    s.textContent="Connected";s.className="status sok";
+    s.textContent="已连接";s.className="status sok";
   }).catch(function(err){
-    s.textContent="Failed: "+err.message;s.className="status serr";
+    s.textContent="失败: "+err.message;s.className="status serr";
   });
 }
 
@@ -78,7 +78,7 @@ function saveSite(){
   var bl=document.getElementById("sBooks").value.split("\n").filter(function(l){return l.trim();});
   site.books=bl.map(function(l){var p=l.split("|");return{title:(p[0]||"").trim(),author:(p[1]||"").trim(),cover:(p[2]||"").trim()};});
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
-  .then(function(){msg("msgSite","ok","Saved");}).catch(function(err){msg("msgSite","err","Failed: "+err.message);});
+  .then(function(){msg("msgSite","ok","Saved");}).catch(function(err){msg("msgSite","err","失败: "+err.message);});
 }
 
 function fillPhoto(){
@@ -110,7 +110,7 @@ function savePhoto(){
     it.albums.push({name:card.querySelector(".an").value,description:card.querySelector(".ad").value,cover:card.querySelector(".ac").value,images:card.querySelector(".ai").value.split("\n").filter(function(l){return l.trim();}),journal:card.querySelector(".aj").value});
   });
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
-  .then(function(){msg("msgPhoto","ok","Saved");fillPhoto();}).catch(function(err){msg("msgPhoto","err","Failed: "+err.message);});
+  .then(function(){msg("msgPhoto","ok","Saved");fillPhoto();}).catch(function(err){msg("msgPhoto","err","失败: "+err.message);});
 }
 
 function fillBooks(){
@@ -128,7 +128,7 @@ function saveBooks(){
   it.reading=p(document.getElementById("bReading").value);
   it.wantToRead=p(document.getElementById("bWantRead").value);
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
-  .then(function(){msg("msgBooks","ok","Saved");}).catch(function(err){msg("msgBooks","err","Failed: "+err.message);});
+  .then(function(){msg("msgBooks","ok","Saved");}).catch(function(err){msg("msgBooks","err","失败: "+err.message);});
 }
 
 function fillHobbies(){
@@ -140,7 +140,7 @@ function saveHobbies(){
   if(!it){it={name:"\u4e09\u5206\u949f\u70ed\u5ea6",icon:"sparkle",page:"interests/hobbies.html"};site.interests.push(it);}
   it.hobbies=document.getElementById("hList").value.split("\n").filter(function(l){return l.trim();});
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
-  .then(function(){msg("msgHobbies","ok","Saved");}).catch(function(err){msg("msgHobbies","err","Failed: "+err.message);});
+  .then(function(){msg("msgHobbies","ok","Saved");}).catch(function(err){msg("msgHobbies","err","失败: "+err.message);});
 }
 
 function fillHiking(){
@@ -160,7 +160,7 @@ function saveHiking(){
   it.journal=document.getElementById("hkJournal").value;
   it.images=document.getElementById("hkImages").value.split("\n").filter(function(l){return l.trim();});
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
-  .then(function(){msg("msgHiking","ok","Saved");}).catch(function(err){msg("msgHiking","err","Failed: "+err.message);});
+  .then(function(){msg("msgHiking","ok","Saved");}).catch(function(err){msg("msgHiking","err","失败: "+err.message);});
 }
 
 function fillBlog(){
@@ -199,7 +199,7 @@ function saveBlog(){
       api("GET","blog/posts/"+p.file).then(function(j){return api("PUT","blog/posts/"+p.file,pH,j.sha);}).catch(function(){return api("PUT","blog/posts/"+p.file,pH,null);}).then(function(){done++;next(i+1);}).catch(function(){done++;next(i+1);});
     }
     next(0);
-  }).catch(function(err){msg("msgBlog","err","Failed: "+err.message);});
+  }).catch(function(err){msg("msgBlog","err","失败: "+err.message);});
 }
 
 function loadGuestbook(){
@@ -223,19 +223,19 @@ function saveGuestbook(){
   api("GET","data/comments.json").then(function(j){return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),j.sha);})
   .catch(function(){return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),null);})
   .then(function(){msg("msgGuestbook","ok","Saved");loadGuestbook();})
-  .catch(function(err){msg("msgGuestbook","err","Failed: "+err.message);});
+  .catch(function(err){msg("msgGuestbook","err","失败: "+err.message);});
 }
 
 function uploadImg(){
-  var file=document.getElementById("imgFile").files[0];if(!file){alert("Select an image");return;}
+  var file=document.getElementById("imgFile").files[0];if(!file){alert("请选择图片");return;}
   var reader=new FileReader();
   reader.onload=function(e){
     var b64=e.target.result.split(",")[1];
-    document.getElementById("msgImg").textContent="Uploading...";document.getElementById("msgImg").className="msg msgok";
+    document.getElementById("msgImg").textContent="上传中...";document.getElementById("msgImg").className="msg msgok";
     api("GET","images/"+file.name).then(function(j){return api("PUT","images/"+file.name,b64,j.sha);})
     .catch(function(){return api("PUT","images/"+file.name,b64,null);})
-    .then(function(){document.getElementById("msgImg").textContent="Uploaded: images/"+file.name;loadImgs();})
-    .catch(function(err){document.getElementById("msgImg").textContent="Failed: "+err.message;document.getElementById("msgImg").className="msg msgerr";});
+    .then(function(){document.getElementById("msgImg").textContent="已上传: images/"+file.name;loadImgs();})
+    .catch(function(err){document.getElementById("msgImg").textContent="失败: "+err.message;document.getElementById("msgImg").className="msg msgerr";});
   };
   reader.readAsDataURL(file);
 }
