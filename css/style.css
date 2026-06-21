@@ -1140,7 +1140,7 @@ footer::before {
 
 /* ====== 唱片悬浮播放器 ====== */
 .vinyl-player {
-  position: fixed; right: -320px; bottom: 80px; z-index: 9999;
+  position: fixed; right: -282px; top: 100px; z-index: 9999;
   display: flex; align-items: center; gap: 0;
   transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -1200,11 +1200,11 @@ footer::before {
 .vinyl-close:hover { color: #aaa; }
 
 /* 贴边露出状态 */
-.vinyl-player:not(.open) { right: -256px; }
-.vinyl-player:not(.open):hover { right: -220px; }
+
+.vinyl-player:not(.open):hover { right: -230px; }
 
 @media (max-width: 600px) {
-  .vinyl-player { right: -296px; bottom: 60px; }
+  .vinyl-player { right: -296px; top: 80px; }
   .vinyl-player.open { right: 4px; }
   .vinyl-body { width: 260px; }
   .vinyl-record { width: 60px; height: 60px; }

@@ -320,6 +320,9 @@ function escapeHTML(str) {
 
 
 // ====== 唱片悬浮播放器 ======
+
+// ====== 唱片悬浮播放器 ======
+var vinylReady = false;
 async function initVinylPlayer() {
   var player = document.getElementById('vinylPlayer');
   var record = document.getElementById('vinylRecord');
@@ -332,48 +335,58 @@ async function initVinylPlayer() {
   try {
     var resp = await fetch(API_BASE + '/api/netease/weekly');
     var data = await resp.json();
-    if (!data.songs || data.songs.length === 0) {
-      player.style.display = 'none';
-      return;
-    }
+    if (!data.songs || data.songs.length === 0) { player.style.display = 'none'; return; }
     var song = data.songs[0];
     titleEl.textContent = song.name;
     artistEl.textContent = song.artists;
     player.style.display = 'flex';
-    iframeWrap.innerHTML = '<iframe src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0"></iframe>';
-  } catch (e2) {
-    console.error('vinyl:', e2);
-    player.style.display = 'none';
-    return;
-  }
+    iframeWrap.innerHTML = '<iframe id="vinylFrame" src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0"></iframe>';
+    vinylReady = true;
+  } catch (e2) { console.error('vinyl:', e2); player.style.display = 'none'; return; }
 
+  // 点击唱片 → 展开/收起
   record.addEventListener('click', function(e) {
     e.stopPropagation();
     player.classList.toggle('open');
   });
-
   if (closeBtn) {
     closeBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       player.classList.remove('open');
     });
   }
-
-  var autoPlayed = false;
-  function tryAutoPlay() {
-    if (autoPlayed) return;
-    autoPlayed = true;
-    record.classList.add('playing');
-    var iframe = iframeWrap.querySelector('iframe');
-    if (iframe && iframe.src.indexOf('auto=1') === -1) {
-      iframe.src = iframe.src.replace('auto=0', 'auto=1');
-    }
-  }
-  document.addEventListener('click', tryAutoPlay, { once: true });
-  document.addEventListener('scroll', tryAutoPlay, { once: true });
 }
 
+// 入场动画后自动弹出 → 播放 → 收回
+function vinylAutoShow() {
+  if (!vinylReady) return;
+  var player = document.getElementById('vinylPlayer');
+  var record = document.getElementById('vinylRecord');
+  if (!player || !record) return;
 
+  // 延迟一小段，让入场动画先完成
+  setTimeout(function() {
+    // 弹出
+    player.classList.add('open');
+    record.classList.add('playing');
+
+    // 自动播放
+    var frame = document.getElementById('vinylFrame');
+    if (frame) frame.src = frame.src.replace('auto=0', 'auto=1');
+
+    // 3 秒后收回
+    setTimeout(function() {
+      player.classList.remove('open');
+    }, 3500);
+  }, 1000);
+}
+
+// 在 switchToMain 完成后触发
+var origSwitchToMain = switchToMain;
+switchToMain = function() {
+  origSwitchToMain();
+  vinylAutoShow();
+};
 async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
