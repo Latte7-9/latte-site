@@ -651,10 +651,12 @@ function spawnRipple(x, y, inner) {
 
 
 function spawnSplash(x, y, vy, inner) {
+  // Debug marker
   var dbg = document.createElement("div"); dbg.style.cssText = "position:absolute;left:"+(x-3)+"px;top:"+(y-3)+"px;width:6px;height:6px;border-radius:50%;background:red;z-index:999;pointer-events:none"; inner.appendChild(dbg); setTimeout(function(){ if(dbg.parentElement) dbg.remove(); }, 2000);
+  
   var speed = Math.abs(vy);
   var count = Math.min(12, Math.max(3, Math.floor(speed * 1.8)));
-  var isEntering = vy > 0; // true = falling into water, false = popping up
+  var isEntering = vy > 0;
   for (var i = 0; i < count; i++) {
     var particle = document.createElement('div');
     var angle = (Math.random() - 0.5) * Math.PI * 0.9 + (isEntering ? -Math.PI/2 : Math.PI/2);
@@ -663,19 +665,34 @@ function spawnSplash(x, y, vy, inner) {
     var sy = Math.sin(angle) * dist - (isEntering ? 0 : 15);
     var size = 2 + Math.random() * 4;
     var lifetime = 0.5 + Math.random() * 0.7;
-    particle.style.cssText =
-      'position:absolute;left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;'
-      + 'width:' + size + 'px;height:' + size + 'px;border-radius:50%;'
-      + 'background:rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ');'
-      + '--sx:' + sx + 'px;--sy:' + sy + 'px;'
-      + 'animation:splashParticle ' + lifetime + 's ease-out forwards;'
-      + 'pointer-events:none;z-index:4';
+    
+    // Set initial styles
+    particle.style.position = 'absolute';
+    particle.style.left = (x - size/2) + 'px';
+    particle.style.top = (y - size/2) + 'px';
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.borderRadius = '50%';
+    particle.style.background = 'rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ')';
+    particle.style.pointerEvents = 'none';
+    particle.style.zIndex = '4';
+    particle.style.transition = 'transform ' + lifetime + 's ease-out, opacity ' + lifetime + 's ease-out';
+    particle.style.transform = 'translate(0, 0) scale(1)';
+    particle.style.opacity = '0.85';
+    
     inner.appendChild(particle);
-    var timeout = lifetime * 1000 + 100;
+    
+    // Trigger animation in next frame
+    requestAnimationFrame(function() {
+      particle.style.transform = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.2)';
+      particle.style.opacity = '0';
+    });
+    
+    // Cleanup
+    var timeout = lifetime * 1000 + 150;
     setTimeout(function() { if (particle.parentElement) particle.remove(); }, timeout);
   }
 }
-
 
 function updateDuckPos(d) {
   d.el.style.left = (d.x - d.size/2) + 'px';
