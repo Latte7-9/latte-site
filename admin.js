@@ -1,4 +1,4 @@
-var R="",T="",site=null,blog=null,gbData=[];
+﻿var R="",T="",site=null,blog=null,gbData=[];
 
 function db(b){return decodeURIComponent(escape(atob(b.replace(/\s/g,""))));}
 function eb(s){return btoa(unescape(encodeURIComponent(s)));}
@@ -55,9 +55,6 @@ function fillAll(){
   document.getElementById("sTagline").value=site.tagline||"";
   document.getElementById("sAbout").value=site.about||"";
   document.getElementById("sEmail").value=(site.contact&&site.contact.email)||"";
-  if(site.currently){
-    document.getElementById("sListening").value=site.currently.listening||"";
-  }
   if(site.books)document.getElementById("sBooks").value=site.books.map(function(b){return b.title+" | "+b.author+" | "+(b.cover||"");}).join("\n");
   fillPhoto();fillBooks();fillHobbies();fillHiking();fillBlog();loadGuestbook();loadImgs();
 }
@@ -67,8 +64,6 @@ function saveSite(){
   site.tagline=document.getElementById("sTagline").value;
   site.about=document.getElementById("sAbout").value;
   if(!site.contact)site.contact={};site.contact.email=document.getElementById("sEmail").value;
-  if(!site.currently)site.currently={};
-  site.currently.listening=document.getElementById("sListening").value;
   var bl=document.getElementById("sBooks").value.split("\n").filter(function(l){return l.trim();});
   site.books=bl.map(function(l){var p=l.split("|");return{title:(p[0]||"").trim(),author:(p[1]||"").trim(),cover:(p[2]||"").trim()};});
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})

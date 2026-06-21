@@ -1140,6 +1140,1170 @@ footer::before {
 
 /* ====== 唱片悬浮播放器 ====== */
 .vinyl-player {
+  position: fixed; right: -40px; top: 120px; z-index: 9998;
+  display: flex; flex-direction: row-reverse; align-items: center; gap: 0;
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.vinyl-player.open { right: 12px; }
+.vinyl-player:not(.open):hover { right: -20px; }
+
+.vinyl-record {
+  width: 80px; height: 80px; flex-shrink: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #1a1a1a 30%, #0d0d0d 31%, #1a1a1a 32%, #0d0d0d 46%, #1a1a1a 47%, #0d0d0d 62%, #222 63%, #111 85%, #222 86%, #111 100%);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 40px rgba(41,144,192,0.12);
+  position: relative; z-index: 2;
+  animation: vinylSpin 4s linear infinite paused;
+}
+.vinyl-record.playing { animation-play-state: running; }
+
+.vinyl-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: radial-gradient(circle, #e74c3c 0%, #c0392b 60%, #8b0000 100%);
+  box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+}
+
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.vinyl-body {
+  background: rgba(20,24,30,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px 0 0 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0.8rem 1rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  width: 300px; max-width: calc(100vw - 100px);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.vinyl-player.open .vinyl-body { opacity: 1; pointer-events: auto; }
+
+.vinyl-info { text-align: center; }
+.vinyl-title { font-size: 0.9rem; color: #e0e4ec; font-weight: 500; }
+.vinyl-artist { font-size: 0.75rem; color: #7a8088; margin-top: 0.15rem; }
+
+.vinyl-iframe-wrap { border-radius: 8px; overflow: hidden; height: 66px; }
+.vinyl-iframe-wrap iframe { width: 100%; height: 66px; border: none; }
+
+.vinyl-close {
+  position: absolute; top: 6px; right: 10px;
+  background: none; border: none; color: #555; font-size: 1.2rem;
+  cursor: pointer; line-height: 1;
+}
+.vinyl-close:hover { color: #aaa; }
+
+@media (max-width: 600px) {
+  .vinyl-player { right: -32px; top: 100px; }
+  .vinyl-player.open { right: 4px; }
+  .vinyl-body { width: 250px; }
+  .vinyl-record { width: 60px; height: 60px; }
+  .vinyl-label { width: 18px; height: 18px; }
+}
+@media (max-width: 600px) {
+  .intro-title { font-size: 2.4rem; }
+}
+
+/* 副标题打字机效果 */
+.intro-subtitle {
+  font-size: 1.15rem; font-weight: 300; color: rgba(255,255,255,0.85);
+  margin-bottom: 2.5em; min-height: 1.8em; letter-spacing: 0.04em;
+  text-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+.intro-subtitle span {
+  animation: letter-glow 0.7s ease both;
+}
+@keyframes letter-glow {
+  0%   { opacity: 0; text-shadow: 0 0 1px rgba(255,255,255,0.1); }
+  66%  { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.9); }
+  77%  { opacity: 1; }
+  100% { opacity: 0.7; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+}
+@media (max-width: 600px) {
+  .intro-subtitle { font-size: 0.95rem; }
+}
+
+/* 进入按钮 */
+.intro-enter {
+  color: rgba(255,255,255,0.9); font-size: 0.85rem;
+  letter-spacing: 6px; cursor: pointer; pointer-events: auto;
+  position: relative; z-index: 10;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2.2s linear infinite;
+  transition: all 0.3s;
+}
+.intro-enter:hover {
+  background: linear-gradient(90deg, transparent, rgba(41,144,192,0.8), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  50%  { text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+  100% { background-position: -200% center; }
+}
+
+/* 弹跳箭头 */
+.intro-arrow {
+  position: absolute; left: 49.5%; top: 92%; transform: translateX(-50%);
+  transform-origin: 50% 50%;
+}
+.intro-arrow-1 { animation: arrow-move 2s ease-in-out infinite; }
+.intro-arrow-2 { animation: arrow-move 2s 1s ease-in-out infinite; }
+.intro-arrow::before, .intro-arrow::after {
+  background: rgba(255,255,255,0.7); content: ""; display: block;
+  height: 2.5px; position: absolute; top: 0; left: 0; width: 14px;
+  box-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+.intro-arrow::before { transform: rotate(45deg) translateX(-10%); transform-origin: top left; }
+.intro-arrow::after  { transform: rotate(-45deg) translateX(10%); transform-origin: top right; }
+@keyframes arrow-move {
+  0%   { opacity: 0; top: 92%; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; top: 94%; }
+}
+
+/* 底部 SVG 几何 */
+.shape-wrap {
+  position: relative; z-index: 0; margin: -5px 0 0 0;
+  background: transparent; pointer-events: none;
+}
+.shape { display: block; background: transparent; }
+.shape path { fill: #1a1e24; }
+
+/* ====== 主内容层 ====== */
+#main-content {
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+#main-content.entering {
+  opacity: 0;
+}
+#main-content.intro-active {
+  opacity: 0;
+  pointer-events: none;
+}
+#main-content.intro-active .grid-background {
+  opacity: 0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
+  color: #c8ccd4; background: #1a1e24; line-height: 1.8;
+
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+
+  /* subtle dot grid */
+
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+
+  background-size: 24px 24px;
+
+}
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; height: auto; }
+
+
+
+/* 閳光偓閳光偓 Nav 閳光偓閳光偓 */
+
+.site-nav {
+
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+
+  background: rgba(26,30,36,0.94); backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid #2a3038;
+
+}
+
+.nav-inner {
+
+  max-width: 720px; margin: 0 auto; padding: 0 2rem;
+
+  display: flex; justify-content: space-between; align-items: center; height: 56px;
+
+}
+
+.nav-brand { font-size: 1.15rem; font-weight: 500; color: #e0e4ec; letter-spacing: 0.06em; }
+
+.nav-brand::before {
+
+  content: "\25C6"; margin-right: 0.5rem; color: #2990c0;
+
+  font-size: 1rem; vertical-align: middle;
+
+}
+
+.nav-links { display: flex; gap: 1.8rem; list-style: none; }
+
+.nav-links a { font-size: 0.88rem; color: #6e747c; transition: color 0.2s; font-weight: 450; position: relative; }
+
+.nav-links a::after {
+
+  content: ""; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+
+  width: 0; height: 2px; background: #2990c0; transition: width 0.25s ease;
+
+}
+
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+.nav-links a:hover, .nav-links a.active { color: #b0b6be; }
+
+
+
+/* 閳光偓閳光偓 Container 閳光偓閳光偓 */
+
+.container { max-width: 680px; margin: 0 auto; padding: 0 2rem; position: relative; }
+
+section { padding: 6rem 0; position: relative; }
+
+section + section { border-top: 1px solid #2a3038; }
+
+
+
+/* 閳光偓閳光偓 Geo Section Divider 閳光偓閳光偓 */
+
+.geo-divider {
+
+  position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+
+  display: flex; gap: 10px; z-index: 2;
+
+}
+
+.geo-divider span {
+
+  display: block; width: 6px; height: 6px;
+
+}
+
+.geo-divider span:nth-child(1) { background: #b8d4e8; transform: rotate(45deg); }
+
+.geo-divider span:nth-child(2) { background: #a0c8e0; border-radius: 50%; width: 5px; height: 5px; margin-top: 1px; }
+
+.geo-divider span:nth-child(3) { background: #b8d4e8; transform: rotate(45deg); }
+
+
+
+/* 閳光偓閳光偓 Hero 閳光偓閳光偓 */
+
+.hero { padding: 10rem 0 6rem; }
+
+.hero .container { position: relative; }
+
+.hero h1 { font-size: 3rem; font-weight: 400; letter-spacing: 0.04em; color: #e0e4ec; }
+
+.hero .tagline { font-size: 1.15rem; color: #6e747c; margin-top: 1rem; font-weight: 380; letter-spacing: 0.03em; }
+
+
+
+/* Hero geometric shapes */
+
+.hero-geo { position: absolute; pointer-events: none; z-index: 0; }
+
+.hero-geo.circle {
+
+  top: -60px; right: -20px; width: 100px; height: 100px;
+
+  border-radius: 50%; border: 1.5px solid rgba(41,144,192,0.3); opacity: 0.6;
+
+}
+
+.hero-geo.triangle {
+
+  top: -30px; right: 70px; width: 0; height: 0;
+
+  border-left: 24px solid transparent; border-right: 24px solid transparent;
+
+  border-bottom: 40px solid rgba(41,144,192,0.2);
+
+  opacity: 0.5;
+
+}
+
+.hero-geo.diamond {
+
+  bottom: -20px; right: 30px; width: 36px; height: 36px;
+
+  background: rgba(41,144,192,0.15); transform: rotate(45deg);
+
+}
+
+.hero-geo.dot-ring {
+
+  bottom: -10px; right: 80px; width: 56px; height: 56px;
+
+  border-radius: 50%; border: 1px dashed rgba(255,255,255,0.08);
+
+  opacity: 0.5;
+
+}
+
+.hero .container > * { position: relative; z-index: 1; }
+
+
+
+/* 閳光偓閳光偓 Section label 閳光偓閳光偓 */
+
+.section-label {
+
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em;
+
+  color: #8b9098; margin-bottom: 2.5rem; font-weight: 500;
+
+  display: flex; align-items: center; gap: 0.8rem;
+
+}
+
+.section-label::after {
+
+  content: ""; flex: 1; height: 1px; background: #333840; margin-top: 1px;
+
+}
+
+
+
+/* 閳光偓閳光偓 About 閳光偓閳光偓 */
+
+.about p { font-size: 1.08rem; color: #9aa0a8; max-width: 540px; font-weight: 420; }
+
+.about .geo-accent {
+
+  position: absolute; right: -60px; top: 40px;
+
+  width: 80px; height: 80px; pointer-events: none; opacity: 0.12;
+
+  border: 2px solid rgba(255,255,255,0.08); transform: rotate(15deg);
+
+}
+
+
+
+/* 閳光偓閳光偓 Interests Grid 閳光偓閳光偓 */
+
+.interest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+.interest-card {
+
+  display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+
+  padding: 2rem 1.5rem 1.6rem; border: 1px solid #2a3038; border-radius: 12px;
+
+  background: #1a1e24; transition: all 0.35s ease; cursor: pointer;
+
+  position: relative; overflow: hidden;
+
+}
+
+.interest-card::before {
+
+  content: ""; position: absolute; top: -20px; right: -20px;
+
+  width: 60px; height: 60px; background: #1e2d3d;
+
+  border-radius: 0 0 0 60px; transition: all 0.35s ease;
+
+}
+
+.interest-card:hover::before { width: 120px; height: 120px; }
+
+.interest-card:hover {
+
+  border-color: #2990c0; box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+
+  transform: translateY(-3px);
+
+}
+
+.interest-card .icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+
+.interest-card .icon svg { width: 40px; height: 40px; }
+
+.interest-card .card-arrow { font-size: 0.75rem; color: #6e747c; margin-top: 0.2rem; transition: all 0.25s; font-weight: 450; position: relative; z-index: 1; }
+
+.interest-card:hover .card-arrow { color: #3a8abf; }
+
+.interest-card .label { font-size: 0.92rem; color: #9aa0a8; letter-spacing: 0.06em; font-weight: 480; position: relative; z-index: 1; }
+
+
+
+/* 閳光偓閳光偓 Interest Sub-page 閳光偓閳光偓 */
+
+.interest-page .back-link {
+
+  display: inline-flex; align-items: center; gap: 0.4rem;
+
+  font-size: 0.88rem; color: #6e747c; margin-bottom: 2rem; transition: color 0.2s; font-weight: 450;
+
+}
+
+.interest-page .back-link:hover { color: #b0b6be; }
+
+.interest-page h1 { font-size: 2.2rem; font-weight: 400; color: #e0e4ec; margin-bottom: 0.5rem; }
+
+.interest-page .sub-desc { font-size: 1.02rem; color: #6e747c; margin-bottom: 2.5rem; font-weight: 380; }
+
+.interest-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+
+.interest-gallery .gallery-item {
+
+  aspect-ratio: 4/3; background: #1e2228; border-radius: 8px;
+
+  display: flex; align-items: center; justify-content: center;
+
+  color: #6e747c; font-size: 0.85rem; overflow: hidden;
+
+  transition: all 0.3s ease; cursor: pointer; border: 1px solid #2a3038;
+
+}
+
+.interest-gallery .gallery-item:hover { border-color: #2990c0; }
+
+.interest-gallery .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+.interest-gallery .gallery-item .placeholder-icon svg { width: 36px; height: 36px; opacity: 0.3; }
+
+.interest-content { font-size: 1.02rem; color: #9aa0a8; line-height: 2; font-weight: 420; }
+
+.interest-content p { margin-bottom: 1rem; }
+
+
+
+/* Hobby tags */
+
+.hobby-cloud { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 2rem; justify-content: center; }
+
+.hobby-tag {
+
+  padding: 0.55rem 1.4rem; border: 1px solid #2a3a48; border-radius: 100px;
+
+  color: #6cb4d8; font-size: 0.92rem; transition: all 0.25s ease; cursor: default; font-weight: 440;
+
+  background: #1e2d3d; position: relative;
+
+}
+
+.hobby-tag::before {
+
+  content: "\25C6"; font-size: 0.5rem; margin-right: 0.4rem; color: #2990c0; vertical-align: middle;
+
+}
+
+.hobby-tag:hover { border-color: #2990c0; color: #8cd0f0; background: #1e2d3d; }
+
+
+
+/* Books tabs */
+
+.book-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+
+.book-tabs button {
+
+  background: transparent; border: 1px solid #2a3a48; color: #6e747c;
+
+  padding: 0.55rem 1.4rem; border-radius: 100px; font-size: 0.88rem;
+
+  cursor: pointer; transition: all 0.2s; font-family: inherit; font-weight: 450;
+
+}
+
+.book-tabs button.active, .book-tabs button:hover { background: #2990c0; color: #fff; border-color: #b0b6be; }
+
+.book-tab-content { display: none; }
+
+.book-tab-content.active { display: block; }
+
+
+
+/* Books section */
+
+.books-section { background: #1a1e24; }
+
+.book-list { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.book-item {
+
+  display: flex; align-items: center; gap: 1.2rem; font-size: 0.98rem; color: #9aa0a8;
+
+  padding: 1rem 1.2rem; background: #1a1e24; border-radius: 10px;
+
+  border: 1px solid #2a3038; transition: all 0.3s ease; position: relative; font-weight: 440;
+
+}
+
+.book-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-color: #c0d8e8; }
+
+.book-cover { width: 55px; height: 78px; border-radius: 3px; flex-shrink: 0; object-fit: cover; display: block; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+.book-item .author { color: #6e747c; margin-left: 0.5rem; font-size: 0.88rem; font-weight: 400; }
+
+.book-item .book-info { flex: 1; }
+
+
+
+/* Review tooltip */
+
+.book-review-trigger {
+
+  display: inline-block; margin-left: 0.8rem; font-size: 0.78rem;
+
+  color: #8abcd8; cursor: pointer; border-bottom: 1px dashed #c0d8e8;
+
+  transition: all 0.2s; font-weight: 420; position: relative;
+
+}
+
+.book-review-trigger:hover { color: #3a8abf; border-bottom-color: #3a8abf; }
+
+.book-review-popup {
+
+  position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%);
+
+  background: #2990c0; color: #d0e4f0; padding: 0.8rem 1.2rem; border-radius: 10px;
+
+  font-size: 0.85rem; font-weight: 400; line-height: 1.6; white-space: normal;
+
+  min-width: 200px; max-width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+
+  opacity: 0; visibility: hidden; transition: all 0.25s ease; z-index: 20;
+
+  pointer-events: none; text-align: left;
+
+}
+
+.book-review-popup::after {
+
+  content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+
+  border: 8px solid transparent; border-top-color: #b0b6be;
+
+}
+
+.book-review-trigger:hover .book-review-popup { opacity: 1; visibility: visible; }
+
+
+
+/* 閳光偓閳光偓 Blog 閳光偓閳光偓 */
+
+.blog-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.blog-card {
+
+  display: block; padding:  1.5rem 1.5rem 1.5rem 2rem; border: 1px solid #2a3038; border-radius: 10px;
+
+  background: #1a1e24; transition: all 0.25s ease; position: relative;
+
+}
+
+.blog-card::before {
+
+  content: ""; position: absolute; left: 0; top: 20%; bottom: 20%;
+
+  width: 3px; background: #2990c0; opacity: 0; transition: opacity 0.3s;
+
+}
+
+.blog-card:hover::before { opacity: 1; }
+
+.blog-card:hover { border-color: #ddd; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+
+.blog-card .date { font-size: 0.78rem; color: #6e747c; letter-spacing: 0.06em; font-weight: 450; }
+
+.blog-card h3 { font-size: 1rem; font-weight: 460; color: #e0e4ec; margin: 0.4rem 0; font-weight: 450; }
+
+.blog-card .summary { font-size: 0.92rem; color: #6e747c; font-weight: 420; }
+
+.blog-empty { text-align: center; color: #6e747c; padding: 3rem 0; font-size: 0.98rem; font-weight: 420; }
+
+
+
+/* Blog Post */
+
+.blog-post h1 { font-size: 2rem; font-weight: 400; color: #b0b6be; margin-bottom: 0.5rem; }
+
+.blog-post .meta { font-size: 0.85rem; color: #6e747c; margin-bottom: 2.5rem; letter-spacing: 0.04em; font-weight: 420; }
+
+.blog-post .content { font-size: 1.04rem; color: #9aa0a8; line-height: 2; font-weight: 420; }
+
+.blog-post .content p { margin-bottom: 1.2rem; }
+
+.blog-post .content img { border-radius: 8px; margin: 1.5rem 0; }
+
+
+
+/* 閳光偓閳光偓 Contact 閳光偓閳光偓 */
+
+.contact-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+
+.contact-links a {
+
+  font-size: 0.98rem; color: #9aa0a8; border-bottom: 1px solid transparent; transition: all 0.2s ease; font-weight: 450;
+
+}
+
+.contact-links a:hover { color: #b0b6be; border-bottom-color: #2990c0; }
+
+
+
+/* 閳光偓閳光偓 Dot divider 閳光偓閳光偓 */
+
+.dot-divider { display: flex; justify-content: center; gap: 6px; margin: 2rem 0 0; }
+
+.dot-divider span { width: 4px; height: 4px; border-radius: 50%; background: #ddd; }
+
+
+
+/* 閳光偓閳光偓 Geo footer strip 閳光偓閳光偓 */
+
+.geo-strip {
+
+  position: relative; height: 80px; overflow: hidden;
+
+}
+
+.geo-strip svg { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; }
+
+
+
+/* Footer */
+
+footer { padding: 3rem 0; text-align: center; position: relative; }
+
+footer span { font-size: 0.82rem; color: #6e747c; font-weight: 420; }
+
+footer::before {
+
+  content: "\25C6"; display: block; font-size: 0.7rem; color: #c0d8e8; margin-bottom: 1rem;
+
+}
+
+
+
+/* 閳光偓閳光偓 Fade-in 閳光偓閳光偓 */
+
+.fade-in { opacity: 1; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+
+
+/* 閳光偓閳光偓 Admin overrides 閳光偓閳光偓 */
+
+.admin-header { background: #1a1a1a !important; color: #fff !important; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+
+.admin-header h2 { font-size: 1rem; font-weight: 400; letter-spacing: 0.06em; }
+
+.admin-tabs { display: flex; gap: 0.5rem; }
+
+.admin-tabs button {
+
+  background: transparent; border: 1px solid #2a3a48; color: #6e747c; padding: 0.35rem 1rem;
+
+  border-radius: 100px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+
+}
+
+.admin-tabs button.active, .admin-tabs button:hover { background: #2990c0; color: #fff; border-color: #6e747c; }
+
+.admin-body { max-width: 720px; margin: 2rem auto; padding: 0 2rem; }
+
+.admin-panel { display: none; }
+
+.admin-panel.active { display: block; }
+
+.admin-form label { display: block; font-size: 0.8rem; color: #6e747c; margin: 1rem 0 0.3rem; letter-spacing: 0.06em; }
+
+.admin-form input, .admin-form textarea {
+
+  width: 100%; padding: 0.7rem 1rem; font-size: 0.95rem; border: 1px solid #333840;
+
+  border-radius: 8px; font-family: inherit; background: #1a1e24; transition: border-color 0.2s;
+
+}
+
+.admin-form input:focus, .admin-form textarea:focus { border-color: #6e747c; outline: none; }
+
+.admin-form textarea { min-height: 120px; resize: vertical; }
+
+.btn-primary { background: #2990c0; color: #fff; padding: 0.7rem 2rem; font-size: 0.9rem; border: none; border-radius: 100px; cursor: pointer; font-family: inherit; margin-top: 1.5rem; }
+
+.btn-primary:hover { background: #2990c0; }
+
+.btn-outline {
+
+  background: transparent; border: 1px solid #ddd; color: #8b9098; padding: 0.55rem 1.2rem;
+
+  border-radius: 100px; cursor: pointer; font-size: 0.85rem; font-family: inherit;
+
+}
+
+.btn-outline:hover { border-color: #6e747c; color: #c0c6ce; }
+
+.repo-setup { text-align: center; padding: 4rem 2rem; max-width: 500px; margin: 0 auto; }
+
+.repo-setup h3 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.8rem; }
+
+.repo-setup input { width: 100%; padding: 0.7rem 1rem; font-size: 0.9rem; border: 1px solid #333840; border-radius: 8px; font-family: inherit; margin-top: 0.5rem; }
+
+.step-num { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: #2990c0; color: #fff; font-size: 0.7rem; line-height: 22px; margin-right: 0.5rem; text-align: center; }
+
+.hint { font-size: 0.78rem; color: #6e747c; margin-top: 0.3rem; font-weight: 420; }
+
+.section-card { background: #1a1e24; border: 1px solid #2a3038; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem; }
+
+.section-card h4 { font-size: 0.98rem; font-weight: 480; color: #b0b6be; margin-bottom: 1rem; }
+
+.section-card h5 { font-size: 0.85rem; font-weight: 480; color: #8b9098; margin: 1rem 0 0.3rem; }
+
+.delete-btn { background: transparent; border: 1px solid #3d2020; color: #e06c6c; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+
+.delete-btn:hover { background: #2d1818; }
+
+.blog-editor { background: #1a1e24; border: 1px solid #2a3038; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
+
+.upload-zone { border: 2px dashed #333840; border-radius: 12px; padding: 2rem; text-align: center; color: #6e747c; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
+
+.upload-zone:hover { border-color: #6e747c; color: #8b9098; }
+
+.image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
+
+.image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; border: 1px solid #2a3038; }
+
+.help-text { font-size: 0.78rem; color: #6e747c; margin-top: 0.2rem; font-weight: 420; }
+
+
+
+@media (max-width: 600px) {
+
+  .container, .nav-inner { padding: 0 1.5rem; }
+
+  .hero h1 { font-size: 2.2rem; }
+
+  .hero { padding: 6rem 0 4rem; }
+
+  section { padding: 4rem 0; }
+
+  .hero-geo.circle { width: 60px; height: 60px; top: -30px; right: 0; }
+
+  .hero-geo.triangle { display: none; }
+
+  .interest-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+  .interest-card { padding: 1.5rem 0.8rem 1.2rem; }
+
+  .book-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+
+  .nav-links { gap: 1rem; }
+
+  .interest-gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+
+  .book-review-popup { left: 0; transform: none; max-width: 240px; }
+
+  .about .geo-accent { display: none; }
+
+}
+
+
+
+/* 閳光偓閳光偓 Hiking Page 閳光偓閳光偓 */
+
+.mountain-card {
+
+  display: flex; align-items: center; gap: 1rem;
+
+  padding: 1rem 1.2rem; background: #1a1e24; border-radius: 10px;
+
+  border: 1px solid #2a3038; transition: all 0.3s ease; position: relative;
+
+}
+
+.mountain-card:hover { border-color: #2990c0; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+
+.mountain-card .mountain-icon {
+
+  width: 44px; height: 44px; flex-shrink: 0;
+
+  display: flex; align-items: center; justify-content: center;
+
+}
+
+.mountain-card .mountain-icon svg { width: 36px; height: 36px; }
+
+.mountain-card .mountain-info { flex: 1; }
+
+.mountain-card .mountain-name { font-size: 0.98rem; color: #b0b6be; font-weight: 480; }
+
+.mountain-card .mountain-detail { font-size: 0.82rem; color: #6e747c; margin-top: 0.15rem; font-weight: 420; }
+
+.mountain-card .tag-climbed {
+
+  font-size: 0.7rem; padding: 0.2rem 0.7rem; border-radius: 100px;
+
+  background: #dce8f2; color: #2c75a8; font-weight: 480; flex-shrink: 0;
+
+}
+
+.mountain-card .tag-wanted {
+
+  font-size: 0.7rem; padding: 0.2rem 0.7rem; border-radius: 100px;
+
+  background: #1e2228; color: #6e747c; font-weight: 480; flex-shrink: 0;
+
+}
+
+.mountain-list { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.mountain-section-title {
+
+  font-size: 0.85rem; font-weight: 500; color: #8b9098;
+
+  margin-bottom: 1rem; margin-top: 2rem; letter-spacing: 0.06em;
+
+}
+
+.mountain-section-title:first-child { margin-top: 0; }
+
+.journal-content {
+
+  font-size: 1rem; color: #9aa0a8; line-height: 2.1; font-weight: 420;
+
+  max-width: 600px;
+
+}
+
+.journal-content p { margin-bottom: 1rem; }
+
+/* 閳光偓閳光偓 Photography Albums 閳光偓閳光偓 */
+
+.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+
+.album-card {
+
+  display: block; border-radius: 12px; overflow: hidden;
+
+  border: 1px solid #2a3038; background: #1a1e24; transition: all 0.3s ease;
+
+  cursor: pointer;
+
+}
+
+.album-card:hover { border-color: #2990c0; box-shadow: 0 6px 24px rgba(0,0,0,0.05); transform: translateY(-2px); }
+
+.album-cover-img {
+
+  width: 100%; aspect-ratio: 4/3; object-fit: cover;
+
+  background: #1e2d3d; display: flex; align-items: center; justify-content: center;
+
+}
+
+.album-cover-img .placeholder { color: #ddd; }
+
+.album-cover-img .placeholder svg { width: 40px; height: 40px; opacity: 0.3; }
+
+.album-card-body { padding: 1rem 1.2rem; }
+
+.album-card-body h4 { font-size: 0.95rem; font-weight: 480; color: #b0b6be; }
+
+.album-card-body .album-desc { font-size: 0.82rem; color: #6e747c; margin-top: 0.2rem; font-weight: 420; }
+
+.album-card-body .album-count { font-size: 0.75rem; color: #6e747c; margin-top: 0.4rem; }
+
+
+
+/* Album Detail */
+
+.album-detail { display: none; }
+
+.album-detail.active { display: block; }
+
+.album-detail .back-link { margin-bottom: 1.5rem; }
+
+.album-detail h2 { font-size: 1.6rem; font-weight: 400; color: #b0b6be; margin-bottom: 0.3rem; }
+
+.album-detail .album-subtitle { font-size: 0.95rem; color: #6e747c; margin-bottom: 2rem; font-weight: 380; }
+
+.album-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.8rem; margin-bottom: 2.5rem; }
+
+.album-gallery .gallery-item { aspect-ratio: 4/3; background: #1e2228; border-radius: 8px; overflow: hidden; border: 1px solid #2a3038; }
+
+.album-gallery .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+.album-journal { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #2a3038; }
+
+.album-journal h3 { font-size: 0.85rem; font-weight: 500; color: #6e747c; letter-spacing: 0.06em; margin-bottom: 1rem; }
+
+.album-journal .journal-content { font-size: 0.98rem; color: #8b9098; line-height: 2; }
+
+.album-journal .journal-content p { margin-bottom: 0.8rem; }
+
+.album-empty { text-align: center; color: #6e747c; padding: 3rem 0; font-size: 0.92rem; }
+
+/* 閳光偓閳光偓 Currently Section 閳光偓閳光偓 */
+
+.currently { background: #1a1e24; }
+
+.currently-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+
+.currently-item {
+
+  display: flex; align-items: baseline; gap: 0.6rem;
+
+  padding: 0.8rem 1rem; background: #1a1e24; border-radius: 8px;
+
+  border: 1px solid #2a3038; font-size: 0.9rem; color: #8b9098; font-weight: 420;
+
+}
+
+.currently-key {
+
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em;
+
+  color: #2990c0; text-transform: uppercase; flex-shrink: 0;
+
+}
+
+
+
+/* 閳光偓閳光偓 Back to Top 閳光偓閳光偓 */
+
+.back-to-top {
+
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 99;
+
+  width: 40px; height: 40px; border-radius: 50%;
+
+  background: #1a1e24; border: 1px solid #333840; cursor: pointer;
+
+  display: flex; align-items: center; justify-content: center;
+
+  opacity: 0; visibility: hidden; transition: all 0.35s ease;
+
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+
+}
+
+.back-to-top.visible { opacity: 1; visibility: visible; }
+
+.back-to-top:hover { border-color: #2990c0; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+
+.back-to-top svg { width: 16px; height: 16px; color: #6e747c; }
+
+
+
+/* 閳光偓閳光偓 Homepage book list (currently in about section) 閳光偓閳光偓 */
+
+.home-books-section { background: #1a1e24; }
+
+
+
+@media (max-width: 600px) {
+
+  .currently-grid { grid-template-columns: 1fr; }
+
+  .back-to-top { bottom: 1rem; right: 1rem; }
+
+}
+
+/* Guestbook */
+
+.guestbook { padding: 6rem 0; }
+
+.guestbook-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+
+.gb-item { background: #1a1e24; border: 1px solid #2a3038; border-radius: 8px; padding: 1rem; }
+
+.gb-item .gb-name { font-size: 0.85rem; font-weight: 480; color: #c0c6ce; }
+
+.gb-item .gb-date { font-size: 0.7rem; color: #6e747c; margin-left: 0.5rem; }
+
+.gb-item .gb-text { font-size: 0.9rem; color: #9aa0a8; margin-top: 0.4rem; line-height: 1.6; }
+
+.guestbook-form { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.guestbook-form input, .guestbook-form textarea { width: 100%; padding: 0.65rem 0.8rem; border: 1px solid #333840; border-radius: 8px; font-size: 0.88rem; font-family: inherit; resize: vertical; background: #1e2228; color: #c8ccd4; }
+
+.guestbook-form textarea { min-height: 80px; }
+.guestbook-form input::placeholder, .guestbook-form textarea::placeholder { color: #5a6068; }
+.guestbook-form input:focus, .guestbook-form textarea:focus { border-color: #2990c0; outline: none; box-shadow: 0 0 0 2px rgba(41,144,192,0.15); }
+
+.guestbook-form button { align-self: flex-end; padding: 0.5rem 1.5rem; background: #2990c0; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+
+.guestbook-form button:hover { background: #3a8abf; }
+
+.guestbook-msg { font-size: 0.8rem; margin-top: 0.4rem; }
+
+
+
+
+/* ====== 随心一听（网易云音乐集成） ====== */
+.random-listen { padding: 6rem 0; background: #1a1e24; }
+
+.listen-status { font-size: 0.8rem; margin-bottom: 1rem; }
+.listen-status.listen-online { color: #6e747c; }
+.listen-status.listen-offline { color: #c0392b; }
+
+.listen-cache-time { color: #4a5058; font-size: 0.7rem; margin-left: 0.4rem; }
+
+.listen-song-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.listen-song-card { display: flex; align-items: center; gap: 0.8rem; padding: 0.65rem 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.03); text-decoration: none; color: inherit; transition: background 0.2s, transform 0.2s; }
+.listen-song-card:hover { background: rgba(41,144,192,0.08); transform: translateX(4px); }
+
+.listen-song-rank { width: 1.4rem; text-align: center; font-size: 0.85rem; font-weight: 500; color: #5a6068; flex-shrink: 0; }
+.listen-song-card:nth-child(1) .listen-song-rank { color: #e6b422; }
+.listen-song-card:nth-child(2) .listen-song-rank { color: #9aa0a8; }
+.listen-song-card:nth-child(3) .listen-song-rank { color: #b87333; }
+
+.listen-song-cover { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: #2a3038; }
+
+.listen-song-info { flex: 1; min-width: 0; }
+.listen-song-name { font-size: 0.9rem; color: #e0e4ec; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.listen-song-artist { font-size: 0.75rem; color: #6e747c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.listen-song-count { font-size: 0.7rem; color: #4a5058; flex-shrink: 0; }
+
+.listen-actions { margin-top: 1.2rem; display: flex; gap: 0.8rem; }
+
+.listen-random-btn { padding: 0.6rem 1.8rem; background: linear-gradient(135deg, #2990c0, #3a6fb5); color: #fff; border: none; border-radius: 10px; font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 12px rgba(41,144,192,0.25); }
+.listen-random-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(41,144,192,0.4); }
+.listen-random-btn:active { transform: translateY(0); }
+.listen-random-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.listen-btn-admin { color: #2990c0; font-size: 0.85rem; text-decoration: none; border-bottom: 1px dashed #2990c0; }
+.listen-btn-admin:hover { color: #5bafd4; }
+
+.listen-static { color: #b0b6be; font-size: 0.95rem; line-height: 1.6; }
+.listen-empty { color: #6e747c; font-size: 0.9rem; padding: 1rem 0; }
+
+@media (max-width: 600px) { .listen-song-cover { width: 32px; height: 32px; } .listen-song-name { font-size: 0.82rem; } }
+
+/* Blog preview on homepage */
+
+.blog-preview { padding: 6rem 0; background: #1a1e24; }
+
+.blog-preview .view-all { display: inline-block; margin-top: 1rem; color: #6e747c; font-size: 0.85rem; text-decoration: none; }
+
+.blog-preview .view-all:hover { color: #c0c6ce; }
+
+.blog-card { display: block; padding:  1.5rem 1.5rem 1.5rem 2rem; border-bottom: 1px solid #2a3038; text-decoration: none; color: inherit; }
+
+.blog-card .date { font-size: 0.75rem; color: #6e747c; margin-bottom: 0.2rem; }
+
+.blog-card h3 { font-size: 1rem; font-weight: 460; color: #e0e4ec; margin: 0 0 0.3rem; }
+
+.blog-card .summary { font-size: 0.85rem; color: #8b9098; line-height: 1.5; }
+
+.blog-empty { color: #6e747c; text-align: center; padding: 2rem 0; font-size: 0.9rem; }
+
+
+
+/* Blog article page */
+
+.blog-article { padding: 8rem 0 4rem; }
+
+.blog-post-header { margin-bottom: 2rem; }
+
+.blog-post-date { font-size: 0.8rem; color: #6e747c; margin-bottom: 0.3rem; }
+
+.blog-post-header h1 { font-size: 1.8rem; font-weight: 400; color: #e0e4ec; margin: 0; }
+
+.blog-post-content { font-size: 1rem; color: #b0b6be; line-height: 1.9; }
+
+.blog-post-content p { margin-bottom: 1rem; }
+
+.blog-post-content h3 { font-size: 1.1rem; font-weight: 480; color: #b0b6be; margin: 2rem 0 0.8rem; }
+
+.blog-post-content blockquote { border-left: 3px solid #2990c0; padding-left: 1rem; margin-left: 0; color: #6e747c; }
+
+.blog-post-content mark { background: #3d3520; padding: 0 2px; }
+
+.blog-back { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #2a3038; }
+
+.blog-back a { color: #6e747c; text-decoration: none; font-size: 0.9rem; }
+
+.blog-back a:hover { color: #c0c6ce; }
+
+
+
+.page-hero { padding: 7rem 0 3rem; }
+
+
+
+/* 閳光偓閳光偓 Geometric Guestbook 閳光偓閳光偓 */
+
+.geo-inner { position: relative; }
+
+.geo-ribbon { pointer-events: none; transition: transform 0.15s; will-change: left, top; }
+
+.geo-shape { display: flex; align-items: center; justify-content: center; transition: transform 0.1s, opacity 0.4s; will-change: left, top; border: none !important; outline: none !important; }
+
+.geo-shape:hover { filter: brightness(1.15); z-index: 5 !important; cursor: grab; }
+
+.geo-shape:active { cursor: grabbing; }
+
+.geo-info { position: absolute; width: 240px; background: rgba(30,35,50,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 12px 40px rgba(0,0,0,0.3); padding: 1.2rem; z-index: 50; display: none; font-size: 0.85rem; color: #c8ccd4; }
+
+@keyframes geoInfoIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); }
+
+
+
+.geo-popup-on { animation: geoPopIn 0.25s ease; }
+/* Duck styles */
+.geo-duck { transition: transform 0.05s linear; }
+.geo-duck:hover { filter: brightness(1.12) drop-shadow(0 3px 8px rgba(0,0,0,0.25)); transform: scale(1.08) !important; }
+.geo-duck:active { cursor: grabbing; filter: brightness(1.15) drop-shadow(0 5px 12px rgba(0,0,0,0.3)); }
+
+/* Ripple animation */
+@keyframes duckRipple {
+  0% { width: 6px; height: 6px; margin-left: -3px; margin-top: -3px; opacity: 0.6; }
+  100% { width: 80px; height: 80px; margin-left: -40px; margin-top: -40px; opacity: 0; }
+}
+
+
+/* Splash particle */
+@keyframes splashParticle {
+  0% { opacity: 0.85; transform: translate(0,0) scale(1); }
+  60% { opacity: 0.3; }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.2); }
+}
+
+
+/* Water wave */
+.geo-wave { transition: none; }
+
+.geo-popup-close { position: absolute; top: 0.5rem; right: 0.8rem; background: none; border: none; font-size: 1.4rem; color: rgba(255,255,255,0.5); cursor: pointer; line-height: 1; }
+
+.geo-popup-close:hover { color: #fff; }
+
+@keyframes geoPopIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+ }
+
+
+
+
+
+/* ====== 唱片悬浮播放器 ====== */
+.vinyl-player {
   position: fixed; right: -282px; top: 100px; z-index: 9999;
   display: flex; align-items: center; gap: 0;
   transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);

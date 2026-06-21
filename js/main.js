@@ -1,4 +1,4 @@
-// ====== 入场层逻辑 ======
+﻿// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
@@ -302,11 +302,7 @@ async function loadRandomListen() {
   } catch (e) {
     console.error('loadRandomListen:', e);
     statusEl.className = 'listen-status listen-offline';
-    statusEl.textContent = '加载失败';
-    try {
-      var siteData = await loadJSON('data/site.json');
-      if (siteData && siteData.currently && siteData.currently.listening) {
-        listEl.innerHTML = '<div class="listen-static">' + siteData.currently.listening + '</div>';
+    listEl.innerHTML = "<div class=\"listen-empty\">暂时无法加载听歌记录</div>";
       }
     } catch (e2) {}
   }
@@ -320,71 +316,66 @@ function escapeHTML(str) {
 
 
 // ====== 唱片悬浮播放器 ======
-
-// ====== 唱片悬浮播放器 ======
 var vinylReady = false;
+var vinylPlayer = null;
+var vinylRecord = null;
+var vinylIframe = null;
+
 async function initVinylPlayer() {
-  var player = document.getElementById('vinylPlayer');
-  var record = document.getElementById('vinylRecord');
+  vinylPlayer = document.getElementById('vinylPlayer');
+  vinylRecord = document.getElementById('vinylRecord');
   var titleEl = document.getElementById('vinylTitle');
   var artistEl = document.getElementById('vinylArtist');
-  var iframeWrap = document.getElementById('vinylIframe');
+  vinylIframe = document.getElementById('vinylIframe');
   var closeBtn = document.getElementById('vinylClose');
-  if (!player || !record || !titleEl || !artistEl || !iframeWrap) return;
+  if (!vinylPlayer || !vinylRecord || !titleEl || !artistEl || !vinylIframe) return;
 
   try {
     var resp = await fetch(API_BASE + '/api/netease/weekly');
     var data = await resp.json();
-    if (!data.songs || data.songs.length === 0) { player.style.display = 'none'; return; }
+    if (!data.songs || data.songs.length === 0) { vinylPlayer.style.display = 'none'; return; }
     var song = data.songs[0];
     titleEl.textContent = song.name;
     artistEl.textContent = song.artists;
-    player.style.display = 'flex';
-    iframeWrap.innerHTML = '<iframe id="vinylFrame" src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0"></iframe>';
+    vinylPlayer.style.display = 'flex';
+    vinylIframe.innerHTML = '<iframe id="vinylFrame" src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0" allow="autoplay"></iframe>';
     vinylReady = true;
-  } catch (e2) { console.error('vinyl:', e2); player.style.display = 'none'; return; }
+  } catch (e2) { console.error('vinyl:', e2); vinylPlayer.style.display = 'none'; return; }
 
-  // 点击唱片 → 展开/收起
-  record.addEventListener('click', function(e) {
+  vinylRecord.addEventListener('click', function(e) {
     e.stopPropagation();
-    player.classList.toggle('open');
+    vinylPlayer.classList.toggle('open');
   });
   if (closeBtn) {
     closeBtn.addEventListener('click', function(e) {
       e.stopPropagation();
-      player.classList.remove('open');
+      vinylPlayer.classList.remove('open');
     });
   }
 }
 
-// 入场动画后自动弹出 → 播放 → 收回
 function vinylAutoShow() {
-  if (!vinylReady) return;
-  var player = document.getElementById('vinylPlayer');
-  var record = document.getElementById('vinylRecord');
-  if (!player || !record) return;
+  if (!vinylReady) { setTimeout(vinylAutoShow, 300); return; }
+  if (!vinylPlayer || !vinylRecord) return;
 
-  // 延迟一小段，让入场动画先完成
   setTimeout(function() {
-    // 弹出
-    player.classList.add('open');
-    record.classList.add('playing');
+    vinylPlayer.classList.add('open');
+    vinylRecord.classList.add('playing');
 
-    // 自动播放
     var frame = document.getElementById('vinylFrame');
-    if (frame) frame.src = frame.src.replace('auto=0', 'auto=1');
+    if (frame && frame.src.indexOf('auto=1') === -1) {
+      frame.src = frame.src.replace('auto=0', 'auto=1');
+    }
 
-    // 3 秒后收回
     setTimeout(function() {
-      player.classList.remove('open');
+      vinylPlayer.classList.remove('open');
     }, 3500);
-  }, 1000);
+  }, 1200);
 }
 
-// 在 switchToMain 完成后触发
-var origSwitchToMain = switchToMain;
+var origSwitchToMain2 = switchToMain;
 switchToMain = function() {
-  origSwitchToMain();
+  origSwitchToMain2();
   vinylAutoShow();
 };
 async function renderHomeBlog() {
