@@ -666,12 +666,17 @@ function geoLoop(W, H) {
     var subRatio = Math.min(1, submerged / d.size);
 
     if (submerged > 0) {
-      d.vy -= subRatio * 0.12;
-      d.vx *= 0.985;
-      d.vy *= 0.985;
-      d.av *= 0.96;
-      d.vy += Math.sin(Date.now()/400 + d.x/40) * 0.03;
-      d.av += (Math.random() - 0.5) * 0.004;
+      // Smooth progressive buoyancy — ducks float at ~25% submerged equilibrium
+      var eqDepth = d.size * 0.22;
+      if (submerged > eqDepth) {
+        d.vy -= (submerged - eqDepth) * 0.005;
+      }
+      d.vy -= subRatio * 0.07;
+      d.vx *= 0.986;
+      d.vy *= 0.986;
+      d.av *= 0.965;
+      d.vy += Math.sin(Date.now()/400 + d.x/40) * 0.025;
+      d.av += (Math.random() - 0.5) * 0.003;
     } else {
       d.vy += 0.28;
       d.vx *= 0.997;
@@ -679,22 +684,17 @@ function geoLoop(W, H) {
       d.av *= 0.98;
     }
 
-    // Water surface crossing
+    // Water surface crossing — dampen + ripple
     var isAbove = d.y < waterY;
     if (!wasAbove && isAbove && d.vy < -0.5) {
-      d.vy *= 0.5;
+      d.vy *= 0.55;
       var inner = document.querySelector('[data-geo] .geo-inner');
       if (inner) spawnRipple(d.x, waterY, inner);
     }
-    if (wasAbove && !isAbove && d.vy > 1) {
-      d.vy *= 0.6;
+    if (wasAbove && !isAbove && d.vy > 1.2) {
+      d.vy *= 0.55;
       var inner2 = document.querySelector('[data-geo] .geo-inner');
       if (inner2) spawnRipple(d.x, waterY, inner2);
-    }
-
-    if (d.y > waterY && d.vy < 0.3 && subRatio > 0.3) {
-      d.y = waterY + d.size * 0.25;
-      d.vy = Math.abs(d.vy) * 0.2;
     }
 
     d.x += d.vx;
