@@ -495,6 +495,24 @@ function createDuckSVG(color) {
   '</svg>';
 }
 
+
+async function loadGuestbook() {
+  try {
+    var res = await fetch("data/comments.json?v=" + Date.now());
+    if (!res.ok) { gbComments = []; renderGeoGuestbook(); return; }
+    gbComments = await res.json();
+    if (!Array.isArray(gbComments)) gbComments = [];
+  } catch(e) { gbComments = []; }
+  try {
+    var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
+    local.forEach(function(c) {
+      if (!gbComments.some(function(x) { return x.text === c.text && x.name === c.name && x.date === c.date; })) {
+        gbComments.unshift(c);
+      }
+    });
+  } catch(e) {}
+  renderGeoGuestbook();
+}
 function renderGeoGuestbook() {
   var container = document.getElementById("guestbookList");
   if (!container) return;
