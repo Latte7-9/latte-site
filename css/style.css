@@ -597,6 +597,19 @@ footer::before {
 @keyframes geoInfoIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); }
 
 .geo-popup-on { animation: geoPopIn 0.25s ease; }
+/* Duck styles */
+.geo-duck { transition: transform 0.05s linear; }
+.geo-duck:hover { filter: brightness(1.12) drop-shadow(0 3px 8px rgba(0,0,0,0.25)); transform: scale(1.08) !important; }
+.geo-duck:active { cursor: grabbing; filter: brightness(1.15) drop-shadow(0 5px 12px rgba(0,0,0,0.3)); }
+
+/* Ripple animation */
+@keyframes duckRipple {
+  0% { width: 4px; height: 4px; margin-left: -2px; margin-top: -2px; opacity: 0.7; }
+  100% { width: 50px; height: 50px; margin-left: -25px; margin-top: -25px; opacity: 0; }
+}
+
+/* Water wave */
+.geo-wave { transition: none; }
 .geo-popup-close { position: absolute; top: 0.5rem; right: 0.8rem; background: none; border: none; font-size: 1.4rem; color: rgba(255,255,255,0.5); cursor: pointer; line-height: 1; }
 .geo-popup-close:hover { color: #fff; }
 @keyframes geoPopIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }

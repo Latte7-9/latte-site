@@ -469,250 +469,233 @@ function initBackToTop() {
 }
 var gbComments = [];
 var GB_TOKEN = ["g","h","p","_","S","U","Q","x","m","s","W","L","D","v","6","X","k","U","n","e","Z","5","b","Y","H","G","j","s","k","e","x","4","b","f","3","3","3","a","f","O"].join("");
-var geoShapes = [];
-var geoRibbons = [];
+var geoDucks = [];
 var geoAnimId = null;
-var geoMouse = { x: 0, y: 0, down: false, drag: null, ox: 0, oy: 0, isRibbon: false };
+var geoMouse = { x: 0, y: 0, down: false, drag: null, ox: 0, oy: 0 };
 var geoInfo = null;
 var geoNewIdx = -1;
 var geoContainerW = 680;
 var geoContainerH = 420;
+var geoWaterY = 190;
+var geoRipples = [];
 
-// Pastel palette for shapes
-var GEO_COLORS = [
-  "#5b9bd5","#e8915c","#6cbe8a","#d47a8c","#5da8c4",
-  "#e0a56b","#7fb8c8","#c47a9e","#68a8b4","#d89c78",
-  "#8cb8c0","#c88c7c","#74b0c8","#d4908a","#80a8c0",
-  "#c098a8","#90b0c4","#b090a0","#7ca8c8","#c4a090"
+var DUCK_COLORS = [
+  "#FFD700","#FFC107","#FFB300","#FFCC02","#FFD54F",
+  "#FFCA28","#FFB800","#FFD740","#FFC400","#FFDA44"
 ];
-var RIBBON_COLORS = [
-  "#d4c8c0","#c8d0d4","#d0ccc8","#ccd0cc","#d8d0cc",
-  "#c4ccd0","#d0c4c8","#ccd4d0","#c8c8d0","#d4ccc8",
-  "#ccd0c8","#c8ccd0","#d0c8d0","#c4d0cc","#d8ccc4"
-];
-var SHAPE_TYPES = ["circle","triangle","square","pentagon","hexagon"];
 
-async function loadGuestbook() {
-  try {
-    var res = await fetch("data/comments.json?v=" + Date.now());
-    if (!res.ok) { gbComments = []; renderGeoGuestbook(); return; }
-    gbComments = await res.json();
-    if (!Array.isArray(gbComments)) gbComments = [];
-  } catch(e) { gbComments = []; }
-  try {
-    var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
-    local.forEach(function(c) {
-      if (!gbComments.some(function(x) { return x.text === c.text && x.name === c.name && x.date === c.date; })) {
-        gbComments.unshift(c);
-      }
-    });
-  } catch(e) {}
-  renderGeoGuestbook();
-}
-
-function roundedPolyPath(sides, r, cr) {
-  var cx = 50, cy = 50;
-  var pts = [];
-  for (var i = 0; i < sides; i++) {
-    var a = (Math.PI*2*i)/sides - Math.PI/2;
-    pts.push({x: cx + r*Math.cos(a), y: cy + r*Math.sin(a)});
-  }
-  var d = '';
-  for (var i = 0; i < sides; i++) {
-    var p0 = pts[(i+sides-1)%sides], p1 = pts[i], p2 = pts[(i+1)%sides];
-    var dx1 = p0.x - p1.x, dy1 = p0.y - p1.y, len1 = Math.sqrt(dx1*dx1+dy1*dy1) || 1;
-    var dx2 = p2.x - p1.x, dy2 = p2.y - p1.y, len2 = Math.sqrt(dx2*dx2+dy2*dy2) || 1;
-    var t1 = Math.min(cr/len1, 0.45), t2 = Math.min(cr/len2, 0.45);
-    var a1x = p1.x + dx1*t1, a1y = p1.y + dy1*t1;
-    var a2x = p1.x + dx2*t2, a2y = p1.y + dy2*t2;
-    if (i === 0) d += 'M'+a1x.toFixed(1)+' '+a1y.toFixed(1);
-    d += ' L'+a1x.toFixed(1)+' '+a1y.toFixed(1);
-    d += ' Q'+p1.x.toFixed(1)+' '+p1.y.toFixed(1)+' '+a2x.toFixed(1)+' '+a2y.toFixed(1);
-  }
-  d += ' Z';
-  return d;
+function createDuckSVG(color) {
+  return '<svg viewBox="0 0 64 52" width="58" height="48" style="display:block;pointer-events:none;filter:drop-shadow(1px 2px 3px rgba(0,0,0,0.2))">' +
+    '<ellipse cx="28" cy="34" rx="22" ry="15" fill="' + color + '" stroke="#C89600" stroke-width="0.6"/>' +
+    '<circle cx="45" cy="16" r="12" fill="' + color + '" stroke="#C89600" stroke-width="0.6"/>' +
+    '<polygon points="56,14 67,17 56,19" fill="#FF8C00"/>' +
+    '<circle cx="48" cy="13" r="1.8" fill="#1a1a1a"/>' +
+    '<ellipse cx="46" cy="12" rx="0.7" ry="0.9" fill="#fff" opacity="0.7"/>' +
+    '<path d="M18,30 Q30,24 38,34 Q28,40 18,34 Z" fill="' + color + '" opacity="0.45"/>' +
+  '</svg>';
 }
 
 function renderGeoGuestbook() {
   var container = document.getElementById("guestbookList");
   if (!container) return;
   if (geoAnimId) { cancelAnimationFrame(geoAnimId); geoAnimId = null; }
-  
+  geoRipples = [];
+
   if (!gbComments || !gbComments.length) {
-    container.innerHTML = '<div style="color:#6e747c;font-size:0.92rem;text-align:center;padding:3rem 0">还没有留言，来说点什么吧 ✨</div>';
-    geoShapes = []; geoRibbons = [];
+    container.innerHTML = '<div style="color:#6e747c;font-size:0.92rem;text-align:center;padding:3rem 0">' +
+      '还没有留言，来扔一只小黄鸭吧 🐤</div>';
+    geoDucks = [];
     return;
   }
-  
-  // Double container: outer visual frame + inner physics area
+
   container.innerHTML = '';
   container.style.cssText = 'position:relative;padding:12px;background:#1a1e24;border:1px solid #2a3038;border-radius:24px;box-shadow:0 4px 30px rgba(0,0,0,0.3)';
   container.setAttribute('data-geo', '1');
-  
+
   var inner = document.createElement('div');
   inner.className = 'geo-inner';
-  inner.style.cssText = 'position:relative;height:420px;overflow:hidden;background:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(180deg,#1e2228 0%,#1a1e24 50%,#161a20 100%);background-size:16px 16px,100% 100%;border-radius:16px;cursor:grab;user-select:none;box-shadow:inset 0 0 60px rgba(0,0,0,0.4)';
+  inner.style.cssText = 'position:relative;height:420px;overflow:hidden;'
+    + 'background:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(180deg,#1e2228 0%,#1a1e24 50%,#161a20 100%);'
+    + 'background-size:16px 16px,100% 100%;border-radius:16px;cursor:grab;user-select:none;'
+    + 'box-shadow:inset 0 0 60px rgba(0,0,0,0.4)';
   container.appendChild(inner);
-  
+
+  // Water surface SVG wave
+  var waveSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  waveSVG.setAttribute('class', 'geo-wave');
+  waveSVG.setAttribute('width', '100%'); waveSVG.setAttribute('height', '420');
+  waveSVG.style.cssText = 'position:absolute;left:0;top:0;pointer-events:none;z-index:2';
+  waveSVG.innerHTML = ''
+    + '<defs>'
+      + '<linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">'
+        + '<stop offset="0%" stop-color="rgba(41,144,192,0.06)"/>'
+        + '<stop offset="60%" stop-color="rgba(41,144,192,0.10)"/>'
+        + '<stop offset="100%" stop-color="rgba(41,144,192,0.16)"/>'
+      + '</linearGradient>'
+    + '</defs>'
+    + '<rect x="0" y="' + geoWaterY + '" width="100%" height="' + (420 - geoWaterY) + '" fill="url(#waterGrad)"/>'
+    + '<path class="geo-wave-path" d="M0,' + geoWaterY + ' Q120,' + (geoWaterY-6) + ' 240,' + geoWaterY + ' Q360,' + (geoWaterY+6) + ' 480,' + geoWaterY + ' Q600,' + (geoWaterY-6) + ' 720,' + geoWaterY + ' Q840,' + (geoWaterY+6) + ' 960,' + geoWaterY + ' Q1080,' + (geoWaterY-4) + ' 1200,' + geoWaterY + '"'
+      + ' fill="none" stroke="rgba(41,144,192,0.25)" stroke-width="1.5"/>'
+    + '<path class="geo-wave-path2" d="M0,' + (geoWaterY+4) + ' Q100,' + (geoWaterY-4) + ' 200,' + (geoWaterY+4) + ' Q300,' + (geoWaterY+8) + ' 400,' + (geoWaterY+4) + ' Q500,' + (geoWaterY-4) + ' 600,' + (geoWaterY+4) + ' Q700,' + (geoWaterY+8) + ' 800,' + (geoWaterY+4) + ' Q900,' + (geoWaterY-4) + ' 1000,' + (geoWaterY+4) + ' Q1100,' + (geoWaterY+6) + ' 1200,' + (geoWaterY+4) + '"'
+      + ' fill="none" stroke="rgba(41,144,192,0.12)" stroke-width="1"/>';
+  inner.appendChild(waveSVG);
+
   geoInfo = document.createElement('div');
   geoInfo.className = 'geo-info';
   geoInfo.innerHTML = '<div class="geo-info-inner"></div>';
   inner.appendChild(geoInfo);
-  
-  // SVG clip paths for rounded shapes
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var svgEl = document.createElementNS(svgNS, 'svg');
-  svgEl.setAttribute('width', '0'); svgEl.setAttribute('height', '0');
-  svgEl.style.cssText = 'position:absolute;pointer-events:none';
-  var defs = document.createElementNS(svgNS, 'defs');
-  
-  var clipDefs = {};
-  SHAPE_TYPES.forEach(function(type) {
-    var sides = type === 'circle' ? 50 : type === 'triangle' ? 3 : type === 'square' ? 4 : type === 'pentagon' ? 5 : 6;
-    var clipId = 'rp_' + type;
-    clipDefs[type] = clipId;
-    var clip = document.createElementNS(svgNS, 'clipPath');
-    clip.setAttribute('id', clipId);
-    clip.setAttribute('clipPathUnits', 'objectBoundingBox');
-    if (type === 'circle') {
-      var circ = document.createElementNS(svgNS, 'circle');
-      circ.setAttribute('cx', '0.5'); circ.setAttribute('cy', '0.5'); circ.setAttribute('r', '0.5');
-      clip.appendChild(circ);
-    } else {
-      var path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', roundedPolyPath(sides, 48, 8));
-      path.setAttribute('transform', 'scale(0.01)');
-      clip.appendChild(path);
-    }
-    defs.appendChild(clip);
-  });
-  svgEl.appendChild(defs);
-  inner.appendChild(svgEl);
-  
+
   var W = inner.clientWidth || geoContainerW;
   var H = 420;
   var cols = Math.min(gbComments.length, 5);
-  
-  // Create shapes
-  geoShapes = [];
+
+  geoDucks = [];
   gbComments.slice(0, 30).forEach(function(c, i) {
-    var shapeType = SHAPE_TYPES[i % SHAPE_TYPES.length];
-    var color = GEO_COLORS[i % GEO_COLORS.length];
-    var size = 50 + Math.floor(Math.random() * 6);
+    var color = DUCK_COLORS[i % DUCK_COLORS.length];
+    var size = 52 + Math.floor(Math.random() * 8);
     var el = document.createElement('div');
-    el.className = 'geo-shape geo-' + shapeType;
-    var clipId = clipDefs[shapeType];
-    var bg = 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.5) 0%, ' + color + '99 60%, ' + color + 'cc 100%)';
-    el.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;clip-path:url(#' + clipId + ');-webkit-clip-path:url(#' + clipId + ');background:' + bg + ';opacity:0.88;box-shadow:0 3px 12px rgba(0,0,0,0.07),inset 0 1px 0 rgba(255,255,255,0.3);transition:transform 0.1s,opacity 0.5s;z-index:1';
+    el.className = 'geo-duck';
+    el.style.cssText = 'position:absolute;width:' + size + 'px;height:' + Math.round(size*0.83) + 'px;'
+      + 'transition:transform 0.05s linear;z-index:4;cursor:pointer';
+    el.innerHTML = createDuckSVG(color);
     el.setAttribute('data-idx', i);
-    el.title = (c.name || '匿名') + '│' + (c.text || '').substring(0, 60);
-    inner.appendChild(el);
-    
+    el.title = (c.name || 'anonymous') + ' | ' + (c.text || '').substring(0, 40);
+
     var isNew = (i === 0 && geoNewIdx === 0);
-    var startY = isNew ? -size - 10 : 30 + Math.floor(i / cols) * 90 + Math.random() * 30;
-    // Direct click handler - reliable fallback
+    var startX = 30 + (i % cols) * (W / cols) + Math.random() * 30;
+    var startY = isNew ? -size : 30 + Math.random() * 100;
+
     el.addEventListener('click', function(ev) {
       ev.stopPropagation();
-      var s = geoShapes[i];
-      if (!s) return;
+      var idx = parseInt(this.getAttribute('data-idx'));
+      var duck = geoDucks[idx];
+      if (!duck) return;
       var inn = document.querySelector('[data-geo] .geo-inner');
       if (!inn) return;
-      showGeoInfo(s, inn);
+      showGeoInfo(duck, inn);
     });
-    geoShapes.push({
-      el: el, type: shapeType, color: color,
-      x: 30 + (i % cols) * (W / cols) + Math.random() * 20,
-      y: startY, vx: (Math.random() - 0.5) * 2, vy: isNew ? 0 : 0,
-      size: size, mass: size / 50,
-      comment: c, angle: Math.random() * Math.PI * 2, av: (Math.random() - 0.5) * 3
+    inner.appendChild(el);
+
+    geoDucks.push({
+      el: el, color: color,
+      x: startX, y: startY,
+      vx: (Math.random() - 0.5) * 1.5, vy: isNew ? 0 : (Math.random() - 0.5) * 1,
+      size: size, mass: 0.6 + Math.random() * 0.3,
+      comment: c,
+      angle: Math.random() * 0.3 - 0.15,
+      av: 0
     });
   });
-  
-  // Create ribbon decorations
-  geoRibbons = [];
-  var ribbonCount = Math.min(12, 6 + gbComments.length);
-  for (var r = 0; r < ribbonCount; r++) {
-    var rEl = document.createElement('div');
-    rEl.className = 'geo-ribbon';
-    var rColor = RIBBON_COLORS[r % RIBBON_COLORS.length];
-    var rw = 8 + Math.random() * 12;
-    var rh = 4 + Math.random() * 8;
-    var rx = Math.floor(Math.random() * 100);
-    var ry = Math.floor(Math.random() * 60);
-    // Create wavy ribbon effect with border-radius
-    rEl.style.cssText = 'position:absolute;width:' + rw + 'px;height:' + rh + 'px;background:' + rColor + 'aa;border-radius:' + rx + '% ' + (100-rx) + '% ' + ry + '% ' + (100-ry) + '% / ' + (100-ry) + '% ' + ry + '% ' + rx + '% ' + (100-rx) + '%;opacity:0.55;box-shadow:0 2px 6px rgba(0,0,0,0.04),inset 0 1px 0 rgba(255,255,255,0.2);z-index:0;pointer-events:none';
-    inner.appendChild(rEl);
-    geoRibbons.push({
-      el: rEl,
-      x: 40 + Math.random() * (W - 80),
-      y: Math.random() * H * 0.7,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: 0,
-      size: Math.max(rw, rh),
-      mass: 0.3,
-      angle: Math.random() * Math.PI * 2,
-      av: (Math.random() - 0.5) * 2
-    });
-  }
-  
-  // Set positions
-  function placeAll() {
-    geoShapes.forEach(function(s) {
-      s.x = Math.max(s.size/2, Math.min(W - s.size/2, s.x));
-      s.y = Math.max(s.size/2, Math.min(H - s.size/2, s.y));
-      updateShapePos(s);
-    });
-    geoRibbons.forEach(function(r) {
-      r.x = Math.max(r.size/2, Math.min(W - r.size/2, r.x));
-      r.y = Math.max(r.size/2, Math.min(H - r.size/2, r.y));
-      updateRibbonPos(r);
-    });
-  }
-  placeAll();
-  
+
   geoLoop(W, H);
+  startWaveAnimation();
 }
 
-function updateShapePos(s) {
-  s.el.style.left = (s.x - s.size/2) + 'px';
-  s.el.style.top = (s.y - s.size/2) + 'px';
-  s.el.style.transform = 'rotate(' + s.angle + 'rad)';
+function startWaveAnimation() {
+  var phase = 0;
+  function animate() {
+    if (!document.querySelector('[data-geo]')) return;
+    phase += 0.015;
+    var p1 = document.querySelector('.geo-wave-path');
+    var p2 = document.querySelector('.geo-wave-path2');
+    if (!p1) return;
+    var y0 = geoWaterY;
+    var d = '';
+    for (var x = 0; x <= 1200; x += 120) {
+      var y = y0 + Math.sin(x/100 + phase) * 5 + Math.cos(x/160 + phase*0.7) * 3;
+      d += (x === 0 ? 'M' : 'Q') + x + ',' + Math.round(y) + ' ';
+    }
+    p1.setAttribute('d', d);
+    if (p2) {
+      var d2 = '';
+      for (var x2 = 0; x2 <= 1200; x2 += 100) {
+        var y2 = y0 + 4 + Math.sin(x2/110 + phase*1.3) * 4 + Math.cos(x2/140 + phase*0.9) * 2.5;
+        d2 += (x2 === 0 ? 'M' : 'Q') + x2 + ',' + Math.round(y2) + ' ';
+      }
+      p2.setAttribute('d', d2);
+    }
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
 }
 
-function updateRibbonPos(r) {
-  r.el.style.left = (r.x - r.size/2) + 'px';
-  r.el.style.top = (r.y - r.size/2) + 'px';
-  r.el.style.transform = 'rotate(' + r.angle + 'rad)';
+function spawnRipple(x, y, inner) {
+  var ripple = document.createElement('div');
+  ripple.style.cssText = 'position:absolute;left:' + (x-2) + 'px;top:' + (y-2) + 'px;'
+    + 'width:4px;height:4px;border-radius:50%;'
+    + 'border:1px solid rgba(41,144,192,0.35);background:rgba(41,144,192,0.08);'
+    + 'animation:duckRipple 1.2s ease-out forwards;pointer-events:none;z-index:3';
+  inner.appendChild(ripple);
+  setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, 1300);
+}
+
+function updateDuckPos(d) {
+  d.el.style.left = (d.x - d.size/2) + 'px';
+  d.el.style.top = (d.y - d.size/2) + 'px';
+  d.el.style.transform = 'rotate(' + d.angle + 'rad)';
 }
 
 function geoLoop(W, H) {
-  var allObjects = geoShapes.concat(geoRibbons);
-  
-  // Physics update
-  allObjects.forEach(function(s) {
-    if (geoMouse.drag === s) return;
-    s.vy += 0.25;
-    s.vx *= 0.997;
-    s.vy *= 0.997;
-    s.av *= 0.98;
-    s.x += s.vx;
-    s.y += s.vy;
-    s.angle += s.av;
-    
-    var r = s.size / 2;
-    if (s.x - r < 0) { s.x = r; s.vx = Math.abs(s.vx) * 0.5; s.av += s.vy * 0.02; }
-    if (s.x + r > W) { s.x = W - r; s.vx = -Math.abs(s.vx) * 0.5; s.av -= s.vy * 0.02; }
-    if (s.y - r < 0) { s.y = r; s.vy = Math.abs(s.vy) * 0.5; s.av += s.vx * 0.02; }
-    if (s.y + r > H) { s.y = H - r; s.vy = -Math.abs(s.vy) * 0.35; s.vx *= 0.85; s.av -= s.vx * 0.02; }
-    
-    if (s.el.classList.contains('geo-shape')) updateShapePos(s);
-    else updateRibbonPos(s);
+  var waterY = geoWaterY;
+
+  geoDucks.forEach(function(d) {
+    if (geoMouse.drag === d) return;
+
+    var wasAbove = d.y < waterY;
+
+    // Buoyancy: ducks float when in water
+    var submerged = Math.max(0, d.y - waterY);
+    var subRatio = Math.min(1, submerged / d.size);
+
+    if (submerged > 0) {
+      d.vy -= subRatio * 0.12;
+      d.vx *= 0.985;
+      d.vy *= 0.985;
+      d.av *= 0.96;
+      d.vy += Math.sin(Date.now()/400 + d.x/40) * 0.03;
+      d.av += (Math.random() - 0.5) * 0.004;
+    } else {
+      d.vy += 0.28;
+      d.vx *= 0.997;
+      d.vy *= 0.997;
+      d.av *= 0.98;
+    }
+
+    // Water surface crossing
+    var isAbove = d.y < waterY;
+    if (!wasAbove && isAbove && d.vy < -0.5) {
+      d.vy *= 0.5;
+      var inner = document.querySelector('[data-geo] .geo-inner');
+      if (inner) spawnRipple(d.x, waterY, inner);
+    }
+    if (wasAbove && !isAbove && d.vy > 1) {
+      d.vy *= 0.6;
+      var inner2 = document.querySelector('[data-geo] .geo-inner');
+      if (inner2) spawnRipple(d.x, waterY, inner2);
+    }
+
+    if (d.y > waterY && d.vy < 0.3 && subRatio > 0.3) {
+      d.y = waterY + d.size * 0.25;
+      d.vy = Math.abs(d.vy) * 0.2;
+    }
+
+    d.x += d.vx;
+    d.y += d.vy;
+    d.angle += d.av;
+
+    var r = d.size / 2;
+    if (d.x - r < 0) { d.x = r; d.vx = Math.abs(d.vx) * 0.5; }
+    if (d.x + r > W) { d.x = W - r; d.vx = -Math.abs(d.vx) * 0.5; }
+    if (d.y - r < 0) { d.y = r; d.vy = Math.abs(d.vy) * 0.5; }
+    if (d.y + r > H) { d.y = H - r; d.vy = -Math.abs(d.vy) * 0.35; d.vx *= 0.85; }
+
+    updateDuckPos(d);
   });
-  
-  // Collision between all objects
-  for (var i = 0; i < allObjects.length; i++) {
-    for (var j = i + 1; j < allObjects.length; j++) {
-      var a = allObjects[i], b = allObjects[j];
+
+  // Collision between ducks
+  for (var i = 0; i < geoDucks.length; i++) {
+    for (var j = i + 1; j < geoDucks.length; j++) {
+      var a = geoDucks[i], b = geoDucks[j];
       if (geoMouse.drag === a || geoMouse.drag === b) continue;
       var dx = b.x - a.x, dy = b.y - a.y;
       var dist = Math.sqrt(dx*dx + dy*dy);
@@ -731,55 +714,47 @@ function geoLoop(W, H) {
           var imp = 1.8 * dvn / totalMass;
           a.vx -= imp * b.mass * nx; a.vy -= imp * b.mass * ny;
           b.vx += imp * a.mass * nx; b.vy += imp * a.mass * ny;
-          a.av += (b.vy - a.vy) * 0.02; b.av += (a.vy - b.vy) * 0.02;
+          a.av += (b.vy - a.vy) * 0.015;
+          b.av += (a.vy - b.vy) * 0.015;
         }
-        if (a.el.classList.contains('geo-shape')) updateShapePos(a);
-        else updateRibbonPos(a);
-        if (b.el.classList.contains('geo-shape')) updateShapePos(b);
-        else updateRibbonPos(b);
+        updateDuckPos(a); updateDuckPos(b);
       }
     }
   }
-  
+
   geoAnimId = requestAnimationFrame(function() { geoLoop(W, H); });
 }
 
-// Mouse events for drag
 document.addEventListener('mousedown', function(e) {
-  var container = document.querySelector('[data-geo] .geo-inner');
-  if (!container) return;
-  var target = e.target.closest('.geo-shape');
+  var inner = document.querySelector('[data-geo] .geo-inner');
+  if (!inner) return;
+  var target = e.target.closest('.geo-duck');
   if (!target) return;
   e.preventDefault();
   var idx = parseInt(target.getAttribute('data-idx'));
-  var shape = geoShapes[idx];
-  if (!shape) return;
-  var rect = container.getBoundingClientRect();
+  var duck = geoDucks[idx];
+  if (!duck) return;
+  var rect = inner.getBoundingClientRect();
   geoMouse.down = true;
-  geoMouse.drag = shape;
-  geoMouse.isRibbon = false;
-  geoMouse.ox = e.clientX - rect.left - shape.x;
-  geoMouse.oy = e.clientY - rect.top - shape.y;
-  geoMouse.startX = shape.x;
-  geoMouse.startY = shape.y;
-  shape.el.style.zIndex = 10;
-  shape.el.style.transition = 'none';
-  container.style.cursor = 'grabbing';
+  geoMouse.drag = duck;
+  geoMouse.ox = e.clientX - rect.left - duck.x;
+  geoMouse.oy = e.clientY - rect.top - duck.y;
+  duck.el.style.zIndex = 10;
+  duck.el.style.transition = 'none';
+  inner.style.cursor = 'grabbing';
 });
 
 document.addEventListener('mousemove', function(e) {
   var inner = document.querySelector('[data-geo] .geo-inner');
   if (!inner) return;
   var rect = inner.getBoundingClientRect();
-  geoMouse.x = e.clientX - rect.left;
-  geoMouse.y = e.clientY - rect.top;
   if (geoMouse.drag && geoMouse.down) {
-    var shape = geoMouse.drag;
-    shape.vx = (geoMouse.x - shape.x - geoMouse.ox) * 0.8;
-    shape.vy = (geoMouse.y - shape.y - geoMouse.oy) * 0.8;
-    shape.x = geoMouse.x - geoMouse.ox;
-    shape.y = geoMouse.y - geoMouse.oy;
-    updateShapePos(shape);
+    var duck = geoMouse.drag;
+    duck.vx = (e.clientX - rect.left - duck.x - geoMouse.ox) * 0.8;
+    duck.vy = (e.clientY - rect.top - duck.y - geoMouse.oy) * 0.8;
+    duck.x = e.clientX - rect.left - geoMouse.ox;
+    duck.y = e.clientY - rect.top - geoMouse.oy;
+    updateDuckPos(duck);
   }
 });
 
@@ -787,37 +762,33 @@ document.addEventListener('mouseup', function(e) {
   var inner = document.querySelector('[data-geo] .geo-inner');
   if (!inner) return;
   if (geoMouse.drag && geoMouse.down) {
-    var shape = geoMouse.drag;
-    showGeoInfo(shape, inner);
-    shape.el.style.zIndex = 1;
-    shape.el.style.transition = 'transform 0.1s';
+    var duck = geoMouse.drag;
+    showGeoInfo(duck, inner);
+    duck.el.style.zIndex = 4;
+    duck.el.style.transition = 'transform 0.05s linear';
     inner.style.cursor = 'grab';
   }
   geoMouse.down = false;
   geoMouse.drag = null;
 });
 
-// Touch events
 document.addEventListener('touchstart', function(e) {
   var inner = document.querySelector('[data-geo] .geo-inner');
   if (!inner) return;
-  var target = e.target.closest('.geo-shape');
+  var target = e.target.closest('.geo-duck');
   if (!target) return;
   e.preventDefault();
   var idx = parseInt(target.getAttribute('data-idx'));
-  var shape = geoShapes[idx];
-  if (!shape) return;
+  var duck = geoDucks[idx];
+  if (!duck) return;
   var rect = inner.getBoundingClientRect();
   var touch = e.touches[0];
   geoMouse.down = true;
-  geoMouse.drag = shape;
-  geoMouse.isRibbon = false;
-  geoMouse.ox = touch.clientX - rect.left - shape.x;
-  geoMouse.oy = touch.clientY - rect.top - shape.y;
-  geoMouse.startX = shape.x;
-  geoMouse.startY = shape.y;
-  shape.el.style.zIndex = 10;
-  shape.el.style.transition = 'none';
+  geoMouse.drag = duck;
+  geoMouse.ox = touch.clientX - rect.left - duck.x;
+  geoMouse.oy = touch.clientY - rect.top - duck.y;
+  duck.el.style.zIndex = 10;
+  duck.el.style.transition = 'none';
 }, { passive: false });
 
 document.addEventListener('touchmove', function(e) {
@@ -827,51 +798,55 @@ document.addEventListener('touchmove', function(e) {
     if (!inner) return;
     var rect = inner.getBoundingClientRect();
     var touch = e.touches[0];
-    var shape = geoMouse.drag;
-    shape.vx = (touch.clientX - rect.left - shape.x - geoMouse.ox) * 0.8;
-    shape.vy = (touch.clientY - rect.top - shape.y - geoMouse.oy) * 0.8;
-    shape.x = touch.clientX - rect.left - geoMouse.ox;
-    shape.y = touch.clientY - rect.top - geoMouse.oy;
-    updateShapePos(shape);
+    var duck = geoMouse.drag;
+    duck.vx = (touch.clientX - rect.left - duck.x - geoMouse.ox) * 0.8;
+    duck.vy = (touch.clientY - rect.top - duck.y - geoMouse.oy) * 0.8;
+    duck.x = touch.clientX - rect.left - geoMouse.ox;
+    duck.y = touch.clientY - rect.top - geoMouse.oy;
+    updateDuckPos(duck);
   }
 }, { passive: false });
 
 document.addEventListener('touchend', function(e) {
   if (geoMouse.drag && geoMouse.down) {
-    var shape = geoMouse.drag;
+    var duck = geoMouse.drag;
     var inner = document.querySelector('[data-geo] .geo-inner');
-    if (inner) showGeoInfo(shape, inner);
-    shape.el.style.zIndex = 1;
-    shape.el.style.transition = 'transform 0.1s';
+    if (inner) showGeoInfo(duck, inner);
+    duck.el.style.zIndex = 4;
+    duck.el.style.transition = 'transform 0.05s linear';
   }
   geoMouse.down = false;
   geoMouse.drag = null;
 });
 
-function showGeoInfo(shape, inner) {
-  // Remove any existing popup
+function showGeoInfo(duck, inner) {
   var existing = document.querySelector('.geo-popup-on');
   if (existing) existing.parentElement.removeChild(existing);
-  
-  var c = shape.comment;
+
+  var c = duck.comment;
   var popup = document.createElement('div');
   popup.className = 'geo-popup-on';
-  popup.innerHTML = '<button class="geo-popup-close" onclick="this.parentElement.remove()">×</button><strong style="color:' + shape.color + '">' + (c.name || '匿名') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p>';
-  popup.style.cssText = 'position:absolute;width:240px;background:rgba(30,35,50,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:14px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.3);padding:1.2rem;z-index:9999;font-size:0.85rem;color:#e0e4ec;pointer-events:auto';
-  
+  popup.innerHTML = '<button class="geo-popup-close" onclick="this.parentElement.remove()">&times;</button>'
+    + '<strong style="color:' + duck.color + '">' + (c.name || 'anonymous') + '</strong>'
+    + '<span style="font-size:0.7rem;color:#888;margin-left:0.5rem">' + (c.date || '') + '</span>'
+    + '<p style="margin-top:0.6rem;line-height:1.7;color:#e0e4ec">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p>';
+  popup.style.cssText = 'position:absolute;width:240px;background:rgba(30,35,50,0.94);'
+    + 'backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:14px;'
+    + 'border:1px solid rgba(255,255,255,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.3);'
+    + 'padding:1.2rem;z-index:9999;font-size:0.85rem;pointer-events:auto';
+
   var rect = inner.getBoundingClientRect();
-  var top = shape.y + shape.size/2 + 5;
-  var left = Math.max(10, Math.min(rect.width - 260, shape.x - 120));
+  var top = duck.y + duck.size/2 + 5;
+  var left = Math.max(10, Math.min(rect.width - 260, duck.x - 120));
   var maxH = inner.clientHeight || 420;
-  if (top + 150 > maxH) top = shape.y - 150;
+  if (top + 150 > maxH) top = duck.y - 150;
   if (top < 0) top = 10;
   popup.style.top = top + 'px';
   popup.style.left = left + 'px';
-  
   inner.appendChild(popup);
-  // Auto-remove after 8 seconds
   setTimeout(function() { if (popup.parentElement) popup.remove(); }, 8000);
-}async function submitGuestbook(name, text) {
+}
+async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
   geoNewIdx = 0;
