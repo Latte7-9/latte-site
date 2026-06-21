@@ -1,4 +1,4 @@
-// ====== 入场层逻辑 ======
+﻿// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
@@ -539,19 +539,19 @@ function renderGeoGuestbook() {
   if (geoAnimId) { cancelAnimationFrame(geoAnimId); geoAnimId = null; }
   
   if (!gbComments || !gbComments.length) {
-    container.innerHTML = '<div style="color:#bbb;font-size:0.92rem;text-align:center;padding:3rem 0">还没有留言，来说点什么吧 ✨</div>';
+    container.innerHTML = '<div style="color:#6e747c;font-size:0.92rem;text-align:center;padding:3rem 0">还没有留言，来说点什么吧 ✨</div>';
     geoShapes = []; geoRibbons = [];
     return;
   }
   
   // Double container: outer visual frame + inner physics area
   container.innerHTML = '';
-  container.style.cssText = 'position:relative;padding:12px;background:#e8e8e8;border-radius:24px;box-shadow:0 4px 30px rgba(0,0,0,0.04)';
+  container.style.cssText = 'position:relative;padding:12px;background:#1a1e24;border:1px solid #2a3038;border-radius:24px;box-shadow:0 4px 30px rgba(0,0,0,0.3)';
   container.setAttribute('data-geo', '1');
   
   var inner = document.createElement('div');
   inner.className = 'geo-inner';
-  inner.style.cssText = 'position:relative;height:420px;overflow:hidden;background:linear-gradient(180deg,#f8f8f8 0%,#f0f0f0 40%,#ececec 100%);border-radius:16px;cursor:grab;user-select:none;box-shadow:inset 0 0 40px rgba(0,0,0,0.03)';
+  inner.style.cssText = 'position:relative;height:420px;overflow:hidden;background:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(180deg,#1e2228 0%,#1a1e24 50%,#161a20 100%);background-size:16px 16px,100% 100%;border-radius:16px;cursor:grab;user-select:none;box-shadow:inset 0 0 60px rgba(0,0,0,0.4)';
   container.appendChild(inner);
   
   geoInfo = document.createElement('div');
