@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -7,6 +7,29 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- ====== 入场层 ====== -->
+<div id="intro-layer">
+  <canvas id="particleCanvas"></canvas>
+  <div class="intro-wrap">
+    <h2 class="intro-title" id="introTitle">Latte</h2>
+    <h3 class="intro-subtitle" id="introSubtitle"></h3>
+    <a class="intro-enter">进入</a>
+    <div class="intro-arrow intro-arrow-1"></div>
+    <div class="intro-arrow intro-arrow-2"></div>
+  </div>
+  <div class="intro-shape-wrap">
+    <svg class="intro-shape" width="100%" height="100vh" preserveAspectRatio="none" viewBox="0 0 1440 800">
+      <path d="M -44,-50 C -52.71,28.52 15.86,8.186 184,14.69 383.3,22.39 462.5,12.58 638,14 835.5,15.6 987,6.4 1194,13.86 1661,30.68 1652,-36.74 1582,-140.1 1512,-243.5 15.88,-589.5 -44,-50 Z"
+            data-original="M -44,-50 C -137.1,117.4 67.86,445.5 236,452 435.3,459.7 500.5,242.6 676,244 873.5,245.6 957,522.4 1154,594 1593,753.7 1793,226.3 1582,-126 1371,-478.3 219.8,-524.2 -44,-50 Z">
+      </path>
+    </svg>
+  </div>
+</div>
+
+<!-- ====== 主内容层 ====== -->
+<div id="main-content">
+
 
 <nav class="site-nav">
   <div class="nav-inner">
@@ -92,6 +115,12 @@
 <button class="back-to-top" id="backToTop" aria-label="返回顶部"><svg viewBox="0 0 16 16" fill="none"><path d="M3 10l5-5 5 5" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg></button>
 
 <script>window.onerror=function(m,s,l,c,e){var d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:10px;z-index:99999;font-size:14px;white-space:pre-wrap";d.textContent="JS ERROR: "+m+" at "+s+":"+l+":"+c;document.body.prepend(d);};console.log=function(){var a=document.createElement("div");a.style.cssText="background:#ff0;color:#000;padding:4px;font-size:12px";a.textContent=Array.from(arguments).join(" ");var p=document.getElementById("diag-log");if(p)p.appendChild(a);};</script>
+<script src="js/main.js"></script>
+
+</div><!-- /#main-content -->
+
+<script>window.onerror=function(m,s,l,c,e){var d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:10px;z-index:99999;font-size:14px;white-space:pre-wrap";d.textContent="JS ERROR: "+m+" at "+s+":"+l+":"+c;document.body.prepend(d);};console.log=function(){var a=document.createElement("div");a.style.cssText="background:#ff0;color:#000;padding:4px;font-size:12px";a.textContent=Array.from(arguments).join(" ");var p=document.getElementById("diag-log");if(p)p.appendChild(a);};</script>
+<script src="js/particles.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

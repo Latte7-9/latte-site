@@ -1,8 +1,129 @@
+
+/* ====== 入场层 ====== */
+#intro-layer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+  z-index: 1000; background: #1a1e24;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+  overflow: hidden;
+}
+#intro-layer.hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+#intro-layer #particleCanvas {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1;
+}
+.intro-wrap {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 100vh; text-align: center;
+  user-select: none;
+}
+
+/* 标题发光动画 */
+.intro-title {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 4.5rem; font-weight: 200; color: #fff;
+  line-height: 1; margin-bottom: 0.5em;
+  animation: intro-glow 1.5s ease-in-out infinite alternate;
+  text-shadow: 0 0 2px #fff, 0 0 4px rgba(41,144,192,0.6), 0 0 8px rgba(41,144,192,0.4), 0 0 15px rgba(41,144,192,0.3);
+}
+@keyframes intro-glow {
+  from { text-shadow: 0 0 1px #fff, 0 0 2px rgba(41,144,192,0.4), 0 0 4px rgba(41,144,192,0.2), 0 0 8px rgba(41,144,192,0.15); }
+  to   { text-shadow: 0 0 2px #fff, 0 0 6px rgba(41,144,192,0.7), 0 0 12px rgba(41,144,192,0.5), 0 0 20px rgba(41,144,192,0.35); }
+}
+@media (max-width: 600px) {
+  .intro-title { font-size: 2.4rem; }
+}
+
+/* 副标题打字机效果 */
+.intro-subtitle {
+  font-size: 1.15rem; font-weight: 300; color: rgba(255,255,255,0.85);
+  margin-bottom: 2.5em; min-height: 1.8em; letter-spacing: 0.04em;
+  text-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+.intro-subtitle span {
+  animation: letter-glow 0.7s ease both;
+}
+@keyframes letter-glow {
+  0%   { opacity: 0; text-shadow: 0 0 1px rgba(255,255,255,0.1); }
+  66%  { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.9); }
+  77%  { opacity: 1; }
+  100% { opacity: 0.7; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+}
+@media (max-width: 600px) {
+  .intro-subtitle { font-size: 0.95rem; }
+}
+
+/* 进入按钮 */
+.intro-enter {
+  color: rgba(255,255,255,0.9); font-size: 0.85rem;
+  letter-spacing: 6px; cursor: pointer; pointer-events: auto;
+  position: relative; z-index: 10;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2.2s linear infinite;
+  transition: all 0.3s;
+}
+.intro-enter:hover {
+  background: linear-gradient(90deg, transparent, rgba(41,144,192,0.8), transparent);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  50%  { text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+  100% { background-position: -200% center; }
+}
+
+/* 弹跳箭头 */
+.intro-arrow {
+  position: absolute; left: 49.5%; top: 92%; transform: translateX(-50%);
+  transform-origin: 50% 50%;
+}
+.intro-arrow-1 { animation: arrow-move 2s ease-in-out infinite; }
+.intro-arrow-2 { animation: arrow-move 2s 1s ease-in-out infinite; }
+.intro-arrow::before, .intro-arrow::after {
+  background: rgba(255,255,255,0.7); content: ""; display: block;
+  height: 2.5px; position: absolute; top: 0; left: 0; width: 14px;
+  box-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+.intro-arrow::before { transform: rotate(45deg) translateX(-10%); transform-origin: top left; }
+.intro-arrow::after  { transform: rotate(-45deg) translateX(10%); transform-origin: top right; }
+@keyframes arrow-move {
+  0%   { opacity: 0; top: 92%; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; top: 94%; }
+}
+
+/* 底部 SVG 几何 */
+.intro-shape-wrap {
+  position: relative; z-index: 0; margin: -5px 0 0 0;
+  background: transparent; pointer-events: none;
+}
+.intro-shape { display: block; background: transparent; }
+.intro-shape path { fill: #f4f6f8; }
+
+/* ====== 主内容层 ====== */
+#main-content {
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+#main-content.entering {
+  opacity: 0;
+}
+#main-content.intro-active {
+  opacity: 0;
+  pointer-events: none;
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  color: #2d2d2d; background: #fff; line-height: 1.8;
+  color: #2d2d2d; background: #f4f6f8; line-height: 1.8;
   -webkit-font-smoothing: antialiased; overflow-x: hidden;
   /* subtle dot grid */
   background-image: radial-gradient(circle, #f0f0f0 1px, transparent 1px);
@@ -11,7 +132,7 @@ body {
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; height: auto; }
 
-/* 鈹€鈹€ Nav 鈹€鈹€ */
+/* 閳光偓閳光偓 Nav 閳光偓閳光偓 */
 .site-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: rgba(255,255,255,0.94); backdrop-filter: blur(10px);
@@ -35,12 +156,12 @@ img { max-width: 100%; height: auto; }
 .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 .nav-links a:hover, .nav-links a.active { color: #1a1a1a; }
 
-/* 鈹€鈹€ Container 鈹€鈹€ */
+/* 閳光偓閳光偓 Container 閳光偓閳光偓 */
 .container { max-width: 680px; margin: 0 auto; padding: 0 2rem; position: relative; }
 section { padding: 6rem 0; position: relative; }
-section + section { border-top: 1px solid #eee; }
+section + section { border-top: 1px solid #e0e3e6; }
 
-/* 鈹€鈹€ Geo Section Divider 鈹€鈹€ */
+/* 閳光偓閳光偓 Geo Section Divider 閳光偓閳光偓 */
 .geo-divider {
   position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
   display: flex; gap: 10px; z-index: 2;
@@ -52,7 +173,7 @@ section + section { border-top: 1px solid #eee; }
 .geo-divider span:nth-child(2) { background: #a0c8e0; border-radius: 50%; width: 5px; height: 5px; margin-top: 1px; }
 .geo-divider span:nth-child(3) { background: #b8d4e8; transform: rotate(45deg); }
 
-/* 鈹€鈹€ Hero 鈹€鈹€ */
+/* 閳光偓閳光偓 Hero 閳光偓閳光偓 */
 .hero { padding: 10rem 0 6rem; }
 .hero .container { position: relative; }
 .hero h1 { font-size: 3rem; font-weight: 400; letter-spacing: 0.04em; color: #1a1a1a; }
@@ -81,7 +202,7 @@ section + section { border-top: 1px solid #eee; }
 }
 .hero .container > * { position: relative; z-index: 1; }
 
-/* 鈹€鈹€ Section label 鈹€鈹€ */
+/* 閳光偓閳光偓 Section label 閳光偓閳光偓 */
 .section-label {
   font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em;
   color: #bbb; margin-bottom: 2.5rem; font-weight: 500;
@@ -91,7 +212,7 @@ section + section { border-top: 1px solid #eee; }
   content: ""; flex: 1; height: 1px; background: #e8e8e8; margin-top: 1px;
 }
 
-/* 鈹€鈹€ About 鈹€鈹€ */
+/* 閳光偓閳光偓 About 閳光偓閳光偓 */
 .about p { font-size: 1.08rem; color: #555; max-width: 540px; font-weight: 420; }
 .about .geo-accent {
   position: absolute; right: -60px; top: 40px;
@@ -99,12 +220,12 @@ section + section { border-top: 1px solid #eee; }
   border: 2px solid #ccc; transform: rotate(15deg);
 }
 
-/* 鈹€鈹€ Interests Grid 鈹€鈹€ */
+/* 閳光偓閳光偓 Interests Grid 閳光偓閳光偓 */
 .interest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 .interest-card {
   display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
   padding: 2rem 1.5rem 1.6rem; border: 1px solid #eee; border-radius: 12px;
-  background: #fff; transition: all 0.35s ease; cursor: pointer;
+  background: #f4f6f8; transition: all 0.35s ease; cursor: pointer;
   position: relative; overflow: hidden;
 }
 .interest-card::before {
@@ -123,7 +244,7 @@ section + section { border-top: 1px solid #eee; }
 .interest-card:hover .card-arrow { color: #3a8abf; }
 .interest-card .label { font-size: 0.92rem; color: #555; letter-spacing: 0.06em; font-weight: 480; position: relative; z-index: 1; }
 
-/* 鈹€鈹€ Interest Sub-page 鈹€鈹€ */
+/* 閳光偓閳光偓 Interest Sub-page 閳光偓閳光偓 */
 .interest-page .back-link {
   display: inline-flex; align-items: center; gap: 0.4rem;
   font-size: 0.88rem; color: #999; margin-bottom: 2rem; transition: color 0.2s; font-weight: 450;
@@ -172,7 +293,7 @@ section + section { border-top: 1px solid #eee; }
 .book-list { display: flex; flex-direction: column; gap: 1.2rem; }
 .book-item {
   display: flex; align-items: center; gap: 1.2rem; font-size: 0.98rem; color: #555;
-  padding: 1rem 1.2rem; background: #fff; border-radius: 10px;
+  padding: 1rem 1.2rem; background: #f4f6f8; border-radius: 10px;
   border: 1px solid #eee; transition: all 0.3s ease; position: relative; font-weight: 440;
 }
 .book-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-color: #c0d8e8; }
@@ -201,11 +322,11 @@ section + section { border-top: 1px solid #eee; }
 }
 .book-review-trigger:hover .book-review-popup { opacity: 1; visibility: visible; }
 
-/* 鈹€鈹€ Blog 鈹€鈹€ */
+/* 閳光偓閳光偓 Blog 閳光偓閳光偓 */
 .blog-list { display: flex; flex-direction: column; gap: 1rem; }
 .blog-card {
   display: block; padding:  1.5rem 1.5rem 1.5rem 2rem; border: 1px solid #eee; border-radius: 10px;
-  background: #fff; transition: all 0.25s ease; position: relative;
+  background: #f4f6f8; transition: all 0.25s ease; position: relative;
 }
 .blog-card::before {
   content: ""; position: absolute; left: 0; top: 20%; bottom: 20%;
@@ -225,18 +346,18 @@ section + section { border-top: 1px solid #eee; }
 .blog-post .content p { margin-bottom: 1.2rem; }
 .blog-post .content img { border-radius: 8px; margin: 1.5rem 0; }
 
-/* 鈹€鈹€ Contact 鈹€鈹€ */
+/* 閳光偓閳光偓 Contact 閳光偓閳光偓 */
 .contact-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
 .contact-links a {
   font-size: 0.98rem; color: #555; border-bottom: 1px solid transparent; transition: all 0.2s ease; font-weight: 450;
 }
 .contact-links a:hover { color: #1a1a1a; border-bottom-color: #2990c0; }
 
-/* 鈹€鈹€ Dot divider 鈹€鈹€ */
+/* 閳光偓閳光偓 Dot divider 閳光偓閳光偓 */
 .dot-divider { display: flex; justify-content: center; gap: 6px; margin: 2rem 0 0; }
 .dot-divider span { width: 4px; height: 4px; border-radius: 50%; background: #ddd; }
 
-/* 鈹€鈹€ Geo footer strip 鈹€鈹€ */
+/* 閳光偓閳光偓 Geo footer strip 閳光偓閳光偓 */
 .geo-strip {
   position: relative; height: 80px; overflow: hidden;
 }
@@ -249,11 +370,11 @@ footer::before {
   content: "\25C6"; display: block; font-size: 0.7rem; color: #c0d8e8; margin-bottom: 1rem;
 }
 
-/* 鈹€鈹€ Fade-in 鈹€鈹€ */
+/* 閳光偓閳光偓 Fade-in 閳光偓閳光偓 */
 .fade-in { opacity: 1; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-/* 鈹€鈹€ Admin overrides 鈹€鈹€ */
+/* 閳光偓閳光偓 Admin overrides 閳光偓閳光偓 */
 .admin-header { background: #1a1a1a !important; color: #fff !important; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
 .admin-header h2 { font-size: 1rem; font-weight: 400; letter-spacing: 0.06em; }
 .admin-tabs { display: flex; gap: 0.5rem; }
@@ -268,7 +389,7 @@ footer::before {
 .admin-form label { display: block; font-size: 0.8rem; color: #999; margin: 1rem 0 0.3rem; letter-spacing: 0.06em; }
 .admin-form input, .admin-form textarea {
   width: 100%; padding: 0.7rem 1rem; font-size: 0.95rem; border: 1px solid #e0e0e0;
-  border-radius: 8px; font-family: inherit; background: #fff; transition: border-color 0.2s;
+  border-radius: 8px; font-family: inherit; background: #f4f6f8; transition: border-color 0.2s;
 }
 .admin-form input:focus, .admin-form textarea:focus { border-color: #999; outline: none; }
 .admin-form textarea { min-height: 120px; resize: vertical; }
@@ -284,12 +405,12 @@ footer::before {
 .repo-setup input { width: 100%; padding: 0.7rem 1rem; font-size: 0.9rem; border: 1px solid #e0e0e0; border-radius: 8px; font-family: inherit; margin-top: 0.5rem; }
 .step-num { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: #1a1a1a; color: #fff; font-size: 0.7rem; line-height: 22px; margin-right: 0.5rem; text-align: center; }
 .hint { font-size: 0.78rem; color: #bbb; margin-top: 0.3rem; font-weight: 420; }
-.section-card { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem; }
+.section-card { background: #f4f6f8; border: 1px solid #eee; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.2rem; }
 .section-card h4 { font-size: 0.98rem; font-weight: 480; color: #1a1a1a; margin-bottom: 1rem; }
 .section-card h5 { font-size: 0.85rem; font-weight: 480; color: #888; margin: 1rem 0 0.3rem; }
 .delete-btn { background: transparent; border: 1px solid #f0d0d0; color: #b71c1c; padding: 0.3rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
 .delete-btn:hover { background: #fef0f0; }
-.blog-editor { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
+.blog-editor { background: #f4f6f8; border: 1px solid #eee; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
 .upload-zone { border: 2px dashed #e0e0e0; border-radius: 12px; padding: 2rem; text-align: center; color: #ccc; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
 .upload-zone:hover { border-color: #999; color: #888; }
 .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
@@ -312,10 +433,10 @@ footer::before {
   .about .geo-accent { display: none; }
 }
 
-/* 鈹€鈹€ Hiking Page 鈹€鈹€ */
+/* 閳光偓閳光偓 Hiking Page 閳光偓閳光偓 */
 .mountain-card {
   display: flex; align-items: center; gap: 1rem;
-  padding: 1rem 1.2rem; background: #fff; border-radius: 10px;
+  padding: 1rem 1.2rem; background: #f4f6f8; border-radius: 10px;
   border: 1px solid #eee; transition: all 0.3s ease; position: relative;
 }
 .mountain-card:hover { border-color: #a0c8e0; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
@@ -346,11 +467,11 @@ footer::before {
   max-width: 600px;
 }
 .journal-content p { margin-bottom: 1rem; }
-/* 鈹€鈹€ Photography Albums 鈹€鈹€ */
+/* 閳光偓閳光偓 Photography Albums 閳光偓閳光偓 */
 .album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
 .album-card {
   display: block; border-radius: 12px; overflow: hidden;
-  border: 1px solid #eee; background: #fff; transition: all 0.3s ease;
+  border: 1px solid #eee; background: #f4f6f8; transition: all 0.3s ease;
   cursor: pointer;
 }
 .album-card:hover { border-color: #a0c8e0; box-shadow: 0 6px 24px rgba(0,0,0,0.05); transform: translateY(-2px); }
@@ -374,17 +495,17 @@ footer::before {
 .album-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.8rem; margin-bottom: 2.5rem; }
 .album-gallery .gallery-item { aspect-ratio: 4/3; background: #eef4f8; border-radius: 8px; overflow: hidden; border: 1px solid #e0ecf4; }
 .album-gallery .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
-.album-journal { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee; }
+.album-journal { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e3e6; }
 .album-journal h3 { font-size: 0.85rem; font-weight: 500; color: #999; letter-spacing: 0.06em; margin-bottom: 1rem; }
 .album-journal .journal-content { font-size: 0.98rem; color: #666; line-height: 2; }
 .album-journal .journal-content p { margin-bottom: 0.8rem; }
 .album-empty { text-align: center; color: #ccc; padding: 3rem 0; font-size: 0.92rem; }
-/* 鈹€鈹€ Currently Section 鈹€鈹€ */
+/* 閳光偓閳光偓 Currently Section 閳光偓閳光偓 */
 .currently { background: #f4f8fb; }
 .currently-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
 .currently-item {
   display: flex; align-items: baseline; gap: 0.6rem;
-  padding: 0.8rem 1rem; background: #fff; border-radius: 8px;
+  padding: 0.8rem 1rem; background: #f4f6f8; border-radius: 8px;
   border: 1px solid #f0f0f0; font-size: 0.9rem; color: #666; font-weight: 420;
 }
 .currently-key {
@@ -392,11 +513,11 @@ footer::before {
   color: #2990c0; text-transform: uppercase; flex-shrink: 0;
 }
 
-/* 鈹€鈹€ Back to Top 鈹€鈹€ */
+/* 閳光偓閳光偓 Back to Top 閳光偓閳光偓 */
 .back-to-top {
   position: fixed; bottom: 2rem; right: 2rem; z-index: 99;
   width: 40px; height: 40px; border-radius: 50%;
-  background: #fff; border: 1px solid #e8e8e8; cursor: pointer;
+  background: #f4f6f8; border: 1px solid #e8e8e8; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   opacity: 0; visibility: hidden; transition: all 0.35s ease;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
@@ -405,7 +526,7 @@ footer::before {
 .back-to-top:hover { border-color: #2990c0; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 .back-to-top svg { width: 16px; height: 16px; color: #999; }
 
-/* 鈹€鈹€ Homepage book list (currently in about section) 鈹€鈹€ */
+/* 閳光偓閳光偓 Homepage book list (currently in about section) 閳光偓閳光偓 */
 .home-books-section { background: #f4f8fb; }
 
 @media (max-width: 600px) {
@@ -446,13 +567,13 @@ footer::before {
 .blog-post-content h3 { font-size: 1.1rem; font-weight: 480; color: #1a1a1a; margin: 2rem 0 0.8rem; }
 .blog-post-content blockquote { border-left: 3px solid #2990c0; padding-left: 1rem; margin-left: 0; color: #777; }
 .blog-post-content mark { background: #fff3a0; padding: 0 2px; }
-.blog-back { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #eee; }
+.blog-back { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e0e3e6; }
 .blog-back a { color: #999; text-decoration: none; font-size: 0.9rem; }
 .blog-back a:hover { color: #333; }
 
 .page-hero { padding: 7rem 0 3rem; }
 
-/* 鈹€鈹€ Geometric Guestbook 鈹€鈹€ */
+/* 閳光偓閳光偓 Geometric Guestbook 閳光偓閳光偓 */
 .geo-inner { position: relative; }
 .geo-ribbon { pointer-events: none; transition: transform 0.15s; will-change: left, top; }
 .geo-shape { display: flex; align-items: center; justify-content: center; transition: transform 0.1s, opacity 0.4s; will-change: left, top; border: none !important; outline: none !important; }
@@ -466,3 +587,4 @@ footer::before {
 .geo-popup-close:hover { color: #fff; }
 @keyframes geoPopIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
  }
+

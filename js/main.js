@@ -1,3 +1,125 @@
+// ====== 入场层逻辑 ======
+var introLayer = document.getElementById("intro-layer");
+var mainContent = document.getElementById("main-content");
+var hasEntered = false;
+
+function typeSubtitle(el, text) {
+  if (!el || !text) { el && (el.textContent = "记录与分享"); return; }
+  el.textContent = "";
+  var chars = text.split("");
+  chars.forEach(function(ch, i) {
+    var span = document.createElement("span");
+    span.textContent = ch;
+    span.style.animationDelay = (0.06 * i) + "s";
+    el.appendChild(span);
+  });
+}
+
+function initIntroText() {
+  var titleEl = document.getElementById("introTitle");
+  var subtitleEl = document.getElementById("introSubtitle");
+  
+  fetch("data/site.json?v=" + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.name && titleEl) titleEl.textContent = data.name;
+      if (data.tagline && subtitleEl) typeSubtitle(subtitleEl, data.tagline);
+    })
+    .catch(function() {
+      if (titleEl) titleEl.textContent = "Latte";
+      if (subtitleEl) typeSubtitle(subtitleEl, "记录与分享");
+    });
+}
+
+function switchToMain() {
+  if (hasEntered) return;
+  hasEntered = true;
+  
+  try { sessionStorage.setItem("latte_visited", "1"); } catch(e) {}
+  
+  if (typeof stopParticles === "function") stopParticles();
+  
+  if (introLayer) {
+    introLayer.classList.add("hidden");
+    setTimeout(function() {
+      if (introLayer.parentNode) introLayer.style.display = "none";
+    }, 900);
+  }
+  
+  if (mainContent) {
+    mainContent.classList.remove("intro-active");
+    setTimeout(function() {
+      document.querySelectorAll(".fade-in").forEach(function(el) {
+        el.classList.add("visible");
+      });
+    }, 300);
+  }
+  
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+}
+
+function bindIntroEvents() {
+  var enterEl = document.querySelector(".intro-enter");
+  var arrowEls = document.querySelectorAll(".intro-arrow");
+  
+  if (enterEl) {
+    enterEl.addEventListener("click", function(e) {
+      e.preventDefault();
+      switchToMain();
+    });
+  }
+  
+  arrowEls.forEach(function(el) {
+    el.addEventListener("click", function(e) {
+      e.preventDefault();
+      switchToMain();
+    });
+  });
+  
+  document.addEventListener("wheel", function(e) {
+    if (!hasEntered && introLayer && introLayer.style.display !== "none") {
+      if (e.deltaY > 0) switchToMain();
+    }
+  }, { passive: true });
+  
+  var startY = 0;
+  document.addEventListener("touchstart", function(e) {
+    if (e.touches.length === 1) startY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  document.addEventListener("touchend", function(e) {
+    if (!hasEntered && introLayer && introLayer.style.display !== "none") {
+      var endY = e.changedTouches[0].clientY;
+      if (startY - endY > 50) switchToMain();
+    }
+  }, { passive: true });
+}
+
+function initIntro() {
+  if (!introLayer || !mainContent) return;
+  
+  var visited = false;
+  try { visited = sessionStorage.getItem("latte_visited"); } catch(e) {}
+  
+  if (visited) {
+    introLayer.style.display = "none";
+    mainContent.classList.remove("intro-active");
+    return;
+  }
+  
+  mainContent.classList.add("intro-active");
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+  
+  initIntroText();
+  bindIntroEvents();
+}
+
+if (document.getElementById("intro-layer")) {
+  initIntro();
+}
+
 // Shared JS for Latte's site
 
 async function loadJSON(path) {
@@ -12,33 +134,33 @@ const ICONS = {
   mountain: '<svg viewBox="0 0 48 48" fill="none"><path d="M4 38 L16 18 L24 26 L32 12 L44 38" stroke="#2471a3" stroke-width="1.8" fill="none" stroke-linejoin="round"/><line x1="4" y1="38" x2="44" y2="38" stroke="#a0c8e0" stroke-width="1" stroke-dasharray="3 3"/><circle cx="32" cy="12" r="2" stroke="#2471a3" stroke-width="1.2" fill="none"/></svg>'
 };
 
-// ── Render Homepage ──
+// 鈹€鈹€ Render Homepage 鈹€鈹€
 async function renderHome() {
   try {
   const data = await loadJSON('data/site.json');
   if (!data) return;
 
   const hero = document.querySelector('.hero .container');
-  if (hero) hero.innerHTML = '<div class="hero-geo circle"></div><div class="hero-geo triangle"></div><div class="hero-geo diamond"></div><div class="hero-geo dot-ring"></div><h1>你好，我是 ' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
+  if (hero) hero.innerHTML = '<div class="hero-geo circle"></div><div class="hero-geo triangle"></div><div class="hero-geo diamond"></div><div class="hero-geo dot-ring"></div><h1>浣犲ソ锛屾垜鏄?' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
 
   const about = document.querySelector('.about .container');
-  if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">关于</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
+  if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">鍏充簬</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
 
   const currentlyEl = document.querySelector('.currently .container');
   if (currentlyEl && data.currently) {
     var c = data.currently;
-    currentlyEl.innerHTML = '<div class="section-label">当下</div><div class="currently-grid">' +
-      '<div class="currently-item"><span class="currently-key">在读</span><span>' + (c.reading || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在听</span><span>' + (c.listening || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在学</span><span>' + (c.learning || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在做</span><span>' + (c.workingOn || '') + '</span></div>' +
+    currentlyEl.innerHTML = '<div class="section-label">褰撲笅</div><div class="currently-grid">' +
+      '<div class="currently-item"><span class="currently-key">鍦ㄨ</span><span>' + (c.reading || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">鍦ㄥ惉</span><span>' + (c.listening || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">鍦ㄥ</span><span>' + (c.learning || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">鍦ㄥ仛</span><span>' + (c.workingOn || '') + '</span></div>' +
       '</div>';
   }
 
   const grid = document.querySelector('.interest-grid');
   if (grid) {
     grid.innerHTML = data.interests.map(i =>
-      '<a class="interest-card" href="' + i.page + '"><div class="icon">' + (ICONS[i.icon] || '') + '</div><span class="label">' + i.name + '</span><span class="card-arrow">探索 &rarr;</span></a>'
+      '<a class="interest-card" href="' + i.page + '"><div class="icon">' + (ICONS[i.icon] || '') + '</div><span class="label">' + i.name + '</span><span class="card-arrow">鎺㈢储 &rarr;</span></a>'
     ).join('');
   }
 
@@ -61,7 +183,7 @@ async function renderHome() {
   }
 }
 
-// ── Render blog preview on homepage ──
+// 鈹€鈹€ Render blog preview on homepage 鈹€鈹€
 async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
@@ -69,27 +191,27 @@ async function renderHomeBlog() {
     const res = await fetch('data/blog.json?v=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
     const data = await res.json();
-    if (!data.posts || !data.posts.length) { list.innerHTML = '<div class="blog-empty">还没有博客文章</div>'; return; }
+    if (!data.posts || !data.posts.length) { list.innerHTML = '<div class="blog-empty">杩樻病鏈夊崥瀹㈡枃绔?/div>'; return; }
     list.innerHTML = data.posts.slice(-3).reverse().map(p =>
       '<a class="blog-card" href="blog/posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
     ).join('');
-  } catch(e) { list.innerHTML = '<div class="blog-empty">还没有博客文章</div>'; }
+  } catch(e) { list.innerHTML = '<div class="blog-empty">杩樻病鏈夊崥瀹㈡枃绔?/div>'; }
 }
 
-// ── Render Blog Listing ──
+// 鈹€鈹€ Render Blog Listing 鈹€鈹€
 async function renderBlog() {
   const data = await loadJSON('../data/blog.json');
   const list = document.querySelector('.blog-list');
   if (!list) return;
   if (!data.posts || data.posts.length === 0) {
-    list.innerHTML = '<div class="blog-empty">还没有博客文章</div>'; return;
+    list.innerHTML = '<div class="blog-empty">杩樻病鏈夊崥瀹㈡枃绔?/div>'; return;
   }
   list.innerHTML = [...data.posts].reverse().map(p =>
     '<a class="blog-card" href="posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
   ).join('');
 }
 
-// ── Render Interest Sub-page ──
+// 鈹€鈹€ Render Interest Sub-page 鈹€鈹€
 async function renderInterestPage() {
   const data = await loadJSON('../data/site.json');
   if (!data) return;
@@ -105,7 +227,7 @@ async function renderInterestPage() {
   const header = document.querySelector('.interest-page .container');
   if (header) {
     header.innerHTML =
-      '<a class="back-link" href="../index.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#2471a3" stroke-width="1.5" stroke-linecap="round"/></svg>返回首页</a>' +
+      '<a class="back-link" href="../index.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#2471a3" stroke-width="1.5" stroke-linecap="round"/></svg>杩斿洖棣栭〉</a>' +
       '<h1>' + interest.name + '</h1>' +
       '<p class="sub-desc">' + (interest.description || '') + '</p>';
   }
@@ -119,13 +241,13 @@ async function renderInterestPage() {
   else if (pageName === 'hiking') renderHikingPage(interest);
 }
 
-// ── Photography Page ──
+// 鈹€鈹€ Photography Page 鈹€鈹€
 function renderPhotographyPage(interest) {
   const content = document.querySelector('.interest-content-area');
   const albums = interest.albums || [];
 
   if (albums.length === 0) {
-    content.innerHTML = '<div class="album-empty">还没有创建图集</div>';
+    content.innerHTML = '<div class="album-empty">杩樻病鏈夊垱寤哄浘闆?/div>';
     return;
   }
 
@@ -149,18 +271,18 @@ function renderPhotographyPage(interest) {
       return '<div class="gallery-item"><img src="../' + img + '" alt="" loading="lazy"></div>';
     }).join('');
   } else {
-    html += '<div class="album-empty">暂无照片</div>';
+    html += '<div class="album-empty">鏆傛棤鐓х墖</div>';
   }
   html += '</div>';
 
   if (album.journal) {
-    html += '<div class="album-journal"><h3>随笔</h3><div class="journal-content">' + album.journal + '</div></div>';
+    html += '<div class="album-journal"><h3>闅忕瑪</h3><div class="journal-content">' + album.journal + '</div></div>';
   }
 
   content.innerHTML = html;
 }
 
-// ── Books Page ──
+// 鈹€鈹€ Books Page 鈹€鈹€
 function renderBooksPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var read = interest.read || [];
@@ -168,29 +290,29 @@ function renderBooksPage(interest) {
   var wantToRead = interest.wantToRead || [];
 
   var html = '<div class="book-tabs">';
-  html += '<button class="active" onclick="switchBookTab(\'read\')">已读</button>';
-  html += '<button onclick="switchBookTab(\'reading\')">正在阅读</button>';
-  html += '<button onclick="switchBookTab(\'want\')">想要阅读</button>';
+  html += '<button class="active" onclick="switchBookTab(\'read\')">宸茶</button>';
+  html += '<button onclick="switchBookTab(\'reading\')">姝ｅ湪闃呰</button>';
+  html += '<button onclick="switchBookTab(\'want\')">鎯宠闃呰</button>';
   html += '</div>';
 
   html += '<div class="book-tab-content active" id="tab-read">';
   if (read.length) {
     html += '<div class="book-list">' + read.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span>' +
-        (b.review ? '<span class="book-review-trigger">我的感想<div class="book-review-popup">' + b.review + '</div></span>' : '') +
+        (b.review ? '<span class="book-review-trigger">鎴戠殑鎰熸兂<div class="book-review-popup">' + b.review + '</div></span>' : '') +
         '</div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">还没有已读书籍</div>'; }
+  } else { html += '<div class="album-empty">杩樻病鏈夊凡璇讳功绫?/div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-reading">';
   if (reading.length) {
     html += '<div class="book-list">' + reading.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span>' +
-        (b.review ? '<span class="book-review-trigger">我的感想<div class="book-review-popup">' + b.review + '</div></span>' : '') +
+        (b.review ? '<span class="book-review-trigger">鎴戠殑鎰熸兂<div class="book-review-popup">' + b.review + '</div></span>' : '') +
         '</div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">还没有正在读的书</div>'; }
+  } else { html += '<div class="album-empty">杩樻病鏈夋鍦ㄨ鐨勪功</div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-want">';
@@ -198,7 +320,7 @@ function renderBooksPage(interest) {
     html += '<div class="book-list">' + wantToRead.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span></div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">还没有想读的书</div>'; }
+  } else { html += '<div class="album-empty">杩樻病鏈夋兂璇荤殑涔?/div>'; }
   html += '</div>';
 
   content.innerHTML = html;
@@ -211,20 +333,20 @@ function switchBookTab(tab) {
   document.getElementById('tab-' + tab).classList.add('active');
 }
 
-// ── Hobbies Page ──
+// 鈹€鈹€ Hobbies Page 鈹€鈹€
 function renderHobbiesPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var hobbies = interest.hobbies || [];
   if (hobbies.length === 0) {
-    content.innerHTML = '<div class="album-empty">还没有添加爱好</div>';
+    content.innerHTML = '<div class="album-empty">杩樻病鏈夋坊鍔犵埍濂?/div>';
     return;
   }
   content.innerHTML = '<div class="hobby-tags">' + hobbies.map(function(h) {
     return '<span class="hobby-tag">' + h + '</span>';
-  }).join('') + '</div><p style="color:#aaa;text-align:center;margin-top:2rem;font-size:0.92rem;">这些都是我曾经认真投入过的「三分钟热度」，每一项都值得纪念。</p>';
+  }).join('') + '</div><p style="color:#aaa;text-align:center;margin-top:2rem;font-size:0.92rem;">杩欎簺閮芥槸鎴戞浘缁忚鐪熸姇鍏ヨ繃鐨勩€屼笁鍒嗛挓鐑害銆嶏紝姣忎竴椤归兘鍊煎緱绾康銆?/p>';
 }
 
-// ── Hiking Page ──
+// 鈹€鈹€ Hiking Page 鈹€鈹€
 function renderHikingPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var climbed = interest.climbed || [];
@@ -233,26 +355,26 @@ function renderHikingPage(interest) {
   var journal = interest.journal || '';
 
   var html = '<div class="book-tabs">';
-  html += '<button class="active" onclick="switchBookTab(\'climbed\')">已登山脉</button>';
-  html += '<button onclick="switchBookTab(\'wantClimb\')">想要征服</button>';
-  if (journal) html += '<button onclick="switchBookTab(\'journal\')">随笔</button>';
-  if (images.length) html += '<button onclick="switchBookTab(\'photos\')">照片</button>';
+  html += '<button class="active" onclick="switchBookTab(\'climbed\')">宸茬櫥灞辫剦</button>';
+  html += '<button onclick="switchBookTab(\'wantClimb\')">鎯宠寰佹湇</button>';
+  if (journal) html += '<button onclick="switchBookTab(\'journal\')">闅忕瑪</button>';
+  if (images.length) html += '<button onclick="switchBookTab(\'photos\')">鐓х墖</button>';
   html += '</div>';
 
   html += '<div class="book-tab-content active" id="tab-climbed">';
   if (climbed.length) {
     html += '<div class="mountain-list">' + climbed.map(function(m) {
-      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div><div class="mountain-detail">' + (m.date || '') + (m.note ? ' · ' + m.note : '') + '</div></div><span class="tag-climbed">已登顶</span></div>';
+      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div><div class="mountain-detail">' + (m.date || '') + (m.note ? ' 路 ' + m.note : '') + '</div></div><span class="tag-climbed">宸茬櫥椤?/span></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">还没有已登山脉</div>'; }
+  } else { html += '<div class="album-empty">杩樻病鏈夊凡鐧诲北鑴?/div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-wantClimb">';
   if (wantToClimb.length) {
     html += '<div class="mountain-list">' + wantToClimb.map(function(m) {
-      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div>' + (m.reason ? '<div class="mountain-detail">' + m.reason + '</div>' : '') + '</div><span class="tag-wanted">想要征服</span></div>';
+      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div>' + (m.reason ? '<div class="mountain-detail">' + m.reason + '</div>' : '') + '</div><span class="tag-wanted">鎯宠寰佹湇</span></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">还没有想要征服的山</div>'; }
+  } else { html += '<div class="album-empty">杩樻病鏈夋兂瑕佸緛鏈嶇殑灞?/div>'; }
   html += '</div>';
 
   if (journal) {
@@ -365,7 +487,7 @@ function renderGeoGuestbook() {
   if (geoAnimId) { cancelAnimationFrame(geoAnimId); geoAnimId = null; }
   
   if (!gbComments || !gbComments.length) {
-    container.innerHTML = '<div style="color:#bbb;font-size:0.92rem;text-align:center;padding:3rem 0">还没有留言，来说点什么吧 ✨</div>';
+    container.innerHTML = '<div style="color:#bbb;font-size:0.92rem;text-align:center;padding:3rem 0">杩樻病鏈夌暀瑷€锛屾潵璇寸偣浠€涔堝惂 鉁?/div>';
     geoShapes = []; geoRibbons = [];
     return;
   }
@@ -431,7 +553,7 @@ function renderGeoGuestbook() {
     var bg = 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.5) 0%, ' + color + '99 60%, ' + color + 'cc 100%)';
     el.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;clip-path:url(#' + clipId + ');-webkit-clip-path:url(#' + clipId + ');background:' + bg + ';opacity:0.88;box-shadow:0 3px 12px rgba(0,0,0,0.07),inset 0 1px 0 rgba(255,255,255,0.3);transition:transform 0.1s,opacity 0.5s;z-index:1';
     el.setAttribute('data-idx', i);
-    el.title = (c.name || '匿名') + '│' + (c.text || '').substring(0, 60);
+    el.title = (c.name || '鍖垮悕') + '鈹? + (c.text || '').substring(0, 60);
     inner.appendChild(el);
     
     var isNew = (i === 0 && geoNewIdx === 0);
@@ -682,7 +804,7 @@ function showGeoInfo(shape, inner) {
   var c = shape.comment;
   var popup = document.createElement('div');
   popup.className = 'geo-popup-on';
-  popup.innerHTML = '<button class="geo-popup-close" onclick="this.parentElement.remove()">×</button><strong style="color:' + shape.color + '">' + (c.name || '匿名') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p>';
+  popup.innerHTML = '<button class="geo-popup-close" onclick="this.parentElement.remove()">脳</button><strong style="color:' + shape.color + '">' + (c.name || '鍖垮悕') + '</strong><span style="font-size:0.7rem;color:#aaa;margin-left:0.5rem">' + (c.date || '') + '</span><p style="margin-top:0.6rem;line-height:1.7">' + (c.text || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</p>';
   popup.style.cssText = 'position:absolute;width:240px;background:rgba(30,35,50,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:14px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.3);padding:1.2rem;z-index:9999;font-size:0.85rem;color:#e0e4ec;pointer-events:auto';
   
   var rect = inner.getBoundingClientRect();
@@ -734,12 +856,12 @@ function initGuestbook() {
   if (!form) return;
   form.addEventListener("submit", function(e) {
     e.preventDefault();
-    var name = document.getElementById("gbName").value.trim() || "匿名";
+    var name = document.getElementById("gbName").value.trim() || "鍖垮悕";
     var text = document.getElementById("gbText").value.trim();
     var msg = document.getElementById("gbMsg");
-    if (!text) { msg.textContent = "请输入留言内容"; msg.style.color = "#c62828"; return; }
+    if (!text) { msg.textContent = "璇疯緭鍏ョ暀瑷€鍐呭"; msg.style.color = "#c62828"; return; }
     submitGuestbook(name, text);
-    msg.textContent = "留言成功！✨";
+    msg.textContent = "鐣欒█鎴愬姛锛佲湪";
     msg.style.color = "#2e7d32";
     form.reset();
     setTimeout(function() { msg.textContent = ""; }, 3000);
@@ -757,3 +879,4 @@ document.addEventListener('DOMContentLoaded', () => { initBackToTop();
   if (document.querySelector('.interest-page')) renderInterestPage();
   if (!document.querySelector('.hero') && !document.querySelector('.blog-list') && !document.querySelector('.interest-page')) initFadeIn();
 });
+
