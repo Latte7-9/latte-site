@@ -1,4 +1,4 @@
-﻿var R="",T="",site=null,blog=null,gbData=[];
+var R="",T="",site=null,blog=null,gbData=[];
 
 function db(b){return decodeURIComponent(escape(atob(b.replace(/\s/g,""))));}
 function eb(s){return btoa(unescape(encodeURIComponent(s)));}
@@ -56,10 +56,7 @@ function fillAll(){
   document.getElementById("sAbout").value=site.about||"";
   document.getElementById("sEmail").value=(site.contact&&site.contact.email)||"";
   if(site.currently){
-    document.getElementById("sReading").value=site.currently.reading||"";
     document.getElementById("sListening").value=site.currently.listening||"";
-    document.getElementById("sLearning").value=site.currently.learning||"";
-    document.getElementById("sWorkingOn").value=site.currently.workingOn||"";
   }
   if(site.books)document.getElementById("sBooks").value=site.books.map(function(b){return b.title+" | "+b.author+" | "+(b.cover||"");}).join("\n");
   fillPhoto();fillBooks();fillHobbies();fillHiking();fillBlog();loadGuestbook();loadImgs();
@@ -71,10 +68,7 @@ function saveSite(){
   site.about=document.getElementById("sAbout").value;
   if(!site.contact)site.contact={};site.contact.email=document.getElementById("sEmail").value;
   if(!site.currently)site.currently={};
-  site.currently.reading=document.getElementById("sReading").value;
   site.currently.listening=document.getElementById("sListening").value;
-  site.currently.learning=document.getElementById("sLearning").value;
-  site.currently.workingOn=document.getElementById("sWorkingOn").value;
   var bl=document.getElementById("sBooks").value.split("\n").filter(function(l){return l.trim();});
   site.books=bl.map(function(l){var p=l.split("|");return{title:(p[0]||"").trim(),author:(p[1]||"").trim(),cover:(p[2]||"").trim()};});
   api("GET","data/site.json").then(function(j){return api("PUT","data/site.json",JSON.stringify(site,null,2),j.sha);})
@@ -220,10 +214,38 @@ function renderGb(){
 }
 function delGb(i){gbData.splice(i,1);renderGb();}
 function saveGuestbook(){
-  api("GET","data/comments.json").then(function(j){return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),j.sha);})
-  .catch(function(){return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),null);})
-  .then(function(){msg("msgGuestbook","ok","Saved");loadGuestbook();})
-  .catch(function(err){msg("msgGuestbook","err","失败: "+err.message);});
+  msg("msgGuestbook","info","保存中...");
+  api("GET","data/comments.json").then(function(j){
+    return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),j.sha);
+  }).then(function(){
+    msg("msgGuestbook","ok","已保存");loadGuestbook();
+  }).catch(function(err){
+    msg("msgGuestbook","err","保存失败: "+err.message+"（请确认Token有写入权限且未过期）");
+    loadGuestbook();
+  });
+}
+
+function syncLocalGuestbook(){
+  var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
+  if (!local.length) { msg("msgGuestbook","info","没有待同步的本地留言"); return; }
+  msg("msgGuestbook","info","同步中...");
+  var added = 0;
+  local.forEach(function(c) {
+    if (!gbData.some(function(x) { return x.text === c.text && x.name === c.name && x.date === c.date; })) {
+      gbData.unshift(c);
+      added++;
+    }
+  });
+  if (added === 0) { msg("msgGuestbook","info","没有新的本地留言需要同步"); return; }
+  api("GET","data/comments.json").then(function(j){
+    return api("PUT","data/comments.json",JSON.stringify(gbData,null,2),j.sha);
+  }).then(function(){
+    localStorage.removeItem("gb_local");
+    msg("msgGuestbook","ok","已同步 "+added+" 条留言");
+    loadGuestbook();
+  }).catch(function(err){
+    msg("msgGuestbook","err","同步失败: "+err.message);
+  });
 }
 
 function uploadImg(){

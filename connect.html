@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -84,6 +84,7 @@ button{cursor:pointer;font-family:inherit}
 <button class="tab" data-tab="blog">博客</button>
 <button class="tab" data-tab="guestbook">留言池</button>
 <button class="tab" data-tab="images">图片</button>
+<button class="tab" data-tab="netease">🎵 随心一听</button>
 </div>
 
 <div class="tc on" id="tab-site"><div class="card">
@@ -156,7 +157,25 @@ button{cursor:pointer;font-family:inherit}
 <div id="gbList"></div>
 <button class="btndel" onclick="loadGuestbook()" style="margin-bottom:0.5rem">刷新</button>
 <button class="btn" onclick="saveGuestbook()">保存更改</button>
+<button class="btndel" onclick="syncLocalGuestbook()" style="margin-left:0.5rem">同步本地留言</button>
 <div class="msg" id="msgGuestbook"></div>
+</div></div>
+
+
+<div class="tc" id="tab-netease"><div class="card">
+<h2>🎵 随心一听 · 网易云管理</h2>
+<div id="neStatus" class="status sinfo">检查中...</div>
+<div style="margin-bottom:0.8rem;">
+<button class="btn btnsm" onclick="neCheck()">刷新状态</button>
+<button class="btn btnsm" onclick="neSync()" style="margin-left:0.3rem;">手动同步</button>
+</div>
+<div id="neQR" style="display:none;">
+<hr>
+<button class="btn" onclick="neGetQR()">获取登录二维码</button>
+<div id="neQRImg" style="text-align:center;margin:0.8rem 0;"></div>
+<div id="neQRHint" class="hint"></div>
+</div>
+<div class="msg" id="neMsg"></div>
 </div></div>
 
 <div class="tc" id="tab-images"><div class="card">
@@ -170,6 +189,68 @@ button{cursor:pointer;font-family:inherit}
 </div>
 </div>
 
+
+<script>
+var NE_API = (location.hostname==='localhost'||location.hostname==='127.0.0.1')?'':'https://latte-site-production.up.railway.app';
+
+async function neCheck(){
+  var el=document.getElementById('neStatus');
+  try{
+    var r=await fetch(NE_API+'/api/netease/status');
+    var d=await r.json();
+    if(d.loggedIn){
+      el.className='status sok';
+      el.innerHTML='✓ 已登录 — '+d.nickname+(d.songCount?' | 缓存 '+d.songCount+' 首歌':'')+(d.cachedAt?' | 同步: '+new Date(d.cachedAt).toLocaleString():"");
+      document.getElementById('neQR').style.display='none';
+    }else{
+      el.className='status serr';
+      el.innerHTML='✗ 未连接网易云';
+      document.getElementById('neQR').style.display='block';
+    }
+  }catch(e){el.className='status serr';el.innerHTML='网络异常';}
+}
+
+async function neSync(){
+  var m=document.getElementById('neMsg');
+  m.textContent='同步中...';m.className='msg';
+  try{
+    var r=await fetch(NE_API+'/api/netease/sync',{method:'POST'});
+    var d=await r.json();
+    if(d.ok){m.textContent='✓ 已同步 '+d.songCount+' 首歌';m.className='msg msgok';neCheck();}
+    else{m.textContent='✗ 同步失败';m.className='msg msgerr';}
+  }catch(e){m.textContent='✗ 请求失败';m.className='msg msgerr';}
+}
+
+async function neGetQR(){
+  var img=document.getElementById('neQRImg');
+  var hint=document.getElementById('neQRHint');
+  img.innerHTML='获取中...';hint.textContent='';
+  try{
+    var r=await fetch(NE_API+'/api/netease/qr-key');
+    var d=await r.json();
+    if(d.qrimg){
+      img.innerHTML='<img src="'+d.qrimg+'" alt="扫码" style="max-width:200px;border-radius:8px;">';
+      hint.textContent='请用网易云音乐 App 扫码';
+      nePollQR(d.unikey,0);
+    }else{img.innerHTML='<span style="color:#c62828;">获取失败</span>';}
+  }catch(e){img.innerHTML='<span style="color:#c62828;">请求失败</span>';}
+}
+
+async function nePollQR(key,count){
+  if(count>120){document.getElementById('neQRHint').textContent='二维码已过期';return;}
+  try{
+    var r=await fetch(NE_API+'/api/netease/qr-check?key='+key);
+    var d=await r.json();
+    if(d.status==='ok'){document.getElementById('neQRHint').textContent='登录成功！'+d.nickname;document.getElementById('neQRImg').innerHTML='<span style="color:#4caf50;">✓ 已登录</span>';setTimeout(neCheck,1000);return;}
+    if(d.status==='scanned')document.getElementById('neQRHint').textContent='已扫码，请在手机上确认...';
+    if(d.status==='expired'){document.getElementById('neQRHint').textContent='已过期';return;}
+    if(d.status==='waiting')document.getElementById('neQRHint').textContent='等待扫码...';
+  }catch(e){}
+  setTimeout(function(){nePollQR(key,count+1);},1000);
+}
+
+neCheck();
+</script>
 <script src="admin.js"></script>
 </body>
 </html>
