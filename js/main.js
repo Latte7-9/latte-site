@@ -645,8 +645,10 @@ function spawnRipple(x, y, inner) {
     + 'animation:duckRipple 1.2s ease-out forwards;pointer-events:none;z-index:3';
   inner.appendChild(ripple);
   setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, 1300);
-}
-
+}
+
+
+
 
 function spawnSplash(x, y, vy, inner) {
   var speed = Math.abs(vy);
@@ -711,20 +713,7 @@ function geoLoop(W, H) {
       d.av *= 0.98;
     }
 
-    // Water surface crossing — dampen + ripple
-    var isAbove = d.y < waterY;
-    if (!wasAbove && isAbove && d.vy < -0.5) {
-      d.vy *= 0.55;
-      var inner = document.querySelector('[data-geo] .geo-inner');
-      if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, d.vy, inner); }
-    }
-    if (wasAbove && !isAbove && d.vy > 1.2) {
-      d.vy *= 0.55;
-      var inner2 = document.querySelector('[data-geo] .geo-inner');
-      if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, d.vy, inner2); }
-    }
-
-    d.x += d.vx;
+        d.x += d.vx;
     d.y += d.vy;
     d.angle += d.av;
 
@@ -733,6 +722,21 @@ function geoLoop(W, H) {
     if (d.x + r > W) { d.x = W - r; d.vx = -Math.abs(d.vx) * 0.5; }
     if (d.y - r < 0) { d.y = r; d.vy = Math.abs(d.vy) * 0.5; }
     if (d.y + r > H) { d.y = H - r; d.vy = -Math.abs(d.vy) * 0.35; d.vx *= 0.85; }
+
+    // Water surface crossing — dampen + ripple + splash
+    var isAbove = d.y < waterY;
+    if (!wasAbove && isAbove && d.vy < -0.5) {
+      var vBefore = d.vy;
+      d.vy *= 0.55;
+      var inner = document.querySelector('[data-geo] .geo-inner');
+      if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, vBefore, inner); }
+    }
+    if (wasAbove && !isAbove && d.vy > 1.2) {
+      var vBefore2 = d.vy;
+      d.vy *= 0.55;
+      var inner2 = document.querySelector('[data-geo] .geo-inner');
+      if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, vBefore2, inner2); }
+    }
 
     updateDuckPos(d);
   });
@@ -890,7 +894,8 @@ function showGeoInfo(duck, inner) {
   popup.style.left = left + 'px';
   inner.appendChild(popup);
   setTimeout(function() { if (popup.parentElement) popup.remove(); }, 8000);
-}
+}
+
 async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
