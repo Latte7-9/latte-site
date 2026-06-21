@@ -159,6 +159,7 @@ var hiddenProperty = (function() {
 })();
 window.visibilityChangeEvent = (hiddenProperty || 'hidden').replace(/[Hh]idden/, 'visibilitychange');
 window.hiddenProperty = hiddenProperty;
+window.switchPage = { switched: false };
 </script>
 <script src="js/particles.js"></script>
 <script src="js/background.js"></script>

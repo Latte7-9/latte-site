@@ -36,6 +36,7 @@ function switchToMain() {
   hasEntered = true;
   
   try { sessionStorage.setItem("latte_visited", "1"); } catch(e) {}
+  if (typeof switchPage !== "undefined") switchPage.switched = true;
   
   if (typeof stopParticles === "function") stopParticles();
   
