@@ -1,4 +1,4 @@
-﻿// ====== 入场层逻辑 ======
+// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
@@ -303,8 +303,6 @@ async function loadRandomListen() {
     console.error('loadRandomListen:', e);
     statusEl.className = 'listen-status listen-offline';
     listEl.innerHTML = "<div class=\"listen-empty\">暂时无法加载听歌记录</div>";
-      }
-    } catch (e2) {}
   }
 }
 
@@ -340,6 +338,8 @@ async function initVinylPlayer() {
     vinylPlayer.style.display = 'flex';
     vinylIframe.innerHTML = '<iframe id="vinylFrame" src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0" allow="autoplay"></iframe>';
     vinylReady = true;
+    // 回访用户跳过入场动画时也自动展示
+    if (typeof hasEntered !== 'undefined' && hasEntered) { vinylAutoShow(); }
   } catch (e2) { console.error('vinyl:', e2); vinylPlayer.style.display = 'none'; return; }
 
   vinylRecord.addEventListener('click', function(e) {
@@ -355,7 +355,7 @@ async function initVinylPlayer() {
 }
 
 function vinylAutoShow() {
-  if (!vinylReady) { setTimeout(vinylAutoShow, 300); return; }
+  if (!vinylReady) { setTimeout(vinylAutoShow, 500); return; }
   if (!vinylPlayer || !vinylRecord) return;
 
   setTimeout(function() {
