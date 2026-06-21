@@ -39,20 +39,71 @@ function switchToMain() {
   
   if (typeof stopParticles === "function") stopParticles();
   
-  if (introLayer) {
-    introLayer.classList.add("hidden");
-    setTimeout(function() {
-      if (introLayer.parentNode) introLayer.style.display = "none";
-    }, 900);
+  // SVG path morphing
+  var shapePath = document.querySelector(".intro-shape path");
+  if (shapePath && shapePath.getAttribute("data-original")) {
+    shapePath.setAttribute("d", shapePath.getAttribute("data-original"));
   }
   
+  // anime.js intro exit animation
+  var introWrap = document.querySelector(".intro-wrap");
+  if (introWrap && typeof anime !== "undefined") {
+    anime({
+      targets: ".intro-wrap > *",
+      opacity: 0,
+      translateY: -30,
+      delay: anime.stagger(50),
+      duration: 400,
+      easing: "easeInQuad",
+      complete: function() {
+        if (introLayer) {
+          introLayer.classList.add("hidden");
+          setTimeout(function() {
+            if (introLayer.parentNode) introLayer.style.display = "none";
+          }, 200);
+        }
+      }
+    });
+  } else {
+    if (introLayer) {
+      introLayer.classList.add("hidden");
+      setTimeout(function() {
+        if (introLayer.parentNode) introLayer.style.display = "none";
+      }, 900);
+    }
+  }
+  
+  // Show main content
   if (mainContent) {
     mainContent.classList.remove("intro-active");
-    setTimeout(function() {
-      document.querySelectorAll(".fade-in").forEach(function(el) {
-        el.classList.add("visible");
+    
+    // anime.js fade-in for sections
+    if (typeof anime !== "undefined") {
+      anime({
+        targets: "#main-content .fade-in",
+        opacity: [0, 1],
+        translateY: [30, 0],
+        delay: anime.stagger(80, { start: 300 }),
+        duration: 600,
+        easing: "easeOutCubic",
+        begin: function() {
+          document.querySelectorAll(".fade-in").forEach(function(el) {
+            el.classList.add("visible");
+          });
+        }
       });
-    }, 300);
+    } else {
+      setTimeout(function() {
+        document.querySelectorAll(".fade-in").forEach(function(el) {
+          el.classList.add("visible");
+        });
+      }, 300);
+    }
+    
+    // Initialize grid background
+    if (typeof initGridBackground === "function") {
+      initGridBackground();
+    }
   }
   
   document.body.style.overflow = "";

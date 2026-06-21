@@ -4,10 +4,14 @@
 (function() {
   'use strict';
 
-  var canvas = document.getElementById('particleCanvas');
+  var canvas = document.getElementById('background');
   if (!canvas) return;
 
-  var ctx = canvas.getContext('2d');
+  // Skip if WebGL is already active (background.js handles it)
+if (canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) {
+  return;
+}
+var ctx = canvas.getContext('2d');
   var particles = [];
   var mouse = { x: null, y: null, radius: 100 };
   var isMobile = /Mobi|Android/i.test(navigator.userAgent);

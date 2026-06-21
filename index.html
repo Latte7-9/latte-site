@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Latte</title>
 <link rel="stylesheet" href="css/style.css">
-</head>
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script></head>
 <body>
 
 <!-- ====== 入场层 ====== -->
 <div id="intro-layer">
-  <canvas id="particleCanvas"></canvas>
+  <canvas id="background"></canvas>
   <div class="intro-wrap">
     <h2 class="intro-title" id="introTitle">Latte</h2>
     <h3 class="intro-subtitle" id="introSubtitle"></h3>
@@ -28,7 +28,7 @@
 </div>
 
 <!-- ====== 主内容层 ====== -->
-<div id="main-content">
+<div id="main-content"><canvas class="grid-background" id="gridCanvas"></canvas>
 
 
 <nav class="site-nav">
@@ -119,8 +119,40 @@
 </div><!-- /#main-content -->
 
 <script>window.onerror=function(m,s,l,c,e){var d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:10px;z-index:99999;font-size:14px;white-space:pre-wrap";d.textContent="JS ERROR: "+m+" at "+s+":"+l+":"+c;document.body.prepend(d);};console.log=function(){var a=document.createElement("div");a.style.cssText="background:#ff0;color:#000;padding:4px;font-size:12px";a.textContent=Array.from(arguments).join(" ");var p=document.getElementById("diag-log");if(p)p.appendChild(a);};</script>
+<script>
+window.config = {
+  SIM_RESOLUTION: 128,
+  DYE_RESOLUTION: 1024,
+  CAPTURE_RESOLUTION: 512,
+  DENSITY_DISSIPATION: 1,
+  VELOCITY_DISSIPATION: 0.2,
+  PRESSURE: 0.8,
+  PRESSURE_ITERATIONS: 20,
+  CURL: 30,
+  SPLAT_RADIUS: 0.25,
+  SPLAT_FORCE: 6000,
+  SHADING: true,
+  COLORFUL: true,
+  COLOR_UPDATE_SPEED: 10,
+  PAUSED: false,
+  BACK_COLOR: { r: 26, g: 30, b: 36 },
+  TRANSPARENT: false,
+  BLOOM: true,
+  BLOOM_ITERATIONS: 8,
+  BLOOM_RESOLUTION: 256,
+  BLOOM_INTENSITY: 0.3,
+  BLOOM_THRESHOLD: 0.8,
+  BLOOM_SOFT_KNEE: 0.7,
+  SUNRAYS: true,
+  SUNRAYS_RESOLUTION: 196,
+  SUNRAYS_WEIGHT: 0.8,
+};
+</script>
 <script src="js/particles.js"></script>
-<script src="js/main.js"></script>
+<script src="js/background.js"></script>
+<script src="js/grid-bg.js"></script><script src="js/main.js"></script>
 </body>
-</html>
 
+
+
+</html>
