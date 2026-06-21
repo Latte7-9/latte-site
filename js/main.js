@@ -582,7 +582,7 @@ function renderGeoGuestbook() {
 
     var isNew = (i === 0 && geoNewIdx === 0);
     var startX = 30 + (i % cols) * (W / cols) + Math.random() * 30;
-    var startY = isNew ? -size : 30 + Math.random() * 100;
+    var startY = isNew ? -size : geoWaterY + Math.random() * 50 - 25;
 
     el.addEventListener('click', function(ev) {
       ev.stopPropagation();
@@ -598,7 +598,7 @@ function renderGeoGuestbook() {
     geoDucks.push({
       el: el, color: color,
       x: startX, y: startY,
-      vx: (Math.random() - 0.5) * 1.5, vy: isNew ? 0 : (Math.random() - 0.5) * 1,
+      vx: (Math.random() - 0.5) * 0.5, vy: isNew ? 0 : (Math.random() - 0.5) * 0.3,
       size: size, mass: 0.6 + Math.random() * 0.3,
       comment: c,
       angle: Math.random() * 0.3 - 0.15,
