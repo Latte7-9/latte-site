@@ -198,17 +198,15 @@ async function renderHome() {
   const about = document.querySelector('.about .container');
   if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">关于</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
 
-  const currentlyEl = document.querySelector('.currently .container');
-  if (currentlyEl && data.currently) {
-    var c = data.currently;
-    currentlyEl.innerHTML = '<div class="section-label">当下</div><div class="currently-grid">' +
-      '<div class="currently-item"><span class="currently-key">在读</span><span>' + (c.reading || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在听</span><span>' + (c.listening || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在学</span><span>' + (c.learning || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">在做</span><span>' + (c.workingOn || '') + '</span></div>' +
-      '</div>';
+    // 随心一听板块
+  const listenEl = document.querySelector('.random-listen .container');
+  if (listenEl) {
+    listenEl.innerHTML = '<div class="section-label">随心一听</div>' +
+      '<div class="listen-status">加载中...</div>' +
+      '<div class="listen-song-list"></div>' +
+      '<div class="listen-actions"></div>';
+    loadRandomListen();
   }
-
   const grid = document.querySelector('.interest-grid');
   if (grid) {
     grid.innerHTML = data.interests.map(i =>
