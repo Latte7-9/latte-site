@@ -41,7 +41,7 @@ function switchToMain() {
   if (typeof stopParticles === "function") stopParticles();
   
   // SVG path morphing
-  var shapePath = document.querySelector(".intro-shape path");
+  var shapePath = document.querySelector(".shape path");
   if (shapePath && shapePath.getAttribute("data-original")) {
     shapePath.setAttribute("d", shapePath.getAttribute("data-original"));
   }
