@@ -1067,15 +1067,10 @@ footer::before {
 
 /* Ripple animation */
 @keyframes duckRipple {
-  0% { width: 0; height: 0; margin-left: 0; margin-top: 0; opacity: 0.8; }
-  100% { width: 140px; height: 140px; margin-left: -70px; margin-top: -70px; opacity: 0; }
+  0% { width: 6px; height: 6px; margin-left: -3px; margin-top: -3px; opacity: 0.6; }
+  100% { width: 80px; height: 80px; margin-left: -40px; margin-top: -40px; opacity: 0; }
 }
 
-/* Water surface ripple — expanding ellipse */
-@keyframes waterRing {
-  0% { width: 4px; height: 2px; margin-left: -2px; opacity: 0.7; }
-  100% { width: 200px; height: 30px; margin-left: -100px; opacity: 0; }
-}
 
 /* Splash particle */
 @keyframes splashParticle {

@@ -478,6 +478,7 @@ var geoContainerW = 680;
 var geoContainerH = 420;
 var geoWaterY = 190;
 var geoRipples = [];
+var waterWaveBoost = 1.0;
 
 var DUCK_COLORS = [
   "#FFD700","#FFC107","#FFB300","#FFCC02","#FFD54F",
@@ -613,21 +614,24 @@ function startWaveAnimation() {
   var phase = 0;
   function animate() {
     if (!document.querySelector('[data-geo]')) return;
-    phase += 0.015;
+    phase += 0.02;
+    // Gradually decay wave boost back to normal
+    waterWaveBoost = waterWaveBoost * 0.97 + 1.0 * 0.03;
+    var amp = waterWaveBoost;
     var p1 = document.querySelector('.geo-wave-path');
     var p2 = document.querySelector('.geo-wave-path2');
     if (!p1) return;
     var y0 = geoWaterY;
     var d = '';
     for (var x = 0; x <= 1200; x += 120) {
-      var y = y0 + Math.sin(x/100 + phase) * 5 + Math.cos(x/160 + phase*0.7) * 3;
+      var y = y0 + (Math.sin(x/80 + phase) * 7 + Math.cos(x/140 + phase*0.7) * 5) * amp;
       d += (x === 0 ? 'M' : 'Q') + x + ',' + Math.round(y) + ' ';
     }
     p1.setAttribute('d', d);
     if (p2) {
       var d2 = '';
       for (var x2 = 0; x2 <= 1200; x2 += 100) {
-        var y2 = y0 + 4 + Math.sin(x2/110 + phase*1.3) * 4 + Math.cos(x2/140 + phase*0.9) * 2.5;
+        var y2 = y0 + 4 + (Math.sin(x2/90 + phase*1.3) * 5 + Math.cos(x2/120 + phase*0.9) * 3.5) * amp;
         d2 += (x2 === 0 ? 'M' : 'Q') + x2 + ',' + Math.round(y2) + ' ';
       }
       p2.setAttribute('d', d2);
@@ -638,23 +642,19 @@ function startWaveAnimation() {
 }
 
 function spawnRipple(x, y, inner) {
-  // Water surface expanding rings (horizontal ellipses at water line)
-  for (var r = 0; r < 4; r++) {
-    var ring = document.createElement('div');
-    var delay = r * 0.12;
-    var maxW = 80 + r * 50;
-    var maxH = 12 + r * 6;
-    ring.style.cssText =
-      'position:absolute;left:' + x + 'px;top:' + y + 'px;'
-      + 'width:0;height:0;margin-left:0;margin-top:' + (-maxH/2) + 'px;'
-      + 'border-radius:50%;'
-      + 'border:1.5px solid rgba(180,220,240,' + (0.6 - r * 0.12) + ');'
-      + 'background:rgba(180,220,240,' + (0.08 - r * 0.015) + ');'
-      + 'animation:waterRing ' + (1.2 + r * 0.25) + 's ease-out ' + delay + 's forwards;'
-      + 'pointer-events:none;z-index:3';
-    inner.appendChild(ring);
-    setTimeout(function() { if (ring.parentElement) ring.remove(); }, (1.2 + r * 0.25 + delay) * 1000 + 200);
-  }
+  // Simple expanding ring at water surface
+  var ripple = document.createElement('div');
+  ripple.style.cssText = 'position:absolute;left:' + (x-3) + 'px;top:' + (y-3) + 'px;'
+    + 'width:6px;height:6px;border-radius:50%;'
+    + 'border:1.5px solid rgba(160,210,235,0.6);'
+    + 'background:rgba(160,210,235,0.1);'
+    + 'animation:duckRipple 1.5s ease-out forwards;'
+    + 'pointer-events:none;z-index:3';
+  inner.appendChild(ripple);
+  setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, 1600);
+  
+  // Boost water wave amplitude on impact
+  waterWaveBoost = 3.0;
 }
 
 function spawnSplash(x, y, vy, inner) {
