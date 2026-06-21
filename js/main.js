@@ -638,48 +638,60 @@ function startWaveAnimation() {
 }
 
 function spawnRipple(x, y, inner) {
-  var ripple = document.createElement('div');
-  ripple.style.cssText = 'position:absolute;left:' + (x-2) + 'px;top:' + (y-2) + 'px;'
-    + 'width:4px;height:4px;border-radius:50%;'
-    + 'border:1px solid rgba(41,144,192,0.35);background:rgba(41,144,192,0.08);'
-    + 'animation:duckRipple 1.2s ease-out forwards;pointer-events:none;z-index:3';
-  inner.appendChild(ripple);
-  setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, 1300);
+  // Create 3 expanding rings for a more dramatic effect
+  var ringCount = 3;
+  for (var r = 0; r < ringCount; r++) {
+    var ripple = document.createElement('div');
+    var delay = r * 0.15;
+    var size = 60 + r * 40;
+    ripple.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;'
+      + 'width:0;height:0;border-radius:50%;'
+      + 'border:2px solid rgba(41,144,192,' + (0.5 - r * 0.12) + ');'
+      + 'background:rgba(41,144,192,' + (0.12 - r * 0.03) + ');'
+      + 'animation:duckRipple ' + (1.5 + r * 0.3) + 's ease-out ' + delay + 's forwards;'
+      + 'pointer-events:none;z-index:3';
+    inner.appendChild(ripple);
+    setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, (1.5 + r * 0.3 + delay) * 1000 + 100);
+  }
+  
+  // Also trigger water surface wave animation
+  var waveEl = document.querySelector('.geo-wave-path');
+  if (waveEl) {
+    waveEl.style.animation = 'none';
+    waveEl.offsetHeight; // reflow
+    waveEl.style.animation = 'waterBounce 0.8s ease-out';
+  }
 }
-
-
-
 
 function spawnSplash(x, y, vy, inner) {
   var speed = Math.abs(vy);
-  var count = Math.min(12, Math.max(3, Math.floor(speed * 1.8)));
+  var count = Math.min(20, Math.max(5, Math.floor(speed * 2.5)));
   var isEntering = vy > 0;
   for (var i = 0; i < count; i++) {
     var particle = document.createElement('div');
     var angle = (Math.random() - 0.5) * Math.PI * 0.9 + (isEntering ? -Math.PI/2 : Math.PI/2);
-    var dist = 15 + Math.random() * 40 * Math.min(1, speed / 6);
+    var dist = 20 + Math.random() * 60 * Math.min(1, speed / 5);
     var sx = Math.cos(angle) * dist;
-    var sy = Math.sin(angle) * dist - (isEntering ? 0 : 15);
-    var size = 2 + Math.random() * 4;
-    var lifetime = 0.5 + Math.random() * 0.7;
+    var sy = Math.sin(angle) * dist - (isEntering ? 0 : 20);
+    var size = 3 + Math.random() * 6;
+    var lifetime = 0.6 + Math.random() * 0.8;
     
     particle.style.cssText =
       'position:absolute;left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;'
       + 'width:' + size + 'px;height:' + size + 'px;border-radius:50%;'
-      + 'background:rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ');'
+      + 'background:rgba(41,144,192,' + (0.5 + Math.random() * 0.4) + ');'
       + 'pointer-events:none;z-index:4;'
       + 'transition:transform ' + lifetime + 's ease-out,opacity ' + lifetime + 's ease-out;'
-      + 'transform:translate(0,0) scale(1);opacity:0.85';
+      + 'transform:translate(0,0) scale(1);opacity:0.9';
     
     inner.appendChild(particle);
     
-    // Force reflow so browser commits initial styles before animating
     var forceReflow = particle.offsetHeight;
     
-    particle.style.transform = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.2)';
+    particle.style.transform = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.15)';
     particle.style.opacity = '0';
     
-    var timeout = lifetime * 1000 + 150;
+    var timeout = lifetime * 1000 + 200;
     setTimeout(function() { if (particle.parentElement) particle.remove(); }, timeout);
   }
 }
