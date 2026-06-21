@@ -606,13 +606,13 @@ footer::before {
 @keyframes duckRipple {
   0% { width: 4px; height: 4px; margin-left: -2px; margin-top: -2px; opacity: 0.7; }
   100% { width: 50px; height: 50px; margin-left: -25px; margin-top: -25px; opacity: 0; }
+}
 
 /* Splash particle */
 @keyframes splashParticle {
   0% { opacity: 0.85; transform: translate(0,0) scale(1); }
   60% { opacity: 0.3; }
   100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.2); }
-}
 }
 
 /* Water wave */
