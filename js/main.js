@@ -651,6 +651,7 @@ function spawnRipple(x, y, inner) {
 
 
 function spawnSplash(x, y, vy, inner) {
+  var dbg = document.createElement("div"); dbg.style.cssText = "position:absolute;left:"+(x-3)+"px;top:"+(y-3)+"px;width:6px;height:6px;border-radius:50%;background:red;z-index:999;pointer-events:none"; inner.appendChild(dbg); setTimeout(function(){ if(dbg.parentElement) dbg.remove(); }, 2000);
   var speed = Math.abs(vy);
   var count = Math.min(12, Math.max(3, Math.floor(speed * 1.8)));
   var isEntering = vy > 0; // true = falling into water, false = popping up
@@ -729,13 +730,13 @@ function geoLoop(W, H) {
       var vBefore = d.vy;
       d.vy *= 0.55;
       var inner = document.querySelector('[data-geo] .geo-inner');
-      if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, vBefore, inner); }
+      var dbg2 = document.createElement("div"); dbg2.style.cssText = "position:absolute;left:"+(d.x-4)+"px;top:"+(waterY-4)+"px;width:8px;height:8px;border-radius:50%;background:lime;z-index:999;pointer-events:none"; if(inner) inner.appendChild(dbg2); setTimeout(function(){ if(dbg2.parentElement) dbg2.remove(); }, 2000); if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, vBefore, inner); }
     }
     if (wasAbove && !isAbove && d.vy > 1.2) {
       var vBefore2 = d.vy;
       d.vy *= 0.55;
       var inner2 = document.querySelector('[data-geo] .geo-inner');
-      if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, vBefore2, inner2); }
+      var dbg3 = document.createElement("div"); dbg3.style.cssText = "position:absolute;left:"+(d.x-4)+"px;top:"+(waterY-4)+"px;width:8px;height:8px;border-radius:50%;background:lime;z-index:999;pointer-events:none"; if(inner2) inner2.appendChild(dbg3); setTimeout(function(){ if(dbg3.parentElement) dbg3.remove(); }, 2000); if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, vBefore2, inner2); }
     }
 
     updateDuckPos(d);
