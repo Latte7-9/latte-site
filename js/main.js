@@ -910,12 +910,49 @@ function showGeoInfo(duck, inner) {
   setTimeout(function() { if (popup.parentElement) popup.remove(); }, 8000);
 }
 
+
+function addNewDuck(comment, inner) {
+  if (!inner) inner = document.querySelector('[data-geo] .geo-inner');
+  if (!inner) return;
+  
+  var color = DUCK_COLORS[Math.floor(Math.random() * DUCK_COLORS.length)];
+  var size = 50 + Math.floor(Math.random() * 15);
+  var W = inner.clientWidth || 680;
+  var x = 30 + Math.random() * (W - 60);
+  var y = -size;  // Start above the container
+
+  var el = document.createElement('div');
+  el.className = 'geo-duck';
+  el.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;'
+    + 'width:' + size + 'px;height:' + size + 'px;'
+    + 'cursor:grab;user-select:none;z-index:2;';
+  el.setAttribute('data-idx', geoDucks.length);
+  el.innerHTML = createDuckSVG(color);
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    showGeoInfo(geoDucks[parseInt(el.getAttribute('data-idx'))], inner);
+  });
+  inner.appendChild(el);
+
+  geoDucks.push({
+    el: el, color: color,
+    x: x, y: y,
+    vx: (Math.random() - 0.5) * 2,
+    vy: 0,
+    size: size,
+    mass: 0.6 + Math.random() * 0.3,
+    comment: comment,
+    angle: Math.random() * 0.3 - 0.15,
+    av: 0
+  });
+}
+
 async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
-  geoNewIdx = 0;
-  renderGeoGuestbook();
-  geoNewIdx = -1;
+  addNewDuck(comment);
+  var msgEl = document.getElementById('gbMsg');
+  if (msgEl) { msgEl.textContent = '留言成功！✨'; msgEl.style.color = '#2e7d32'; }
   
   try {
     var getResp = await fetch("https://api.github.com/repos/Latte7-9/latte-site/contents/data/comments.json", {
@@ -952,8 +989,6 @@ function initGuestbook() {
     var msg = document.getElementById("gbMsg");
     if (!text) { msg.textContent = "请输入留言内容"; msg.style.color = "#c62828"; return; }
     submitGuestbook(name, text);
-    msg.textContent = "留言成功！✨";
-    msg.style.color = "#2e7d32";
     form.reset();
     setTimeout(function() { msg.textContent = ""; }, 3000);
   });
