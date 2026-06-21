@@ -651,9 +651,6 @@ function spawnRipple(x, y, inner) {
 
 
 function spawnSplash(x, y, vy, inner) {
-  // Debug marker
-  var dbg = document.createElement("div"); dbg.style.cssText = "position:absolute;left:"+(x-3)+"px;top:"+(y-3)+"px;width:6px;height:6px;border-radius:50%;background:red;z-index:999;pointer-events:none"; inner.appendChild(dbg); setTimeout(function(){ if(dbg.parentElement) dbg.remove(); }, 2000);
-  
   var speed = Math.abs(vy);
   var count = Math.min(12, Math.max(3, Math.floor(speed * 1.8)));
   var isEntering = vy > 0;
@@ -666,29 +663,22 @@ function spawnSplash(x, y, vy, inner) {
     var size = 2 + Math.random() * 4;
     var lifetime = 0.5 + Math.random() * 0.7;
     
-    // Set initial styles
-    particle.style.position = 'absolute';
-    particle.style.left = (x - size/2) + 'px';
-    particle.style.top = (y - size/2) + 'px';
-    particle.style.width = size + 'px';
-    particle.style.height = size + 'px';
-    particle.style.borderRadius = '50%';
-    particle.style.background = 'rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ')';
-    particle.style.pointerEvents = 'none';
-    particle.style.zIndex = '4';
-    particle.style.transition = 'transform ' + lifetime + 's ease-out, opacity ' + lifetime + 's ease-out';
-    particle.style.transform = 'translate(0, 0) scale(1)';
-    particle.style.opacity = '0.85';
+    particle.style.cssText =
+      'position:absolute;left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;'
+      + 'width:' + size + 'px;height:' + size + 'px;border-radius:50%;'
+      + 'background:rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ');'
+      + 'pointer-events:none;z-index:4;'
+      + 'transition:transform ' + lifetime + 's ease-out,opacity ' + lifetime + 's ease-out;'
+      + 'transform:translate(0,0) scale(1);opacity:0.85';
     
     inner.appendChild(particle);
     
-    // Trigger animation in next frame
-    requestAnimationFrame(function() {
-      particle.style.transform = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.2)';
-      particle.style.opacity = '0';
-    });
+    // Force reflow so browser commits initial styles before animating
+    var forceReflow = particle.offsetHeight;
     
-    // Cleanup
+    particle.style.transform = 'translate(' + sx + 'px, ' + sy + 'px) scale(0.2)';
+    particle.style.opacity = '0';
+    
     var timeout = lifetime * 1000 + 150;
     setTimeout(function() { if (particle.parentElement) particle.remove(); }, timeout);
   }
@@ -747,13 +737,13 @@ function geoLoop(W, H) {
       var vBefore = d.vy;
       d.vy *= 0.55;
       var inner = document.querySelector('[data-geo] .geo-inner');
-      var dbg2 = document.createElement("div"); dbg2.style.cssText = "position:absolute;left:"+(d.x-4)+"px;top:"+(waterY-4)+"px;width:8px;height:8px;border-radius:50%;background:lime;z-index:999;pointer-events:none"; if(inner) inner.appendChild(dbg2); setTimeout(function(){ if(dbg2.parentElement) dbg2.remove(); }, 2000); if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, vBefore, inner); }
+      if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, vBefore, inner); }
     }
     if (wasAbove && !isAbove && d.vy > 1.2) {
       var vBefore2 = d.vy;
       d.vy *= 0.55;
       var inner2 = document.querySelector('[data-geo] .geo-inner');
-      var dbg3 = document.createElement("div"); dbg3.style.cssText = "position:absolute;left:"+(d.x-4)+"px;top:"+(waterY-4)+"px;width:8px;height:8px;border-radius:50%;background:lime;z-index:999;pointer-events:none"; if(inner2) inner2.appendChild(dbg3); setTimeout(function(){ if(dbg3.parentElement) dbg3.remove(); }, 2000); if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, vBefore2, inner2); }
+      if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, vBefore2, inner2); }
     }
 
     updateDuckPos(d);
