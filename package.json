@@ -4,23 +4,14 @@
     "description":  "",
     "main":  "api-server.js",
     "scripts":  {
-                    "test":  "echo OK",
-                    "dev":  "node serve.js",
-                    "start":  "node api-server.js"
+                    "start":  "node api-server.js",
+                    "dev":  "node serve.js"
                 },
     "keywords":  [
 
                  ],
     "author":  "",
     "license":  "ISC",
-    "devEngines":  {
-                       "packageManager":  {
-                                              "name":  "pnpm",
-                                              "version":  "^11.5.3",
-                                              "onFail":  "download"
-                                          }
-                   },
-    "type":  "commonjs",
     "dependencies":  {
                          "NeteaseCloudMusicApi":  "^4.32.0"
                      }
