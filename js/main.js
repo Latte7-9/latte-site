@@ -1,10 +1,10 @@
-ï»¿// ====== å…¥åœºå±‚é€»è¾‘ ======
+// ====== Èë³¡²ãÂß¼­ ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
 
 function typeSubtitle(el, text) {
-  if (!el || !text) { el && (el.textContent = "è®°å½•ä¸åˆ†äº«"); return; }
+  if (!el || !text) { el && (el.textContent = "¼ÇÂ¼Óë·ÖÏí"); return; }
   el.textContent = "";
   var chars = text.split("");
   chars.forEach(function(ch, i) {
@@ -27,7 +27,7 @@ function initIntroText() {
     })
     .catch(function() {
       if (titleEl) titleEl.textContent = "Latte";
-      if (subtitleEl) typeSubtitle(subtitleEl, "è®°å½•ä¸åˆ†äº«");
+      if (subtitleEl) typeSubtitle(subtitleEl, "¼ÇÂ¼Óë·ÖÏí");
     });
 }
 
@@ -186,33 +186,33 @@ const ICONS = {
   mountain: '<svg viewBox="0 0 48 48" fill="none"><path d="M4 38 L16 18 L24 26 L32 12 L44 38" stroke="#2471a3" stroke-width="1.8" fill="none" stroke-linejoin="round"/><line x1="4" y1="38" x2="44" y2="38" stroke="#a0c8e0" stroke-width="1" stroke-dasharray="3 3"/><circle cx="32" cy="12" r="2" stroke="#2471a3" stroke-width="1.2" fill="none"/></svg>'
 };
 
-// â”€â”€ Render Homepage â”€â”€
+// ©¤©¤ Render Homepage ©¤©¤
 async function renderHome() {
   try {
   const data = await loadJSON('data/site.json');
   if (!data) return;
 
   const hero = document.querySelector('.hero .container');
-  if (hero) hero.innerHTML = '<div class="hero-geo circle"></div><div class="hero-geo triangle"></div><div class="hero-geo diamond"></div><div class="hero-geo dot-ring"></div><h1>ä½ å¥½ï¼Œæˆ‘æ˜¯ ' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
+  if (hero) hero.innerHTML = '<div class="hero-geo circle"></div><div class="hero-geo triangle"></div><div class="hero-geo diamond"></div><div class="hero-geo dot-ring"></div><h1>ÄãºÃ£¬ÎÒÊÇ ' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
 
   const about = document.querySelector('.about .container');
-  if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">å…³äº</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
+  if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">¹ØÓÚ</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
 
   const currentlyEl = document.querySelector('.currently .container');
   if (currentlyEl && data.currently) {
     var c = data.currently;
-    currentlyEl.innerHTML = '<div class="section-label">å½“ä¸‹</div><div class="currently-grid">' +
-      '<div class="currently-item"><span class="currently-key">åœ¨è¯»</span><span>' + (c.reading || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">åœ¨å¬</span><span>' + (c.listening || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">åœ¨å­¦</span><span>' + (c.learning || '') + '</span></div>' +
-      '<div class="currently-item"><span class="currently-key">åœ¨åš</span><span>' + (c.workingOn || '') + '</span></div>' +
+    currentlyEl.innerHTML = '<div class="section-label">µ±ÏÂ</div><div class="currently-grid">' +
+      '<div class="currently-item"><span class="currently-key">ÔÚ¶Á</span><span>' + (c.reading || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">ÔÚÌı</span><span>' + (c.listening || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">ÔÚÑ§</span><span>' + (c.learning || '') + '</span></div>' +
+      '<div class="currently-item"><span class="currently-key">ÔÚ×ö</span><span>' + (c.workingOn || '') + '</span></div>' +
       '</div>';
   }
 
   const grid = document.querySelector('.interest-grid');
   if (grid) {
     grid.innerHTML = data.interests.map(i =>
-      '<a class="interest-card" href="' + i.page + '"><div class="icon">' + (ICONS[i.icon] || '') + '</div><span class="label">' + i.name + '</span><span class="card-arrow">æ¢ç´¢ &rarr;</span></a>'
+      '<a class="interest-card" href="' + i.page + '"><div class="icon">' + (ICONS[i.icon] || '') + '</div><span class="label">' + i.name + '</span><span class="card-arrow">Ì½Ë÷ &rarr;</span></a>'
     ).join('');
   }
 
@@ -235,7 +235,7 @@ async function renderHome() {
   }
 }
 
-// â”€â”€ Render blog preview on homepage â”€â”€
+// ©¤©¤ Render blog preview on homepage ©¤©¤
 async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
@@ -243,27 +243,27 @@ async function renderHomeBlog() {
     const res = await fetch('data/blog.json?v=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
     const data = await res.json();
-    if (!data.posts || !data.posts.length) { list.innerHTML = '<div class="blog-empty">è¿˜æ²¡æœ‰åšå®¢æ–‡ç« </div>'; return; }
+    if (!data.posts || !data.posts.length) { list.innerHTML = '<div class="blog-empty">»¹Ã»ÓĞ²©¿ÍÎÄÕÂ</div>'; return; }
     list.innerHTML = data.posts.slice(-3).reverse().map(p =>
       '<a class="blog-card" href="blog/posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
     ).join('');
-  } catch(e) { list.innerHTML = '<div class="blog-empty">è¿˜æ²¡æœ‰åšå®¢æ–‡ç« </div>'; }
+  } catch(e) { list.innerHTML = '<div class="blog-empty">»¹Ã»ÓĞ²©¿ÍÎÄÕÂ</div>'; }
 }
 
-// â”€â”€ Render Blog Listing â”€â”€
+// ©¤©¤ Render Blog Listing ©¤©¤
 async function renderBlog() {
   const data = await loadJSON('../data/blog.json');
   const list = document.querySelector('.blog-list');
   if (!list) return;
   if (!data.posts || data.posts.length === 0) {
-    list.innerHTML = '<div class="blog-empty">è¿˜æ²¡æœ‰åšå®¢æ–‡ç« </div>'; return;
+    list.innerHTML = '<div class="blog-empty">»¹Ã»ÓĞ²©¿ÍÎÄÕÂ</div>'; return;
   }
   list.innerHTML = [...data.posts].reverse().map(p =>
     '<a class="blog-card" href="posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
   ).join('');
 }
 
-// â”€â”€ Render Interest Sub-page â”€â”€
+// ©¤©¤ Render Interest Sub-page ©¤©¤
 async function renderInterestPage() {
   const data = await loadJSON('../data/site.json');
   if (!data) return;
@@ -279,7 +279,7 @@ async function renderInterestPage() {
   const header = document.querySelector('.interest-page .container');
   if (header) {
     header.innerHTML =
-      '<a class="back-link" href="../index.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#2471a3" stroke-width="1.5" stroke-linecap="round"/></svg>è¿”å›é¦–é¡µ</a>' +
+      '<a class="back-link" href="../index.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#2471a3" stroke-width="1.5" stroke-linecap="round"/></svg>·µ»ØÊ×Ò³</a>' +
       '<h1>' + interest.name + '</h1>' +
       '<p class="sub-desc">' + (interest.description || '') + '</p>';
   }
@@ -293,13 +293,13 @@ async function renderInterestPage() {
   else if (pageName === 'hiking') renderHikingPage(interest);
 }
 
-// â”€â”€ Photography Page â”€â”€
+// ©¤©¤ Photography Page ©¤©¤
 function renderPhotographyPage(interest) {
   const content = document.querySelector('.interest-content-area');
   const albums = interest.albums || [];
 
   if (albums.length === 0) {
-    content.innerHTML = '<div class="album-empty">è¿˜æ²¡æœ‰åˆ›å»ºå›¾é›†</div>';
+    content.innerHTML = '<div class="album-empty">»¹Ã»ÓĞ´´½¨Í¼¼¯</div>';
     return;
   }
 
@@ -323,18 +323,18 @@ function renderPhotographyPage(interest) {
       return '<div class="gallery-item"><img src="../' + img + '" alt="" loading="lazy"></div>';
     }).join('');
   } else {
-    html += '<div class="album-empty">æš‚æ— ç…§ç‰‡</div>';
+    html += '<div class="album-empty">ÔİÎŞÕÕÆ¬</div>';
   }
   html += '</div>';
 
   if (album.journal) {
-    html += '<div class="album-journal"><h3>éšç¬”</h3><div class="journal-content">' + album.journal + '</div></div>';
+    html += '<div class="album-journal"><h3>Ëæ±Ê</h3><div class="journal-content">' + album.journal + '</div></div>';
   }
 
   content.innerHTML = html;
 }
 
-// â”€â”€ Books Page â”€â”€
+// ©¤©¤ Books Page ©¤©¤
 function renderBooksPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var read = interest.read || [];
@@ -342,29 +342,29 @@ function renderBooksPage(interest) {
   var wantToRead = interest.wantToRead || [];
 
   var html = '<div class="book-tabs">';
-  html += '<button class="active" onclick="switchBookTab(\'read\')">å·²è¯»</button>';
-  html += '<button onclick="switchBookTab(\'reading\')">æ­£åœ¨é˜…è¯»</button>';
-  html += '<button onclick="switchBookTab(\'want\')">æƒ³è¦é˜…è¯»</button>';
+  html += '<button class="active" onclick="switchBookTab(\'read\')">ÒÑ¶Á</button>';
+  html += '<button onclick="switchBookTab(\'reading\')">ÕıÔÚÔÄ¶Á</button>';
+  html += '<button onclick="switchBookTab(\'want\')">ÏëÒªÔÄ¶Á</button>';
   html += '</div>';
 
   html += '<div class="book-tab-content active" id="tab-read">';
   if (read.length) {
     html += '<div class="book-list">' + read.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span>' +
-        (b.review ? '<span class="book-review-trigger">æˆ‘çš„æ„Ÿæƒ³<div class="book-review-popup">' + b.review + '</div></span>' : '') +
+        (b.review ? '<span class="book-review-trigger">ÎÒµÄ¸ĞÏë<div class="book-review-popup">' + b.review + '</div></span>' : '') +
         '</div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">è¿˜æ²¡æœ‰å·²è¯»ä¹¦ç±</div>'; }
+  } else { html += '<div class="album-empty">»¹Ã»ÓĞÒÑ¶ÁÊé¼®</div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-reading">';
   if (reading.length) {
     html += '<div class="book-list">' + reading.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span>' +
-        (b.review ? '<span class="book-review-trigger">æˆ‘çš„æ„Ÿæƒ³<div class="book-review-popup">' + b.review + '</div></span>' : '') +
+        (b.review ? '<span class="book-review-trigger">ÎÒµÄ¸ĞÏë<div class="book-review-popup">' + b.review + '</div></span>' : '') +
         '</div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">è¿˜æ²¡æœ‰æ­£åœ¨è¯»çš„ä¹¦</div>'; }
+  } else { html += '<div class="album-empty">»¹Ã»ÓĞÕıÔÚ¶ÁµÄÊé</div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-want">';
@@ -372,7 +372,7 @@ function renderBooksPage(interest) {
     html += '<div class="book-list">' + wantToRead.map(function(b) {
       return '<div class="book-item"><img class="book-cover" src="../' + b.cover + '" alt="' + b.title + '"><div class="book-info">' + b.title + '<span class="author">' + b.author + '</span></div></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">è¿˜æ²¡æœ‰æƒ³è¯»çš„ä¹¦</div>'; }
+  } else { html += '<div class="album-empty">»¹Ã»ÓĞÏë¶ÁµÄÊé</div>'; }
   html += '</div>';
 
   content.innerHTML = html;
@@ -385,20 +385,20 @@ function switchBookTab(tab) {
   document.getElementById('tab-' + tab).classList.add('active');
 }
 
-// â”€â”€ Hobbies Page â”€â”€
+// ©¤©¤ Hobbies Page ©¤©¤
 function renderHobbiesPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var hobbies = interest.hobbies || [];
   if (hobbies.length === 0) {
-    content.innerHTML = '<div class="album-empty">è¿˜æ²¡æœ‰æ·»åŠ çˆ±å¥½</div>';
+    content.innerHTML = '<div class="album-empty">»¹Ã»ÓĞÌí¼Ó°®ºÃ</div>';
     return;
   }
   content.innerHTML = '<div class="hobby-tags">' + hobbies.map(function(h) {
     return '<span class="hobby-tag">' + h + '</span>';
-  }).join('') + '</div><p style="color:#aaa;text-align:center;margin-top:2rem;font-size:0.92rem;">è¿™äº›éƒ½æ˜¯æˆ‘æ›¾ç»è®¤çœŸæŠ•å…¥è¿‡çš„ã€Œä¸‰åˆ†é’Ÿçƒ­åº¦ã€ï¼Œæ¯ä¸€é¡¹éƒ½å€¼å¾—çºªå¿µã€‚</p>';
+  }).join('') + '</div><p style="color:#aaa;text-align:center;margin-top:2rem;font-size:0.92rem;">ÕâĞ©¶¼ÊÇÎÒÔø¾­ÈÏÕæÍ¶Èë¹ıµÄ¡¸Èı·ÖÖÓÈÈ¶È¡¹£¬Ã¿Ò»Ïî¶¼ÖµµÃ¼ÍÄî¡£</p>';
 }
 
-// â”€â”€ Hiking Page â”€â”€
+// ©¤©¤ Hiking Page ©¤©¤
 function renderHikingPage(interest) {
   const content = document.querySelector('.interest-content-area');
   var climbed = interest.climbed || [];
@@ -407,26 +407,26 @@ function renderHikingPage(interest) {
   var journal = interest.journal || '';
 
   var html = '<div class="book-tabs">';
-  html += '<button class="active" onclick="switchBookTab(\'climbed\')">å·²ç™»å±±è„‰</button>';
-  html += '<button onclick="switchBookTab(\'wantClimb\')">æƒ³è¦å¾æœ</button>';
-  if (journal) html += '<button onclick="switchBookTab(\'journal\')">éšç¬”</button>';
-  if (images.length) html += '<button onclick="switchBookTab(\'photos\')">ç…§ç‰‡</button>';
+  html += '<button class="active" onclick="switchBookTab(\'climbed\')">ÒÑµÇÉ½Âö</button>';
+  html += '<button onclick="switchBookTab(\'wantClimb\')">ÏëÒªÕ÷·ş</button>';
+  if (journal) html += '<button onclick="switchBookTab(\'journal\')">Ëæ±Ê</button>';
+  if (images.length) html += '<button onclick="switchBookTab(\'photos\')">ÕÕÆ¬</button>';
   html += '</div>';
 
   html += '<div class="book-tab-content active" id="tab-climbed">';
   if (climbed.length) {
     html += '<div class="mountain-list">' + climbed.map(function(m) {
-      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div><div class="mountain-detail">' + (m.date || '') + (m.note ? ' Â· ' + m.note : '') + '</div></div><span class="tag-climbed">å·²ç™»é¡¶</span></div>';
+      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div><div class="mountain-detail">' + (m.date || '') + (m.note ? ' ¡¤ ' + m.note : '') + '</div></div><span class="tag-climbed">ÒÑµÇ¶¥</span></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">è¿˜æ²¡æœ‰å·²ç™»å±±è„‰</div>'; }
+  } else { html += '<div class="album-empty">»¹Ã»ÓĞÒÑµÇÉ½Âö</div>'; }
   html += '</div>';
 
   html += '<div class="book-tab-content" id="tab-wantClimb">';
   if (wantToClimb.length) {
     html += '<div class="mountain-list">' + wantToClimb.map(function(m) {
-      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div>' + (m.reason ? '<div class="mountain-detail">' + m.reason + '</div>' : '') + '</div><span class="tag-wanted">æƒ³è¦å¾æœ</span></div>';
+      return '<div class="mountain-card"><div class="mountain-icon">' + ICONS.mountain + '</div><div class="mountain-info"><div class="mountain-name">' + m.name + '</div>' + (m.reason ? '<div class="mountain-detail">' + m.reason + '</div>' : '') + '</div><span class="tag-wanted">ÏëÒªÕ÷·ş</span></div>';
     }).join('') + '</div>';
-  } else { html += '<div class="album-empty">è¿˜æ²¡æœ‰æƒ³è¦å¾æœçš„å±±</div>'; }
+  } else { html += '<div class="album-empty">»¹Ã»ÓĞÏëÒªÕ÷·şµÄÉ½</div>'; }
   html += '</div>';
 
   if (journal) {
@@ -521,7 +521,7 @@ function renderGeoGuestbook() {
 
   if (!gbComments || !gbComments.length) {
     container.innerHTML = '<div style="color:#6e747c;font-size:0.92rem;text-align:center;padding:3rem 0">' +
-      'è¿˜æ²¡æœ‰ç•™è¨€ï¼Œæ¥æ‰”ä¸€åªå°é»„é¸­å§ ğŸ¤</div>';
+      '»¹Ã»ÓĞÁôÑÔ£¬À´ÈÓÒ»Ö»Ğ¡»ÆÑ¼°É ??</div>';
     geoDucks = [];
     return;
   }
@@ -647,6 +647,33 @@ function spawnRipple(x, y, inner) {
   setTimeout(function() { if (ripple.parentElement) ripple.remove(); }, 1300);
 }
 
+
+function spawnSplash(x, y, vy, inner) {
+  var speed = Math.abs(vy);
+  var count = Math.min(12, Math.max(3, Math.floor(speed * 1.8)));
+  var isEntering = vy > 0; // true = falling into water, false = popping up
+  for (var i = 0; i < count; i++) {
+    var particle = document.createElement('div');
+    var angle = (Math.random() - 0.5) * Math.PI * 0.9 + (isEntering ? -Math.PI/2 : Math.PI/2);
+    var dist = 15 + Math.random() * 40 * Math.min(1, speed / 6);
+    var sx = Math.cos(angle) * dist;
+    var sy = Math.sin(angle) * dist - (isEntering ? 0 : 15);
+    var size = 2 + Math.random() * 4;
+    var lifetime = 0.5 + Math.random() * 0.7;
+    particle.style.cssText =
+      'position:absolute;left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;'
+      + 'width:' + size + 'px;height:' + size + 'px;border-radius:50%;'
+      + 'background:rgba(41,144,192,' + (0.35 + Math.random() * 0.45) + ');'
+      + '--sx:' + sx + 'px;--sy:' + sy + 'px;'
+      + 'animation:splashParticle ' + lifetime + 's ease-out forwards;'
+      + 'pointer-events:none;z-index:4';
+    inner.appendChild(particle);
+    var timeout = lifetime * 1000 + 100;
+    setTimeout(function() { if (particle.parentElement) particle.remove(); }, timeout);
+  }
+}
+
+
 function updateDuckPos(d) {
   d.el.style.left = (d.x - d.size/2) + 'px';
   d.el.style.top = (d.y - d.size/2) + 'px';
@@ -666,7 +693,7 @@ function geoLoop(W, H) {
     var subRatio = Math.min(1, submerged / d.size);
 
     if (submerged > 0) {
-      // Smooth progressive buoyancy â€” ducks float at ~25% submerged equilibrium
+      // Smooth progressive buoyancy ¡ª ducks float at ~25% submerged equilibrium
       var eqDepth = d.size * 0.22;
       if (submerged > eqDepth) {
         d.vy -= (submerged - eqDepth) * 0.005;
@@ -684,17 +711,17 @@ function geoLoop(W, H) {
       d.av *= 0.98;
     }
 
-    // Water surface crossing â€” dampen + ripple
+    // Water surface crossing ¡ª dampen + ripple
     var isAbove = d.y < waterY;
     if (!wasAbove && isAbove && d.vy < -0.5) {
       d.vy *= 0.55;
       var inner = document.querySelector('[data-geo] .geo-inner');
-      if (inner) spawnRipple(d.x, waterY, inner);
+      if (inner) { spawnRipple(d.x, waterY, inner); spawnSplash(d.x, waterY, d.vy, inner); }
     }
     if (wasAbove && !isAbove && d.vy > 1.2) {
       d.vy *= 0.55;
       var inner2 = document.querySelector('[data-geo] .geo-inner');
-      if (inner2) spawnRipple(d.x, waterY, inner2);
+      if (inner2) { spawnRipple(d.x, waterY, inner2); spawnSplash(d.x, waterY, d.vy, inner2); }
     }
 
     d.x += d.vx;
@@ -901,12 +928,12 @@ function initGuestbook() {
   if (!form) return;
   form.addEventListener("submit", function(e) {
     e.preventDefault();
-    var name = document.getElementById("gbName").value.trim() || "åŒ¿å";
+    var name = document.getElementById("gbName").value.trim() || "ÄäÃû";
     var text = document.getElementById("gbText").value.trim();
     var msg = document.getElementById("gbMsg");
-    if (!text) { msg.textContent = "è¯·è¾“å…¥ç•™è¨€å†…å®¹"; msg.style.color = "#c62828"; return; }
+    if (!text) { msg.textContent = "ÇëÊäÈëÁôÑÔÄÚÈİ"; msg.style.color = "#c62828"; return; }
     submitGuestbook(name, text);
-    msg.textContent = "ç•™è¨€æˆåŠŸï¼âœ¨";
+    msg.textContent = "ÁôÑÔ³É¹¦£¡?";
     msg.style.color = "#2e7d32";
     form.reset();
     setTimeout(function() { msg.textContent = ""; }, 3000);
