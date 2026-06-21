@@ -163,17 +163,11 @@ button{cursor:pointer;font-family:inherit}
 
 
 <div class="tc" id="tab-netease"><div class="card">
-<h2>🎵 随心一听 · 网易云管理</h2>
+<h2>🎵 随心一听</h2>
+<div class="sub">数据来源：拿铁超人獭 · 网易云近一周听歌排行</div>
 <div id="neStatus" class="status sinfo">检查中...</div>
 <div style="margin-bottom:0.8rem;">
-<button class="btn btnsm" onclick="neCheck()">刷新状态</button>
-<button class="btn btnsm" onclick="neSync()" style="margin-left:0.3rem;">手动同步</button>
-</div>
-<div id="neQR" style="display:none;">
-<hr>
-<button class="btn" onclick="neGetQR()">获取登录二维码</button>
-<div id="neQRImg" style="text-align:center;margin:0.8rem 0;"></div>
-<div id="neQRHint" class="hint"></div>
+<button class="btn btnsm" onclick="neSync()">手动同步</button>
 </div>
 <div class="msg" id="neMsg"></div>
 </div></div>
@@ -193,22 +187,19 @@ button{cursor:pointer;font-family:inherit}
 <script>
 var NE_API = (location.hostname==='localhost'||location.hostname==='127.0.0.1')?'':'https://latte-site-production.up.railway.app';
 
-async function neCheck(){
+(async function(){
   var el=document.getElementById('neStatus');
   try{
     var r=await fetch(NE_API+'/api/netease/status');
     var d=await r.json();
-    if(d.loggedIn){
+    if(d.ok){
       el.className='status sok';
-      el.innerHTML='✓ 已登录 — '+d.nickname+(d.songCount?' | 缓存 '+d.songCount+' 首歌':'')+(d.cachedAt?' | 同步: '+new Date(d.cachedAt).toLocaleString():"");
-      document.getElementById('neQR').style.display='none';
+      el.innerHTML='✓ 在线 | 缓存 '+d.songCount+' 首歌'+(d.cachedAt?' | 上次同步: '+new Date(d.cachedAt).toLocaleString():"");
     }else{
-      el.className='status serr';
-      el.innerHTML='✗ 未连接网易云';
-      document.getElementById('neQR').style.display='block';
+      el.className='status serr';el.innerHTML='✗ 离线';
     }
   }catch(e){el.className='status serr';el.innerHTML='网络异常';}
-}
+})();
 
 async function neSync(){
   var m=document.getElementById('neMsg');
@@ -216,40 +207,10 @@ async function neSync(){
   try{
     var r=await fetch(NE_API+'/api/netease/sync',{method:'POST'});
     var d=await r.json();
-    if(d.ok){m.textContent='✓ 已同步 '+d.songCount+' 首歌';m.className='msg msgok';neCheck();}
+    if(d.ok){m.textContent='✓ 已同步 '+d.songCount+' 首歌';m.className='msg msgok';location.reload();}
     else{m.textContent='✗ 同步失败';m.className='msg msgerr';}
   }catch(e){m.textContent='✗ 请求失败';m.className='msg msgerr';}
 }
-
-async function neGetQR(){
-  var img=document.getElementById('neQRImg');
-  var hint=document.getElementById('neQRHint');
-  img.innerHTML='获取中...';hint.textContent='';
-  try{
-    var r=await fetch(NE_API+'/api/netease/qr-key');
-    var d=await r.json();
-    if(d.qrimg){
-      img.innerHTML='<img src="'+d.qrimg+'" alt="扫码" style="max-width:200px;border-radius:8px;">';
-      hint.textContent='请用网易云音乐 App 扫码';
-      nePollQR(d.unikey,0);
-    }else{img.innerHTML='<span style="color:#c62828;">获取失败</span>';}
-  }catch(e){img.innerHTML='<span style="color:#c62828;">请求失败</span>';}
-}
-
-async function nePollQR(key,count){
-  if(count>120){document.getElementById('neQRHint').textContent='二维码已过期';return;}
-  try{
-    var r=await fetch(NE_API+'/api/netease/qr-check?key='+key);
-    var d=await r.json();
-    if(d.status==='ok'){document.getElementById('neQRHint').textContent='登录成功！'+d.nickname;document.getElementById('neQRImg').innerHTML='<span style="color:#4caf50;">✓ 已登录</span>';setTimeout(neCheck,1000);return;}
-    if(d.status==='scanned')document.getElementById('neQRHint').textContent='已扫码，请在手机上确认...';
-    if(d.status==='expired'){document.getElementById('neQRHint').textContent='已过期';return;}
-    if(d.status==='waiting')document.getElementById('neQRHint').textContent='等待扫码...';
-  }catch(e){}
-  setTimeout(function(){nePollQR(key,count+1);},1000);
-}
-
-neCheck();
 </script>
 <script src="admin.js"></script>
 </body>

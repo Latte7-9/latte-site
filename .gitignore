@@ -1,7 +1,6 @@
-﻿git_tmp/
+git_tmp/
 
 # Netease cookie
-data/.netease_cookie
 
 node_modules/
 pnpm-lock.yaml

@@ -244,32 +244,15 @@ var API_BASE = (window.location.hostname === 'localhost' || window.location.host
   ? '' : 'https://latte-site-production.up.railway.app';
 
 async function loadRandomListen() {
-  const statusEl = document.querySelector('.listen-status');
-  const listEl = document.querySelector('.listen-song-list');
-  const actionsEl = document.querySelector('.listen-actions');
+  var statusEl = document.querySelector('.listen-status');
+  var listEl = document.querySelector('.listen-song-list');
+  var actionsEl = document.querySelector('.listen-actions');
   if (!statusEl || !listEl || !actionsEl) return;
 
   try {
-    const resp = await fetch(API_BASE + '/api/netease/weekly');
-    if (resp.status === 401) {
-      // 未登录，降级到静态数据
-      statusEl.className = 'listen-status listen-offline';
-      statusEl.textContent = '未连接网易云';
-      try {
-        const siteData = await loadJSON('data/site.json');
-        if (siteData && siteData.currently && siteData.currently.listening) {
-          listEl.innerHTML = '<div class="listen-static">' + siteData.currently.listening + '</div>';
-        } else {
-          listEl.innerHTML = '<div class="listen-empty">暂无数据</div>';
-        }
-      } catch {
-        listEl.innerHTML = '<div class="listen-empty">暂无数据</div>';
-      }
-      actionsEl.innerHTML = '<a class="listen-btn-admin" href="admin/">去管理面板登录网易云</a>';
-      return;
-    }
-
-    const data = await resp.json();
+    var resp = await fetch(API_BASE + '/api/netease/weekly');
+    var data = await resp.json();
+    
     if (!data.songs || data.songs.length === 0) {
       statusEl.className = 'listen-status listen-offline';
       statusEl.textContent = '暂无播放记录';
@@ -277,16 +260,14 @@ async function loadRandomListen() {
       return;
     }
 
-    // 更新状态
-    const updatedAt = data.updatedAt ? new Date(data.updatedAt) : null;
-    const minutesAgo = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 60000) : null;
+    var updatedAt = data.updatedAt ? new Date(data.updatedAt) : null;
+    var minutesAgo = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 60000) : null;
     statusEl.className = 'listen-status listen-online';
     statusEl.innerHTML = '最近一周常听' +
       (minutesAgo !== null ? '<span class="listen-cache-time">（' + minutesAgo + '分钟前同步）</span>' : '');
 
-    // 渲染歌曲列表
-    let songsHTML = '';
-    data.songs.forEach(function(song, i) {
+    var songsHTML = '';
+    data.songs.slice(0, 5).forEach(function(song, i) {
       songsHTML += '<a class="listen-song-card" href="' + song.url + '" target="_blank" rel="noopener">' +
         '<span class="listen-song-rank">' + (i + 1) + '</span>' +
         '<img class="listen-song-cover" src="' + (song.cover ? song.cover + '?param=80y80' : '') + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
@@ -299,10 +280,8 @@ async function loadRandomListen() {
     });
     listEl.innerHTML = songsHTML;
 
-    // 随心一听按钮
     actionsEl.innerHTML = '<button class="listen-random-btn" id="randomListenBtn">🎵 随心一听</button>';
 
-    // 绑定随机点击事件
     var btn = document.getElementById('randomListenBtn');
     if (btn) {
       btn.addEventListener('click', async function() {
@@ -313,25 +292,24 @@ async function loadRandomListen() {
           var d = await r.json();
           if (d.song && d.song.url) {
             window.open(d.song.url, '_blank', 'noopener');
-          } else {
-            alert('暂时没有可播放的歌曲');
           }
-        } catch (e) {
-          alert('获取歌曲失败，请稍后再试');
-        }
+        } catch (e) {}
         btn.textContent = '🎵 随心一听';
         btn.disabled = false;
       });
     }
-
   } catch (e) {
-    console.error('loadRandomListen error:', e);
+    console.error('loadRandomListen:', e);
     statusEl.className = 'listen-status listen-offline';
     statusEl.textContent = '加载失败';
-    listEl.innerHTML = '<div class="listen-empty">网络异常，请刷新重试</div>';
+    try {
+      var siteData = await loadJSON('data/site.json');
+      if (siteData && siteData.currently && siteData.currently.listening) {
+        listEl.innerHTML = '<div class="listen-static">' + siteData.currently.listening + '</div>';
+      }
+    } catch {}
   }
 }
-
 function escapeHTML(str) {
   var div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
