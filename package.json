@@ -1,23 +1,27 @@
 ﻿{
-  "name": "Project_001_个人网站搭建",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.5.3",
-      "onFail": "download"
-    }
-  },
-  "type": "commonjs",
-  "dependencies": {
-    "NeteaseCloudMusicApi": "^4.32.0"
-  }
+    "name":  "Project_001_个人网站搭建",
+    "version":  "1.0.0",
+    "description":  "",
+    "main":  "api-server.js",
+    "scripts":  {
+                    "test":  "echo OK",
+                    "dev":  "node serve.js",
+                    "start":  "node api-server.js"
+                },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "devEngines":  {
+                       "packageManager":  {
+                                              "name":  "pnpm",
+                                              "version":  "^11.5.3",
+                                              "onFail":  "download"
+                                          }
+                   },
+    "type":  "commonjs",
+    "dependencies":  {
+                         "NeteaseCloudMusicApi":  "^4.32.0"
+                     }
 }

@@ -238,6 +238,11 @@ async function renderHome() {
 // ── Render blog preview on homepage ──
 
 // ====== 随心一听：网易云音乐集成 ======
+
+// API 地址：本地用相对路径，线上用 Railway
+var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? '' : 'https://YOUR-RAILWAY-APP.up.railway.app';
+
 async function loadRandomListen() {
   const statusEl = document.querySelector('.listen-status');
   const listEl = document.querySelector('.listen-song-list');
@@ -245,7 +250,7 @@ async function loadRandomListen() {
   if (!statusEl || !listEl || !actionsEl) return;
 
   try {
-    const resp = await fetch('/api/netease/weekly');
+    const resp = await fetch(API_BASE + '/api/netease/weekly');
     if (resp.status === 401) {
       // 未登录，降级到静态数据
       statusEl.className = 'listen-status listen-offline';
@@ -304,7 +309,7 @@ async function loadRandomListen() {
         btn.textContent = '🎵 正在挑选...';
         btn.disabled = true;
         try {
-          var r = await fetch('/api/netease/random');
+          var r = await fetch(API_BASE + '/api/netease/random');
           var d = await r.json();
           if (d.song && d.song.url) {
             window.open(d.song.url, '_blank', 'noopener');
