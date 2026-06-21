@@ -1,4 +1,4 @@
-﻿// ====== 入场层逻辑 ======
+// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
@@ -241,7 +241,7 @@ async function renderHome() {
 
 // API 地址：本地用相对路径，线上用 Railway
 var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? '' : 'https://YOUR-RAILWAY-APP.up.railway.app';
+  ? '' : 'https://latte-site-production.up.railway.app';
 
 async function loadRandomListen() {
   const statusEl = document.querySelector('.listen-status');
