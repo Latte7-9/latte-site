@@ -1,4 +1,4 @@
-﻿
+
 /* ====== Grid Background Canvas ====== */
 .grid-background {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1136,3 +1136,77 @@ footer::before {
 
 
 
+
+
+/* ====== 唱片悬浮播放器 ====== */
+.vinyl-player {
+  position: fixed; right: -320px; bottom: 80px; z-index: 9999;
+  display: flex; align-items: center; gap: 0;
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.vinyl-player.open { right: 12px; }
+
+/* 唱片圆盘 */
+.vinyl-record {
+  width: 80px; height: 80px; flex-shrink: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #1a1a1a 30%, #0d0d0d 31%, #1a1a1a 32%, #0d0d0d 46%, #1a1a1a 47%, #0d0d0d 62%, #222 63%, #111 85%, #222 86%, #111 100%);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 60px rgba(41,144,192,0.15);
+  position: relative; z-index: 2;
+  animation: vinylSpin 4s linear infinite paused;
+}
+.vinyl-record.playing { animation-play-state: running; }
+
+.vinyl-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: radial-gradient(circle, #e74c3c 0%, #c0392b 60%, #8b0000 100%);
+  box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+}
+
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 展开主体 */
+.vinyl-body {
+  background: rgba(20,24,30,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 0 14px 14px 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0.8rem 1rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  width: 320px; max-width: calc(100vw - 120px);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.vinyl-player.open .vinyl-body { opacity: 1; pointer-events: auto; }
+
+.vinyl-info { text-align: center; }
+.vinyl-title { font-size: 0.9rem; color: #e0e4ec; font-weight: 500; }
+.vinyl-artist { font-size: 0.75rem; color: #7a8088; margin-top: 0.15rem; }
+
+.vinyl-iframe-wrap { border-radius: 8px; overflow: hidden; height: 66px; }
+.vinyl-iframe-wrap iframe { width: 100%; height: 66px; border: none; }
+
+.vinyl-close {
+  position: absolute; top: 6px; right: 10px;
+  background: none; border: none; color: #555; font-size: 1.2rem;
+  cursor: pointer; line-height: 1;
+}
+.vinyl-close:hover { color: #aaa; }
+
+/* 贴边露出状态 */
+.vinyl-player:not(.open) { right: -256px; }
+.vinyl-player:not(.open):hover { right: -220px; }
+
+@media (max-width: 600px) {
+  .vinyl-player { right: -296px; bottom: 60px; }
+  .vinyl-player.open { right: 4px; }
+  .vinyl-body { width: 260px; }
+  .vinyl-record { width: 60px; height: 60px; }
+  .vinyl-label { width: 18px; height: 18px; }
+}

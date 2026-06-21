@@ -240,7 +240,6 @@ async function renderHome() {
 // API 地址：本地用相对路径，线上用 Railway
 var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? '' : 'https://latte-site-production.up.railway.app';
-
 async function loadRandomListen() {
   var statusEl = document.querySelector('.listen-status');
   var listEl = document.querySelector('.listen-song-list');
@@ -291,7 +290,7 @@ async function loadRandomListen() {
           if (d.song && d.song.url) {
             window.open(d.song.url, '_blank', 'noopener');
           }
-        } catch (e) {}
+        } catch (e2) {}
         btn.textContent = '🎵 随心一听';
         btn.disabled = false;
       });
@@ -305,14 +304,17 @@ async function loadRandomListen() {
       if (siteData && siteData.currently && siteData.currently.listening) {
         listEl.innerHTML = '<div class="listen-static">' + siteData.currently.listening + '</div>';
       }
-    } catch {}
+    } catch (e2) {}
   }
 }
+
 function escapeHTML(str) {
   var div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
-}async function renderHomeBlog() {
+}
+
+async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
   try {
@@ -1066,5 +1068,6 @@ document.addEventListener('DOMContentLoaded', () => { initBackToTop();
   homePromise.then(function() { initFadeIn(); });
   if (document.querySelector('.blog-list')) renderBlog();
   if (document.querySelector('.interest-page')) renderInterestPage();
+    initVinylPlayer();
   if (!document.querySelector('.hero') && !document.querySelector('.blog-list') && !document.querySelector('.interest-page')) initFadeIn();
 });
