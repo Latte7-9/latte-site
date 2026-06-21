@@ -142,7 +142,7 @@ img { max-width: 100%; height: auto; }
   max-width: 720px; margin: 0 auto; padding: 0 2rem;
   display: flex; justify-content: space-between; align-items: center; height: 56px;
 }
-.nav-brand { font-size: 1.15rem; font-weight: 500; color: #b0b6be; letter-spacing: 0.06em; }
+.nav-brand { font-size: 1.15rem; font-weight: 500; color: #e0e4ec; letter-spacing: 0.06em; }
 .nav-brand::before {
   content: "\25C6"; margin-right: 0.5rem; color: #2990c0;
   font-size: 1rem; vertical-align: middle;
@@ -176,7 +176,7 @@ section + section { border-top: 1px solid #2a3038; }
 /* 閳光偓閳光偓 Hero 閳光偓閳光偓 */
 .hero { padding: 10rem 0 6rem; }
 .hero .container { position: relative; }
-.hero h1 { font-size: 3rem; font-weight: 400; letter-spacing: 0.04em; color: #b0b6be; }
+.hero h1 { font-size: 3rem; font-weight: 400; letter-spacing: 0.04em; color: #e0e4ec; }
 .hero .tagline { font-size: 1.15rem; color: #6e747c; margin-top: 1rem; font-weight: 380; letter-spacing: 0.03em; }
 
 /* Hero geometric shapes */
@@ -205,7 +205,7 @@ section + section { border-top: 1px solid #2a3038; }
 /* 閳光偓閳光偓 Section label 閳光偓閳光偓 */
 .section-label {
   font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em;
-  color: #6e747c; margin-bottom: 2.5rem; font-weight: 500;
+  color: #8b9098; margin-bottom: 2.5rem; font-weight: 500;
   display: flex; align-items: center; gap: 0.8rem;
 }
 .section-label::after {
@@ -250,7 +250,7 @@ section + section { border-top: 1px solid #2a3038; }
   font-size: 0.88rem; color: #6e747c; margin-bottom: 2rem; transition: color 0.2s; font-weight: 450;
 }
 .interest-page .back-link:hover { color: #b0b6be; }
-.interest-page h1 { font-size: 2.2rem; font-weight: 400; color: #b0b6be; margin-bottom: 0.5rem; }
+.interest-page h1 { font-size: 2.2rem; font-weight: 400; color: #e0e4ec; margin-bottom: 0.5rem; }
 .interest-page .sub-desc { font-size: 1.02rem; color: #6e747c; margin-bottom: 2.5rem; font-weight: 380; }
 .interest-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .interest-gallery .gallery-item {
@@ -335,7 +335,7 @@ section + section { border-top: 1px solid #2a3038; }
 .blog-card:hover::before { opacity: 1; }
 .blog-card:hover { border-color: #ddd; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
 .blog-card .date { font-size: 0.78rem; color: #6e747c; letter-spacing: 0.06em; font-weight: 450; }
-.blog-card h3 { font-size: 1.12rem; color: #b0b6be; margin: 0.4rem 0; font-weight: 450; }
+.blog-card h3 { font-size: 1rem; font-weight: 460; color: #e0e4ec; margin: 0.4rem 0; font-weight: 450; }
 .blog-card .summary { font-size: 0.92rem; color: #6e747c; font-weight: 420; }
 .blog-empty { text-align: center; color: #6e747c; padding: 3rem 0; font-size: 0.98rem; font-weight: 420; }
 
@@ -553,7 +553,7 @@ footer::before {
 .blog-preview .view-all:hover { color: #c0c6ce; }
 .blog-card { display: block; padding:  1.5rem 1.5rem 1.5rem 2rem; border-bottom: 1px solid #2a3038; text-decoration: none; color: inherit; }
 .blog-card .date { font-size: 0.75rem; color: #6e747c; margin-bottom: 0.2rem; }
-.blog-card h3 { font-size: 1rem; font-weight: 460; color: #b0b6be; margin: 0 0 0.3rem; }
+.blog-card h3 { font-size: 1rem; font-weight: 460; color: #e0e4ec; margin: 0 0 0.3rem; }
 .blog-card .summary { font-size: 0.85rem; color: #8b9098; line-height: 1.5; }
 .blog-empty { color: #6e747c; text-align: center; padding: 2rem 0; font-size: 0.9rem; }
 
@@ -561,7 +561,7 @@ footer::before {
 .blog-article { padding: 8rem 0 4rem; }
 .blog-post-header { margin-bottom: 2rem; }
 .blog-post-date { font-size: 0.8rem; color: #6e747c; margin-bottom: 0.3rem; }
-.blog-post-header h1 { font-size: 1.8rem; font-weight: 400; color: #b0b6be; margin: 0; }
+.blog-post-header h1 { font-size: 1.8rem; font-weight: 400; color: #e0e4ec; margin: 0; }
 .blog-post-content { font-size: 1rem; color: #b0b6be; line-height: 1.9; }
 .blog-post-content p { margin-bottom: 1rem; }
 .blog-post-content h3 { font-size: 1.1rem; font-weight: 480; color: #b0b6be; margin: 2rem 0 0.8rem; }
@@ -579,7 +579,7 @@ footer::before {
 .geo-shape { display: flex; align-items: center; justify-content: center; transition: transform 0.1s, opacity 0.4s; will-change: left, top; border: none !important; outline: none !important; }
 .geo-shape:hover { filter: brightness(1.15); z-index: 5 !important; cursor: grab; }
 .geo-shape:active { cursor: grabbing; }
-.geo-info { position: absolute; width: 240px; background: rgba(30,35,50,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 12px 40px rgba(0,0,0,0.3); padding: 1.2rem; z-index: 50; display: none; font-size: 0.85rem; color: #b0b6be; }
+.geo-info { position: absolute; width: 240px; background: rgba(30,35,50,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 12px 40px rgba(0,0,0,0.3); padding: 1.2rem; z-index: 50; display: none; font-size: 0.85rem; color: #c8ccd4; }
 @keyframes geoInfoIn { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); }
 
 .geo-popup-on { animation: geoPopIn 0.25s ease; }
