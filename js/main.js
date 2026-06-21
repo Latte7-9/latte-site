@@ -236,6 +236,10 @@ async function renderHome() {
 // ── Render blog preview on homepage ──
 
 // ====== 随心一听：网易云音乐集成 ======
+// API 地址：本地用相对路径，线上用 Railway
+var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? '' : 'https://latte-site-production.up.railway.app';
+
 
 // API 地址：本地用相对路径，线上用 Railway
 var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
@@ -313,6 +317,62 @@ function escapeHTML(str) {
   div.appendChild(document.createTextNode(str));
   return div.innerHTML;
 }
+
+
+// ====== 唱片悬浮播放器 ======
+async function initVinylPlayer() {
+  var player = document.getElementById('vinylPlayer');
+  var record = document.getElementById('vinylRecord');
+  var titleEl = document.getElementById('vinylTitle');
+  var artistEl = document.getElementById('vinylArtist');
+  var iframeWrap = document.getElementById('vinylIframe');
+  var closeBtn = document.getElementById('vinylClose');
+  if (!player || !record || !titleEl || !artistEl || !iframeWrap) return;
+
+  try {
+    var resp = await fetch(API_BASE + '/api/netease/weekly');
+    var data = await resp.json();
+    if (!data.songs || data.songs.length === 0) {
+      player.style.display = 'none';
+      return;
+    }
+    var song = data.songs[0];
+    titleEl.textContent = song.name;
+    artistEl.textContent = song.artists;
+    player.style.display = 'flex';
+    iframeWrap.innerHTML = '<iframe src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0"></iframe>';
+  } catch (e2) {
+    console.error('vinyl:', e2);
+    player.style.display = 'none';
+    return;
+  }
+
+  record.addEventListener('click', function(e) {
+    e.stopPropagation();
+    player.classList.toggle('open');
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      player.classList.remove('open');
+    });
+  }
+
+  var autoPlayed = false;
+  function tryAutoPlay() {
+    if (autoPlayed) return;
+    autoPlayed = true;
+    record.classList.add('playing');
+    var iframe = iframeWrap.querySelector('iframe');
+    if (iframe && iframe.src.indexOf('auto=1') === -1) {
+      iframe.src = iframe.src.replace('auto=0', 'auto=1');
+    }
+  }
+  document.addEventListener('click', tryAutoPlay, { once: true });
+  document.addEventListener('scroll', tryAutoPlay, { once: true });
+}
+
 
 async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
