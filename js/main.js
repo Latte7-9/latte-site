@@ -236,7 +236,102 @@ async function renderHome() {
 }
 
 // ── Render blog preview on homepage ──
-async function renderHomeBlog() {
+
+// ====== 随心一听：网易云音乐集成 ======
+async function loadRandomListen() {
+  const statusEl = document.querySelector('.listen-status');
+  const listEl = document.querySelector('.listen-song-list');
+  const actionsEl = document.querySelector('.listen-actions');
+  if (!statusEl || !listEl || !actionsEl) return;
+
+  try {
+    const resp = await fetch('/api/netease/weekly');
+    if (resp.status === 401) {
+      // 未登录，降级到静态数据
+      statusEl.className = 'listen-status listen-offline';
+      statusEl.textContent = '未连接网易云';
+      try {
+        const siteData = await loadJSON('data/site.json');
+        if (siteData && siteData.currently && siteData.currently.listening) {
+          listEl.innerHTML = '<div class="listen-static">' + siteData.currently.listening + '</div>';
+        } else {
+          listEl.innerHTML = '<div class="listen-empty">暂无数据</div>';
+        }
+      } catch {
+        listEl.innerHTML = '<div class="listen-empty">暂无数据</div>';
+      }
+      actionsEl.innerHTML = '<a class="listen-btn-admin" href="admin/">去管理面板登录网易云</a>';
+      return;
+    }
+
+    const data = await resp.json();
+    if (!data.songs || data.songs.length === 0) {
+      statusEl.className = 'listen-status listen-offline';
+      statusEl.textContent = '暂无播放记录';
+      listEl.innerHTML = '<div class="listen-empty">近一周还没有听歌记录</div>';
+      return;
+    }
+
+    // 更新状态
+    const updatedAt = data.updatedAt ? new Date(data.updatedAt) : null;
+    const minutesAgo = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 60000) : null;
+    statusEl.className = 'listen-status listen-online';
+    statusEl.innerHTML = '最近一周常听' +
+      (minutesAgo !== null ? '<span class="listen-cache-time">（' + minutesAgo + '分钟前同步）</span>' : '');
+
+    // 渲染歌曲列表
+    let songsHTML = '';
+    data.songs.forEach(function(song, i) {
+      songsHTML += '<a class="listen-song-card" href="' + song.url + '" target="_blank" rel="noopener">' +
+        '<span class="listen-song-rank">' + (i + 1) + '</span>' +
+        '<img class="listen-song-cover" src="' + (song.cover ? song.cover + '?param=80y80' : '') + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<div class="listen-song-info">' +
+          '<div class="listen-song-name">' + escapeHTML(song.name) + '</div>' +
+          '<div class="listen-song-artist">' + escapeHTML(song.artists) + '</div>' +
+        '</div>' +
+        '<span class="listen-song-count">' + (song.playCount || '') + '次</span>' +
+      '</a>';
+    });
+    listEl.innerHTML = songsHTML;
+
+    // 随心一听按钮
+    actionsEl.innerHTML = '<button class="listen-random-btn" id="randomListenBtn">🎵 随心一听</button>';
+
+    // 绑定随机点击事件
+    var btn = document.getElementById('randomListenBtn');
+    if (btn) {
+      btn.addEventListener('click', async function() {
+        btn.textContent = '🎵 正在挑选...';
+        btn.disabled = true;
+        try {
+          var r = await fetch('/api/netease/random');
+          var d = await r.json();
+          if (d.song && d.song.url) {
+            window.open(d.song.url, '_blank', 'noopener');
+          } else {
+            alert('暂时没有可播放的歌曲');
+          }
+        } catch (e) {
+          alert('获取歌曲失败，请稍后再试');
+        }
+        btn.textContent = '🎵 随心一听';
+        btn.disabled = false;
+      });
+    }
+
+  } catch (e) {
+    console.error('loadRandomListen error:', e);
+    statusEl.className = 'listen-status listen-offline';
+    statusEl.textContent = '加载失败';
+    listEl.innerHTML = '<div class="listen-empty">网络异常，请刷新重试</div>';
+  }
+}
+
+function escapeHTML(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
   try {
@@ -468,7 +563,6 @@ function initBackToTop() {
   });
 }
 var gbComments = [];
-var GB_TOKEN = ["g","h","p","_","S","U","Q","x","m","s","W","L","D","v","6","X","k","U","n","e","Z","5","b","Y","H","G","j","s","k","e","x","4","b","f","3","3","3","a","f","O"].join("");
 var geoDucks = [];
 var geoAnimId = null;
 var geoMouse = { x: 0, y: 0, down: false, drag: null, ox: 0, oy: 0 };
@@ -506,11 +600,18 @@ async function loadGuestbook() {
   } catch(e) { gbComments = []; }
   try {
     var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
+    var syncedLocal = [];
     local.forEach(function(c) {
       if (!gbComments.some(function(x) { return x.text === c.text && x.name === c.name && x.date === c.date; })) {
         gbComments.unshift(c);
+      } else {
+        syncedLocal.push(c);
       }
     });
+    if (syncedLocal.length > 0) {
+      var remaining = local.filter(function(c) { return !syncedLocal.some(function(s) { return s.text===c.text&&s.name===c.name&&s.date===c.date; }); });
+      localStorage.setItem("gb_local", JSON.stringify(remaining));
+    }
   } catch(e) {}
   renderGeoGuestbook();
 }
@@ -946,37 +1047,18 @@ function addNewDuck(comment, inner) {
     av: 0
   });
 }
-
 async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
   addNewDuck(comment);
-  var msgEl = document.getElementById('gbMsg');
-  if (msgEl) { msgEl.textContent = '留言成功！✨'; msgEl.style.color = '#2e7d32'; }
-  
-  try {
-    var getResp = await fetch("https://api.github.com/repos/Latte7-9/latte-site/contents/data/comments.json", {
-      headers: { Authorization: "Bearer " + GB_TOKEN }
-    });
-    if (!getResp.ok) throw new Error("fetch failed");
-    var getJson = await getResp.json();
-    var existing = JSON.parse(decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, "")))));
-    if (!Array.isArray(existing)) existing = [];
-    existing.unshift(comment);
-    if (existing.length > 100) existing = existing.slice(0, 100);
-    var content = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
-    await fetch("https://api.github.com/repos/Latte7-9/latte-site/contents/data/comments.json", {
-      method: "PUT",
-      headers: { Authorization: "Bearer " + GB_TOKEN },
-      body: JSON.stringify({ message: "New guestbook comment", content: content, sha: getJson.sha })
-    });
-  } catch(e) {
-    var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
-    local.unshift(comment);
-    if (local.length > 50) local = local.slice(0, 50);
-    localStorage.setItem("gb_local", JSON.stringify(local));
-  }
+  var msgEl = document.getElementById("gbMsg");
+  if (msgEl) { msgEl.textContent = "留言成功！✨（等待管理员同步后公开显示）"; msgEl.style.color = "#2e7d32"; }
+  var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
+  local.unshift(comment);
+  if (local.length > 50) local = local.slice(0, 50);
+  localStorage.setItem("gb_local", JSON.stringify(local));
 }
+
 
 function initGuestbook() {
   loadGuestbook();

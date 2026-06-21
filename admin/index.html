@@ -62,6 +62,7 @@
       <button onclick="switchTab('interests')">兴趣子页面</button>
       <button onclick="switchTab('blog')">博客管理</button>
       <button onclick="switchTab('images')">图片管理</button>
+      <button onclick="switchTab('netease')">随心一听</button>
       <button onclick="disconnect()" style="border-color:#e8c0c0;color:#b71c1c;">断开</button>
     </div>
   </div>
@@ -77,10 +78,7 @@
         <label>邮箱</label><input type="text" id="editEmail">
         <label>首页书籍（书名 / 作者 / 封面路径，一行一本）</label><textarea id="editBooks" rows="4"></textarea>
         <h5>当下状态</h5>
-        <label>在读</label><input type="text" id="editReading">
         <label>在听</label><input type="text" id="editListening">
-        <label>在学</label><input type="text" id="editLearning">
-        <label>在做</label><input type="text" id="editWorkingOn">
         <button class="btn btn-primary" onclick="saveContent()">保存网站内容</button>
         <span class="status-msg" id="contentMsg"></span>
       </div>
@@ -232,10 +230,7 @@ function populateSiteForm() {
     return b.title.replace(/《|》/g,'') + ' / ' + b.author + ' / ' + b.cover;
   }).join('\n');
   if (siteData.currently) {
-    document.getElementById('editReading').value = siteData.currently.reading || '';
     document.getElementById('editListening').value = siteData.currently.listening || '';
-    document.getElementById('editLearning').value = siteData.currently.learning || '';
-    document.getElementById('editWorkingOn').value = siteData.currently.workingOn || '';
   }
 }
 
@@ -245,10 +240,7 @@ async function saveContent() {
   siteData.about = document.getElementById('editAbout').value;
   siteData.contact = { email: document.getElementById('editEmail').value };
   siteData.currently = {
-    reading: document.getElementById('editReading').value,
     listening: document.getElementById('editListening').value,
-    learning: document.getElementById('editLearning').value,
-    workingOn: document.getElementById('editWorkingOn').value
   };
   var booksRaw = document.getElementById('editBooks').value.split('\n').filter(Boolean);
   siteData.books = booksRaw.map(function(line) {
