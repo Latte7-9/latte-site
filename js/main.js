@@ -191,11 +191,8 @@ async function renderHome() {
   try {
   const data = await loadJSON('data/site.json');
   if (!data) return;
-
-  const hero = document.querySelector('.hero .container');
-  if (hero) hero.innerHTML = '<div class="hero-geo circle"></div><div class="hero-geo triangle"></div><div class="hero-geo diamond"></div><div class="hero-geo dot-ring"></div><h1>你好，我是 ' + data.name + '</h1><p class="tagline">' + data.tagline + '</p>';
-
-  const about = document.querySelector('.about .container');
+  // Hero section removed — title now shown in intro animation
+const about = document.querySelector('.about .container');
   if (about) about.innerHTML = '<div class="geo-accent"></div><div class="section-label">关于</div><p>' + data.about + '</p><div class="dot-divider"><span></span><span></span><span></span></div>';
 
     // 随心一听板块
@@ -1128,10 +1125,10 @@ function initGuestbook() {
 document.addEventListener('DOMContentLoaded', () => { initBackToTop();
   highlightNav();
   initGuestbook();
-  var homePromise = document.querySelector('.hero') ? renderHome() : Promise.resolve();
+  var homePromise = renderHome();
   homePromise.then(function() { initFadeIn(); });
   if (document.querySelector('.blog-list')) renderBlog();
   if (document.querySelector('.interest-page')) renderInterestPage();
     initVinylPlayer();
-  if (!document.querySelector('.hero') && !document.querySelector('.blog-list') && !document.querySelector('.interest-page')) initFadeIn();
+  if (!document.querySelector('.blog-list') && !document.querySelector('.interest-page')) initFadeIn();
 });
