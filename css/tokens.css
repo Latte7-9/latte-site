@@ -50,6 +50,14 @@
   font-display: swap;
 }
 
+
+@font-face {
+  font-family: 'ZCOOL QingKe HuangYou';
+  src: url('../fonts/zcool-qingke.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
   --neon-pink: #ff3d71;
   --neon-cyan: #00d4aa;
@@ -80,7 +88,7 @@
   --duration-fast: 0.2s;
   --duration-normal: 0.4s;
   --duration-slow: 0.6s;
-  --font-heading: "Orbitron", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-heading: "Orbitron", "ZCOOL QingKe HuangYou", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Cascadia Code", "JetBrains Mono", monospace;
 }
