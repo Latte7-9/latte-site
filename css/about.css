@@ -1,4 +1,4 @@
-﻿.about { padding-top: 6rem; }
+.about { padding-top: 6rem; }
 .about-layout {
   display: flex; align-items: center; gap: 2rem;
   justify-content: center;

@@ -1,4 +1,4 @@
-﻿function initScrollAnimations() {
+function initScrollAnimations() {
   if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
 

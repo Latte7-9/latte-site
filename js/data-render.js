@@ -1,4 +1,4 @@
-﻿// ====== Latte v3.0 数据渲染适配器 ======
+// ====== Latte v3.0 数据渲染适配器 ======
 
 // 兴趣标签和书籍渲染（独立函数，支持回退）
 function renderInterestsBooks(data) {

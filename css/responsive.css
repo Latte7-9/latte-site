@@ -1,4 +1,4 @@
-﻿@media (max-width: 768px) {
+@media (max-width: 768px) {
   :root { --section-gap: 2.5rem; --card-padding: 1rem; }
   .section-container { padding: 0 1rem; }
   .nav-glass { gap: 1.5rem; padding: 0.5rem 1rem; }

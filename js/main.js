@@ -1,4 +1,4 @@
-﻿// ====== 入场层逻辑 ======
+// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;

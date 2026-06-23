@@ -1,4 +1,4 @@
-/* admin.css - Latte 管理后台 */
+﻿/* admin.css - Latte 管理后台 */
 :root{--cream:#faf8f5;--white:#fff;--ink:#2c2c2c;--ink-secondary:#555;--ink-muted:#999;--latte:#b8977e;--latte-dark:#9a7b64;--border:#e8e0d6;--border-focus:#b8977e;--green:#00a86b;--red:#c62828;--sky:#2990c0;--radius:12px;--radius-sm:8px;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--cream);color:var(--ink);min-height:100vh}

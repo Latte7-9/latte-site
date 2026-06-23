@@ -1,4 +1,4 @@
-﻿// ====== 子页面渲染适配 v3.0 ======
+// ====== 子页面渲染适配 v3.0 ======
 // 覆盖 main.js 中的 renderBlog / renderInterestPage，使用新设计类
 
 var _origRenderBlog = renderBlog;

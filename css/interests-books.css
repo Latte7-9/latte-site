@@ -1,4 +1,4 @@
-﻿.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 .dual-col { padding: 1.2rem; min-height: 180px; }
 .interest-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .interest-tag {

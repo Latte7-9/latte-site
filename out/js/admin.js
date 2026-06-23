@@ -1,4 +1,4 @@
-// ====== Latte 管理后台 v3.0 ======
+﻿// ====== Latte 管理后台 v3.0 ======
 var Admin = (function() {
   var R = '', T = '', site = null, blog = { posts: [] }, comments = [];
   var API_BASE = 'https://latte-site-production.up.railway.app';
