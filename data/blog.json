@@ -1,6 +1,13 @@
 {
   "posts": [
     {
+      "title": "即使有了agent搭建网站也不容易",
+      "date": "2026-06-23",
+      "summary": "",
+      "content": "因为在国内没有国外电话卡，也没法给chatGPT充值，导致我只能用Codex+Deepseek-V4 pro来使用。<br>",
+      "file": ""
+    },
+    {
       "title": "欢迎来到我的网站",
       "date": "2026-06-19",
       "summary": "这是我的第一篇博客，记录搭建个人网站的过程与想法。",
