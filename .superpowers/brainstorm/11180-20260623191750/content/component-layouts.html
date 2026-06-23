@@ -1,0 +1,190 @@
+<h2>📐 各板块排版方案</h2>
+<p class="subtitle">霓虹暗夜 × 毛玻璃 × 渐变边框 — 每个板块的具体布局</p>
+
+<!-- 导航栏 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">🧭 导航栏 — 悬浮毛玻璃卡片</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="display:flex;justify-content:center;">
+      <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border-radius:16px;padding:0.7rem 1.5rem;display:flex;align-items:center;gap:2rem;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 24px rgba(0,0,0,0.3);">
+        <span style="color:#fff;font-size:1rem;font-weight:300;letter-spacing:0.08em;">Latte</span>
+        <div style="display:flex;gap:1.5rem;">
+          <span style="color:#ff3d71;font-size:0.78rem;">首页</span>
+          <span style="color:#888;font-size:0.78rem;">博客</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:8px;">固定顶部 · 背景毛玻璃模糊 · 当前页高亮霓虹色 · 滚动时微微缩小</div>
+  </div>
+</div>
+
+<!-- 关于我 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">👤 关于我 — 左侧头像 + 右侧文字</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="display:flex;align-items:center;gap:2rem;max-width:600px;margin:0 auto;">
+      <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,rgba(255,61,113,0.3),rgba(0,212,170,0.2));border:1.5px solid rgba(255,61,113,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem;">🦁</div>
+      <div>
+        <div style="font-size:1.1rem;color:#fff;font-weight:300;">Latte</div>
+        <div style="font-size:0.78rem;color:#999;margin-top:4px;">狮子座 / ENTP / 兴趣广泛</div>
+        <div style="font-size:0.78rem;color:#ff3d71;margin-top:2px;">三分钟热度，但足够热！</div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:10px;">头像圆形霓虹边框 · 右侧文字左对齐 · 整体居中 · 无卡片容器（直接融入背景）</div>
+  </div>
+</div>
+
+<!-- 博客预览 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">📝 博客预览 — 横向卡片列表</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="margin-bottom:0.8rem;display:flex;justify-content:space-between;align-items:baseline;">
+      <div style="font-size:0.9rem;color:#fff;font-weight:300;">📝 博客</div>
+      <div style="font-size:0.72rem;color:#00d4aa;">查看全部 →</div>
+    </div>
+    <div style="display:flex;gap:0.8rem;overflow-x:auto;">
+      <div style="min-width:200px;background:rgba(255,255,255,0.02);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,0.06);position:relative;">
+        <div style="position:absolute;inset:0;border-radius:12px;padding:1px;background:linear-gradient(135deg,rgba(41,144,192,0.2),rgba(124,77,255,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;"></div>
+        <div style="font-size:0.75rem;color:#ccc;">泰山夜爬记</div>
+        <div style="font-size:0.65rem;color:#666;margin-top:4px;">2026-06-15</div>
+        <div style="font-size:0.68rem;color:#999;margin-top:6px;line-height:1.5;">凌晨三点出发，头顶是银河，脚下是石阶...</div>
+      </div>
+      <div style="min-width:200px;background:rgba(255,255,255,0.02);border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,0.06);position:relative;">
+        <div style="position:absolute;inset:0;border-radius:12px;padding:1px;background:linear-gradient(135deg,rgba(41,144,192,0.2),rgba(124,77,255,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;"></div>
+        <div style="font-size:0.75rem;color:#ccc;">Codex 初体验</div>
+        <div style="font-size:0.65rem;color:#666;margin-top:4px;">2026-06-20</div>
+        <div style="font-size:0.68rem;color:#999;margin-top:6px;line-height:1.5;">一个命令行能做的事远超想象...</div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:10px;">横向滚动卡片 · 渐变细边框 · hover时霓虹发光 · 最多显示3篇</div>
+  </div>
+</div>
+
+<!-- 兴趣+书籍 双栏 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">🎯📚 兴趣 + 正在翻阅 — 双栏并排</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <!-- 兴趣 -->
+      <div style="background:rgba(255,255,255,0.02);border-radius:14px;padding:1rem;border:1px solid rgba(255,255,255,0.06);position:relative;">
+        <div style="position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(255,184,0,0.2),rgba(255,61,113,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;"></div>
+        <div style="font-size:0.85rem;color:#ffb800;margin-bottom:0.8rem;">🎯 兴趣</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <span style="background:rgba(255,61,113,0.1);color:#ff3d71;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(255,61,113,0.2);">📷 摄影</span>
+          <span style="background:rgba(0,212,170,0.1);color:#00d4aa;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(0,212,170,0.2);">☕ 手冲咖啡</span>
+          <span style="background:rgba(255,184,0,0.1);color:#ffb800;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(255,184,0,0.2);">🎸 吉他</span>
+          <span style="background:rgba(255,61,113,0.1);color:#ff3d71;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(255,61,113,0.2);">⛰️ 登山</span>
+          <span style="background:rgba(0,212,170,0.1);color:#00d4aa;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(0,212,170,0.2);">🧶 钩织</span>
+          <span style="background:rgba(255,184,0,0.1);color:#ffb800;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(255,184,0,0.2);">🎬 动漫</span>
+          <span style="background:rgba(255,61,113,0.1);color:#ff3d71;padding:3px 10px;border-radius:20px;font-size:0.7rem;border:1px solid rgba(255,61,113,0.2);">🍳 烹饪</span>
+        </div>
+      </div>
+      <!-- 书籍 -->
+      <div style="background:rgba(255,255,255,0.02);border-radius:14px;padding:1rem;border:1px solid rgba(255,255,255,0.06);position:relative;">
+        <div style="position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(0,212,170,0.2),rgba(255,184,0,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;"></div>
+        <div style="font-size:0.85rem;color:#00d4aa;margin-bottom:0.8rem;">📚 正在翻阅</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:44px;background:linear-gradient(180deg,rgba(255,61,113,0.3),rgba(0,212,170,0.2));border-radius:3px;"></div>
+            <div>
+              <div style="font-size:0.72rem;color:#ccc;">《罪与罚》</div>
+              <div style="font-size:0.62rem;color:#666;">陀思妥耶夫斯基</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:44px;background:linear-gradient(180deg,rgba(0,212,170,0.3),rgba(255,184,0,0.2));border-radius:3px;"></div>
+            <div>
+              <div style="font-size:0.72rem;color:#ccc;">《我与地坛》</div>
+              <div style="font-size:0.62rem;color:#666;">史铁生</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:44px;background:linear-gradient(180deg,rgba(255,184,0,0.3),rgba(255,61,113,0.2));border-radius:3px;"></div>
+            <div>
+              <div style="font-size:0.72rem;color:#ccc;">《面纱》</div>
+              <div style="font-size:0.62rem;color:#666;">毛姆</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:10px;">双栏等宽 · 独立渐变边框 · 兴趣用霓虹标签 · 书籍用小封面+信息 · 移动端自动变单栏</div>
+  </div>
+</div>
+
+<!-- 音乐 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">🎵 随机听听 — 居中大卡片</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="display:flex;justify-content:center;">
+      <div style="background:rgba(255,255,255,0.02);border-radius:16px;padding:1.2rem 1.8rem;border:1px solid rgba(255,255,255,0.06);text-align:center;position:relative;max-width:340px;">
+        <div style="position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,rgba(255,184,0,0.3),rgba(255,61,113,0.2),rgba(0,212,170,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;"></div>
+        <div style="font-size:0.85rem;color:#ffb800;margin-bottom:0.5rem;">🎵 最近耳朵里住着谁</div>
+        <div style="width:60px;height:60px;border-radius:8px;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));margin:0.6rem auto;border:1px solid rgba(255,255,255,0.1);"></div>
+        <div style="font-size:0.8rem;color:#ccc;">《神探》</div>
+        <div style="font-size:0.68rem;color:#888;">丁世光</div>
+        <div style="margin-top:0.5rem;padding:4px 14px;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));border-radius:20px;display:inline-block;font-size:0.68rem;color:#fff;">▶ 听一听</div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:10px;">居中单卡片 · 专辑封面 · 歌名+艺术家 · 渐变播放按钮 · 占宽约40-50%</div>
+  </div>
+</div>
+
+<!-- 留言板 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">🦆 留言板 — 水池+鸭群</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="background:rgba(255,255,255,0.02);border-radius:16px;padding:1rem;position:relative;overflow:hidden;min-height:140px;">
+      <div style="position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(180deg,transparent,rgba(0,212,170,0.04),rgba(41,144,192,0.06));border-radius:0 0 16px 16px;"></div>
+      <div style="position:relative;z-index:1;">
+        <div style="font-size:0.85rem;color:#00d4aa;margin-bottom:0.6rem;">🦆 丢一只鸭子到水池里</div>
+        <div style="display:flex;gap:8px;justify-content:center;padding:1rem 0;">
+          <div style="width:28px;height:24px;background:rgba(255,184,0,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;position:relative;"><div style="position:absolute;width:6px;height:3px;background:rgba(0,0,0,0.3);border-radius:1px;top:4px;left:6px;"></div></div>
+          <div style="width:28px;height:24px;background:rgba(255,61,113,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;position:relative;"><div style="position:absolute;width:6px;height:3px;background:rgba(0,0,0,0.3);border-radius:1px;top:4px;left:6px;"></div></div>
+          <div style="width:28px;height:24px;background:rgba(0,212,170,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;position:relative;"><div style="position:absolute;width:6px;height:3px;background:rgba(0,0,0,0.3);border-radius:1px;top:4px;left:6px;"></div></div>
+          <div style="width:28px;height:24px;background:rgba(255,184,0,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;position:relative;"><div style="position:absolute;width:6px;height:3px;background:rgba(0,0,0,0.3);border-radius:1px;top:4px;left:6px;"></div></div>
+          <div style="width:28px;height:24px;background:rgba(255,61,113,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;position:relative;"><div style="position:absolute;width:6px;height:3px;background:rgba(0,0,0,0.3);border-radius:1px;top:4px;left:6px;"></div></div>
+        </div>
+        <div style="display:flex;gap:6px;justify-content:center;">
+          <input placeholder="你的名字" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:5px 10px;color:#ccc;font-size:0.7rem;width:100px;">
+          <input placeholder="说点什么吧..." style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:5px 10px;color:#ccc;font-size:0.7rem;width:160px;">
+          <div style="background:linear-gradient(135deg,#ff3d71,#00d4aa);border-radius:8px;padding:5px 12px;color:#fff;font-size:0.7rem;">丢鸭子</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:8px;">水池底色渐变 · 霓虹色鸭群漂浮 · 底部表单简洁 · 点击鸭子弹出气泡卡片</div>
+  </div>
+</div>
+
+<!-- 联系方式 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">📬 联系方式 — 图标横排+邮箱</div>
+  <div class="mockup-body" style="padding:1.2rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);">
+    <div style="text-align:center;">
+      <div style="font-size:0.85rem;color:#fff;margin-bottom:1rem;">📬 来找我玩——</div>
+      <div style="display:flex;gap:1rem;justify-content:center;margin-bottom:0.8rem;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">📧</div>
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🐙</div>
+      </div>
+      <div style="font-size:0.72rem;color:#888;">xqy07207903@163.com</div>
+    </div>
+    <div style="font-size:0.7rem;color:#666;text-align:center;margin-top:8px;">图标居中横排 · 毛玻璃方块底 · hover霓虹发光 · 邮箱下方文字链接</div>
+  </div>
+</div>
+
+<!-- 页脚 -->
+<div class="mockup" style="margin-bottom:1.2rem;">
+  <div class="mockup-header">📄 页脚</div>
+  <div class="mockup-body" style="padding:1rem;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);text-align:center;">
+    <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;">
+      <span style="color:#666;font-size:0.72rem;">© 2026 Latte · 用 Codex 搭建</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="text-align:center;margin-top:1rem;">
+  <p style="color:#999;font-size:0.85rem;">
+    💡 以上为全部板块的排版方案<br>
+    <strong style="color:#fff;">移动端</strong>：双栏自动变单栏 · 卡片全宽 · 字号微调 · 导航简化
+  </p>
+</div>
