@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   var introLayer = document.getElementById("intro-layer");
   var blob = document.getElementById("introBlob");
   var particles = document.getElementById("introParticles");
@@ -56,26 +56,62 @@
     try { sessionStorage.setItem("latte_visited", "1"); } catch(e) {}
     if (typeof stopParticles === "function") stopParticles();
 
-    gsap.to("#intro-layer", {
-      opacity: 0, duration: 0.6, ease: "power2.in",
+    var mc = document.getElementById("main-content");
+
+    // 主页初始状态：微下沉 + 透明，准备接住 intro 退场后浮起
+    if (mc) {
+      mc.classList.remove("intro-active");
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      gsap.set(mc, { opacity: 0, y: 80, filter: "blur(4px)" });
+    }
+
+    introLayer.style.overflow = "visible";
+
+    var tl = gsap.timeline({
       onComplete: function() {
-        introLayer.classList.add("hidden");
         introLayer.style.display = "none";
+        introLayer.style.transform = "";
+        introLayer.style.overflow = "";
+        introLayer.style.background = "";
+        if (mc) mc.style.filter = "";
+        if (typeof initScrollAnimations === "function") initScrollAnimations();
+        if (typeof initGridBackground === "function") initGridBackground();
       }
     });
 
-    var mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.classList.remove("intro-active");
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      if (typeof initScrollAnimations === "function") initScrollAnimations();
-      if (typeof initGridBackground === "function") initGridBackground();
-      // 触发黑胶墨滴入场
-      setTimeout(function() {
-        if (typeof triggerVinylEntrance === "function") triggerVinylEntrance();
-      }, 300);
-    }
+    tl
+      // 阶段1: 文字消失 + blob 爆裂
+      .to(content, { opacity: 0, duration: 0.18, ease: "power2.in" })
+      .to(hint, { opacity: 0, duration: 0.12, ease: "power2.in" }, "<")
+      .to(blob, {
+        width: window.innerWidth * 3.5, height: window.innerHeight * 3.5,
+        opacity: 0.92, filter: "blur(0px)",
+        duration: 0.5, ease: "power3.in"
+      }, "-=0.1")
+      .to(introLayer, {
+        background: "radial-gradient(ellipse at center, rgba(0,212,170,0.2) 0%, rgba(10,10,10,1) 65%)",
+        duration: 0.15
+      }, "-=0.25")
+      // 阶段2: 墨色沉降
+      .to(introLayer, {
+        background: "#0a0a0a",
+        duration: 0.3, ease: "power2.out"
+      })
+      // 阶段3: intro 下沉消失 ← → 主页上升浮现（同步进行）
+      .to(introLayer, {
+        y: "100%",
+        opacity: 0,
+        duration: 1.0,
+        ease: "power4.inOut"
+      }, "+=0.1")
+      .to(mc, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.0,
+        ease: "power3.out"
+      }, "-=1.0");
   }
 
   function initIntro() {
