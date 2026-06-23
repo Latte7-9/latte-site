@@ -10,6 +10,7 @@ var Admin = (function() {
 
   function gh(method, path, bodySha, bodyObj) {
     var url = 'https://api.github.com/repos/' + R + '/contents/' + path;
+    console.log('[Admin] fetch ' + method + ' ' + url);
     var headers = { 'Authorization': 'Bearer ' + T, 'Accept': 'application/vnd.github+json' };
     var opts = { method: method, headers: headers };
     if (method === 'PUT' && bodyObj) {
@@ -17,9 +18,18 @@ var Admin = (function() {
       if (bodySha) b.sha = bodySha;
       opts.body = JSON.stringify(b);
     }
+    var controller = new AbortController();
+    var timer = setTimeout(function() { controller.abort(); }, 15000);
+    opts.signal = controller.signal;
     return fetch(url, opts).then(function(r) {
+      clearTimeout(timer);
+      console.log('[Admin] response ' + r.status + ' ' + r.statusText);
       if (!r.ok) throw new Error(r.status + ': ' + r.statusText);
       return r.json();
+    }).catch(function(err) {
+      clearTimeout(timer);
+      if (err.name === 'AbortError') throw new Error('请求超时(15s) —— 网络不通或被拦截');
+      throw err;
     });
   }
 
