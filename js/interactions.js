@@ -1,7 +1,7 @@
-﻿// ====== 3D 卡片倾斜（移动端禁用，桌面端节流优化） ======
+// ====== 3D 卡片倾斜（移动端禁用，桌面端节流优化） ======
 (function() {
   // 移动端/触摸设备直接跳过
-  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  var isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
   if (isTouch) return;
 
   var cards = [];

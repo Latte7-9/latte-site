@@ -1,7 +1,7 @@
-﻿// ====== 霓虹光标 + 拖尾（移动端跳过） ======
+﻿// ====== 霓虹光标 + 拖尾（仅纯触屏设备跳过） ======
 (function() {
-  // 移动端/触摸设备直接跳过
-  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+  // 只用 pointer:coarse 检测真正手机/平板，触屏笔记本不受影响
+  if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
 
   var cursor = document.createElement('div');
   cursor.id = 'neon-cursor';
