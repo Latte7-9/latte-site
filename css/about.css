@@ -1,4 +1,4 @@
-.about { padding-top: 6rem; }
+﻿.about { padding-top: 6rem; }
 .about-layout {
   display: flex; align-items: center; gap: 2rem;
   justify-content: center;
@@ -12,7 +12,8 @@
   overflow: hidden;
   background: rgba(255,61,113,0.05);
 }
-.about-name { font-size: 1.3rem; font-weight: 300; color: #fff; }
+.about-name {
+  font-family: var(--font-heading); letter-spacing: 0.08em; font-size: 1.3rem; font-weight: 300; color: #fff; }
 .about-meta { font-size: 0.85rem; color: #999; margin-top: 0.2rem; }
 .about-tagline { font-size: 0.85rem; color: #ff3d71; margin-top: 0.1rem; }
 

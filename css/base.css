@@ -1,4 +1,4 @@
-/* ====== 全局重置 & 基础样式 ====== */
+﻿/* ====== 鍏ㄥ眬閲嶇疆 & 鍩虹鏍峰紡 ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -12,7 +12,16 @@ body {
   overflow-x: hidden;
 }
 
-/* 微噪点纹理 */
+.section-label {
+  font-family: var(--font-heading);
+  font-weight: 600; font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  display: inline-block; margin-bottom: 0.6rem;
+}
+
+/* 寰櫔鐐圭汗鐞?*/
 body::after {
   content: "";
   position: fixed; inset: 0; z-index: 9999;
@@ -20,7 +29,7 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* 自定义霓虹光标 */
+/* 鑷畾涔夐湏铏瑰厜鏍?*/
 body, a, button, input, textarea, [data-clickable] { cursor: none; }
 
 #neon-cursor {
@@ -43,20 +52,20 @@ body, a, button, input, textarea, [data-clickable] { cursor: none; }
   border-color: var(--neon-cyan);
 }
 
-/* 阅读进度条 */
+/* 闃呰杩涘害鏉?*/
 #reading-progress {
   position: fixed; top: 0; left: 0; height: 2px; z-index: 10001;
   background: linear-gradient(90deg, var(--neon-pink), var(--neon-gold), var(--neon-cyan));
   width: 0; transition: width 0.1s linear;
 }
 
-/* 网格背景 */
+/* 缃戞牸鑳屾櫙 */
 .grid-background {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   z-index: 0; pointer-events: none; opacity: 0.4;
 }
 
-/* 毛玻璃卡片基础类 */
+/* 姣涚幓鐠冨崱鐗囧熀纭€绫?*/
 .glass-card {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
@@ -65,7 +74,7 @@ body, a, button, input, textarea, [data-clickable] { cursor: none; }
   border-radius: var(--radius-lg);
 }
 
-/* 渐变边框卡片 */
+/* 娓愬彉杈规鍗＄墖 */
 .gradient-border-card {
   position: relative;
   background: var(--bg-card);
@@ -88,24 +97,24 @@ body, a, button, input, textarea, [data-clickable] { cursor: none; }
   box-shadow: 0 0 20px rgba(255, 61, 113, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* 3D 倾斜 */
+/* 3D 鍊炬枩 */
 .tilt-card {
   transition: transform 0.1s ease-out;
   transform-style: preserve-3d;
 }
 
-/* 淡入上浮 */
+/* 娣″叆涓婃诞 */
 .fade-up { opacity: 0; transform: translateY(30px); }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-/* section 通用 */
+/* section 閫氱敤 */
 .section-container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
 .section-label {
   font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
   margin-bottom: 1.2rem; display: block;
 }
 
-/* 按钮 */
+/* 鎸夐挳 */
 .btn-primary {
   display: inline-block; padding: 0.5rem 1.2rem;
   border-radius: var(--radius-sm); color: #fff; font-size: 0.82rem;

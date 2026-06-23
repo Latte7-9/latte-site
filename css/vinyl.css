@@ -1,4 +1,4 @@
-/* ====== 黑胶播放器 v2.7 —— clip-path 隐藏面板，iframe 始终"可见" ====== */
+﻿/* ====== 榛戣兌鎾斁鍣?v2.7 鈥斺€?clip-path 闅愯棌闈㈡澘锛宨frame 濮嬬粓"鍙" ====== */
 
 .vinyl-player {
   position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000;
@@ -11,7 +11,7 @@
 .vinyl-player.idle,
 .vinyl-player.expanded { display: flex; }
 
-/* 墨滴入场 */
+/* 澧ㄦ淮鍏ュ満 */
 .vinyl-player.ink-entering .vinyl-record-neon {
   animation: ink-drop-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
@@ -71,7 +71,7 @@
   box-shadow: 0 0 25px rgba(255,61,113,0.15);
 }
 
-/* 面板 —— clip-path 裁剪隐藏，不触发 iframe 的不可见检测 */
+/* 闈㈡澘 鈥斺€?clip-path 瑁佸壀闅愯棌锛屼笉瑙﹀彂 iframe 鐨勪笉鍙妫€娴?*/
 .vinyl-panel {
   width: 320px;
   overflow: hidden;
@@ -90,7 +90,8 @@
 .vinyl-panel-inner { padding: 0.8rem 1rem; }
 
 .vinyl-info { margin-bottom: 0.5rem; }
-.vinyl-title { font-size: 0.82rem; color: #fff; font-weight: 500; }
+.vinyl-title {
+  font-family: var(--font-heading); font-size: 0.82rem; color: #fff; font-weight: 500; }
 .vinyl-artist { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
 
 .vinyl-iframe-wrap { border-radius: 8px; overflow: hidden; }

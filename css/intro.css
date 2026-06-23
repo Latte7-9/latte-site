@@ -1,4 +1,4 @@
-/* ====== 入场层 ====== */
+﻿/* ====== 鍏ュ満灞?====== */
 #intro-layer {
   position: fixed; inset: 0; z-index: 2000;
   background: #0a0a0a;
@@ -30,7 +30,7 @@
 }
 
 .intro-title {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-heading); letter-spacing: 0.16em;
   font-size: 4rem; font-weight: 200;
   color: #fff; letter-spacing: 0.12em;
   margin-bottom: 0.4em;
