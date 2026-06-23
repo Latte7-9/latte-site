@@ -18,6 +18,7 @@
 .about-tagline { font-size: 0.85rem; color: #ff3d71; margin-top: 0.1rem; }
 
 .avatar-emoji {
+  font-family: apple color emoji, segoe ui emoji, noto color emoji, sans-serif;
   font-size: 4rem;
   line-height: 1;
   filter: drop-shadow(0 0 8px rgba(255,184,0,0.4));
@@ -25,11 +26,13 @@
   user-select: none;
 }
 .about-avatar:hover .avatar-emoji {
+  font-family: apple color emoji, segoe ui emoji, noto color emoji, sans-serif;
   transform: scale(1.08);
 }
 
 @media (max-width: 768px) {
   .about-layout { flex-direction: column; text-align: center; }
   .about-avatar { width: 100px; height: 100px; }
-  .avatar-emoji { font-size: 3rem; }
+  .avatar-emoji {
+  font-family: apple color emoji, segoe ui emoji, noto color emoji, sans-serif; font-size: 3rem; }
 }
