@@ -44,7 +44,6 @@ var Admin = (function() {
     el.textContent = text; el.className = 'status-badge status-' + type;
   }
 
-  // ====== 登录 ======
   function login() {
     console.log('[Admin] login() called');
     var btn = document.getElementById('loginBtn');
@@ -77,7 +76,6 @@ var Admin = (function() {
     });
   }
 
-  // ====== Tab 初始化 ======
   document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginBtn').addEventListener('click', login);
     document.getElementById('tabBar').addEventListener('click', function(e) {
@@ -97,10 +95,7 @@ var Admin = (function() {
     if (saved) { try { var c = JSON.parse(saved); R = c.r; T = c.t; } catch(e) { sessionStorage.removeItem('latte_admin_v3'); } }
   });
 
-  function refreshTab(name) {
-    if (name === 'images') loadImages();
-    if (name === 'music') loadMusicStatus();
-  }
+  function refreshTab(name) { if (name === 'images') loadImages(); if (name === 'music') loadMusicStatus(); }
 
   function renderAll() {
     document.getElementById('siteName').value = site.name || '';
@@ -108,8 +103,7 @@ var Admin = (function() {
     document.getElementById('siteAbout').value = site.about || '';
     document.getElementById('siteEmail').value = (site.contact && site.contact.email) || '';
     renderBlog(); renderGuestbook(); renderPhoto(); renderBooks(); renderHiking(); renderHobbies();
-  }
-  // ====== 1. 站点信息 ======
+  }  // ====== 1. 站点 ======
   function saveSite() {
     site.name = document.getElementById('siteName').value;
     site.tagline = document.getElementById('siteTagline').value;
@@ -200,16 +194,23 @@ var Admin = (function() {
     msg('photoMsg','info','保存中...');
     ghGet('data/site.json').then(function(j){return ghPut('data/site.json',JSON.stringify(site,null,2),j.sha);}).then(function(){msg('photoMsg','ok','已保存');}).catch(function(err){msg('photoMsg','err','失败: '+err.message);});
   }
-
   // ====== 5. 书籍 ======
   function getBooks() { var it=site.interests.find(function(i){return i.name==='书籍';}); if(!it){it={name:'书籍',icon:'book',page:'interests/books.html',description:'',read:[],reading:[],wantToRead:[]};site.interests.push(it);} return it; }
   function renderBooks() {
     var it=getBooks();
     var sections=[{key:'reading',label:'📖 在读',arr:it.reading||[]},{key:'read',label:'✅ 已读',arr:it.read||[]},{key:'wantToRead',label:'📋 想读',arr:it.wantToRead||[]}];
     var h='';
-    sections.forEach(function(sec){ h+='<div class="section-group"><h3>'+sec.label+'</h3>';
-      sec.arr.forEach(function(b,j){ h+='<div class="item-card"><div class="item-header"><span class="item-title">'+esc(b.title||'')+'</span><button class="btn btn-danger btn-sm" onclick="Admin.deleteBook(''"+sec.key+"','+j+')">删除</button></div><div class="form-group"><label>书名</label><input class="bk-title" value="'+esc(b.title||'')+'"></div><div class="form-group"><label>作者</label><input class="bk-author" value="'+esc(b.author||'')+'"></div><div class="form-group"><label>封面</label><input class="bk-cover" value="'+esc(b.cover||'')+'"></div><div class="form-group"><label>书评</label><textarea class="bk-review" rows="2">'+esc(b.review||'')+'</textarea></div></div>'; });
-      h+='<button class="btn btn-ghost btn-sm" onclick="Admin.newBook(&apos;"+sec.key+"&apos;)" style="margin-top:0.3rem;">+ 添加</button></div>';
+    sections.forEach(function(sec){
+      h+='<div class="section-group"><h3>'+sec.label+'</h3>';
+      sec.arr.forEach(function(b,j){
+        h+='<div class="item-card"><div class="item-header"><span class="item-title">'+esc(b.title||'')+'</span>'+
+          '<button class="btn btn-danger btn-sm" onclick="Admin.deleteBook(\''+sec.key+'\','+j+')">删除</button></div>'+
+          '<div class="form-group"><label>书名</label><input class="bk-title" value="'+esc(b.title||'')+'"></div>'+
+          '<div class="form-group"><label>作者</label><input class="bk-author" value="'+esc(b.author||'')+'"></div>'+
+          '<div class="form-group"><label>封面</label><input class="bk-cover" value="'+esc(b.cover||'')+'"></div>'+
+          '<div class="form-group"><label>书评</label><textarea class="bk-review" rows="2">'+esc(b.review||'')+'</textarea></div></div>';
+      });
+      h+='<button class="btn btn-ghost btn-sm" onclick="Admin.newBook(\''+sec.key+'\')" style="margin-top:0.3rem;">+ 添加</button></div>';
     });
     document.getElementById('booksList').innerHTML=h;
   }
@@ -256,7 +257,6 @@ var Admin = (function() {
   function newHobby(){getHobbies().hobbies.push('');renderHobbies();}
   function deleteHobby(i){getHobbies().hobbies.splice(i,1);renderHobbies();}
   function saveHobbies(){var it=getHobbies();it.hobbies=Array.from(document.querySelectorAll('#hobbiesList .hobby-input')).map(function(i){return i.value.trim();}).filter(Boolean);msg('hobbiesMsg','info','保存中...');ghGet('data/site.json').then(function(j){return ghPut('data/site.json',JSON.stringify(site,null,2),j.sha);}).then(function(){msg('hobbiesMsg','ok','已保存');}).catch(function(err){msg('hobbiesMsg','err','失败: '+err.message);});}
-
   // ====== 8. 图片管理 ======
   function uploadImage(file) {
     var reader = new FileReader();
@@ -321,7 +321,6 @@ var Admin = (function() {
     });
   }
 
-  // ====== 公共 API ======
   return {
     login: login, saveSite: saveSite,
     renderBlog: renderBlog, newBlogPost: newBlogPost, deleteBlogPost: deleteBlogPost, editBlogPost: editBlogPost, saveBlog: saveBlog,
@@ -333,4 +332,3 @@ var Admin = (function() {
     loadImages: loadImages, loadMusicStatus: loadMusicStatus, syncMusic: syncMusic
   };
 })();
-
