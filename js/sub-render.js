@@ -1,4 +1,4 @@
-// ====== 子页面渲染适配 v3.0 ======
+﻿// ====== 子页面渲染适配 v3.0 ======
 // 覆盖 main.js 中的 renderBlog / renderInterestPage，使用新设计类
 
 var _origRenderBlog = renderBlog;
@@ -67,14 +67,11 @@ var _albumCurrentIdx = -1;
 var _albumImgIdx = 0;
 var _albumContainer = null;
 
-
-// ====== 图片 URL 解析（本地走 GitHub Raw，线上走相对路径） ======
 var _imageBase = null;
 function getImageBase() {
   if (_imageBase) return _imageBase;
   var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   if (isLocal) {
-    // 尝试从 site.json 获取仓库名
     _imageBase = (window._siteGithubRepo)
       ? 'https://raw.githubusercontent.com/' + window._siteGithubRepo + '/main/'
       : '../';
@@ -87,11 +84,66 @@ function resolveImageUrl(imgPath) {
   if (!imgPath) return '';
   if (/^https?:\/\//i.test(imgPath)) return imgPath;
   var base = getImageBase();
-  // 对中文文件名进行编码
   var parts = imgPath.split('/');
   var encoded = parts.map(function(p) { return encodeURIComponent(p); }).join('/');
   return base + encoded;
 }
+
+function openAlbum(idx) {
+  _albumCurrentIdx = idx;
+  _albumImgIdx = 0;
+  showAlbumLightbox();
+}
+function closeAlbum() {
+  var lb = document.getElementById('albumLightbox');
+  if (lb) lb.remove();
+  _albumCurrentIdx = -1;
+}
+function showAlbumLightbox() {
+  closeAlbum();
+  var album = _albumList[_albumCurrentIdx];
+  if (!album) return;
+  var images = album.images || [];
+
+  var lb = document.createElement('div');
+  lb.id = 'albumLightbox';
+  lb.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;';
+  lb.addEventListener('click', closeAlbum);
+
+  var img = document.createElement('img');
+  img.id = 'albumLightboxImg';
+  img.style.cssText = 'max-width:90vw;max-height:75vh;object-fit:contain;border-radius:4px;';
+  lb.appendChild(img);
+
+  var info = document.createElement('div');
+  info.style.cssText = 'margin-top:1rem;color:var(--text-muted);font-size:0.78rem;';
+  lb.appendChild(info);
+
+  var nav = document.createElement('div');
+  nav.style.cssText = 'margin-top:0.5rem;display:flex;gap:1rem;';
+  var prevBtn = document.createElement('button');
+  prevBtn.textContent = '← 上一张';
+  prevBtn.style.cssText = 'background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;';
+  prevBtn.addEventListener('click', function(e) { e.stopPropagation(); _albumImgIdx = (_albumImgIdx - 1 + images.length) % images.length; updateLightboxImg(); });
+  var nextBtn = document.createElement('button');
+  nextBtn.textContent = '下一张 →';
+  nextBtn.style.cssText = prevBtn.style.cssText;
+  nextBtn.addEventListener('click', function(e) { e.stopPropagation(); _albumImgIdx = (_albumImgIdx + 1) % images.length; updateLightboxImg(); });
+  nav.appendChild(prevBtn);
+  nav.appendChild(nextBtn);
+  lb.appendChild(nav);
+
+  document.body.appendChild(lb);
+
+  function updateLightboxImg() {
+    img.src = resolveImageUrl(images[_albumImgIdx]);
+    info.textContent = (_albumImgIdx + 1) + ' / ' + images.length + (album.name ? ' — ' + album.name : '');
+    prevBtn.style.display = images.length > 1 ? '' : 'none';
+    nextBtn.style.display = images.length > 1 ? '' : 'none';
+  }
+  updateLightboxImg();
+}
+
 function renderPhotography(container, item) {
   if (!item.albums) { container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">暂无图集</p>'; return; }
   _albumList = item.albums;
@@ -104,142 +156,44 @@ function renderPhotography(container, item) {
       coverImg = '<div style="width:100%;height:160px;overflow:hidden;border-radius:10px;margin-bottom:0.8rem;">' +
         '<img src="../' + album.images[0] + '" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>';
     } else if (album.cover) {
-      coverImg = '<div style="width:100%;height:160px;overflow:hidden;border-radius:10px;margin-bottom:0.8rem;">' +
-        '<img src="../' + album.cover + '" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>';
+      coverImg = '<div style="width:100%;height:160px;overflow:hidden;border-radius:10px;margin-bottom:0.8rem;background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:2rem;">📷</div>';
     }
-    var imgCount = album.images ? album.images.length : 0;
-    var imgHint = imgCount > 0 ? '<span style="font-size:0.7rem;color:var(--text-dim);">🖼️ ' + imgCount + ' 张</span>' : '';
-
-    html += '<div class="gradient-border-card album-card" onclick="openAlbumDetail(' + i + ')" style="margin-bottom:1rem;padding:1.2rem 1.5rem;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;">' +
+    html += '<div class="gradient-border-card tilt-card" style="cursor:pointer;margin-bottom:0.8rem;padding:0;" onclick="openAlbum(' + i + ')">' +
       coverImg +
-      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-        '<h3 style="color:var(--neon-pink);font-weight:400;margin:0;font-size:1.05rem;">📷 ' + escapeHtml(album.name) + '</h3>' +
-        imgHint +
-      '</div>' +
-      (album.description ? '<p style="color:var(--text-muted);font-size:0.82rem;line-height:1.7;margin-top:0.4rem;">' + escapeHtml(album.description) + '</p>' : '') +
-      (album.journal ? '<p style="color:var(--text-dim);font-size:0.75rem;margin-top:0.6rem;line-height:1.8;border-top:1px solid var(--border-subtle);padding-top:0.6rem;">' + escapeHtml(album.journal) + '</p>' : '') +
-      '<div style="margin-top:0.6rem;font-size:0.72rem;color:var(--neon-cyan);text-align:right;">点击浏览 →</div>' +
-      '</div>';
+      '<div style="padding:0.6rem 1rem 0.8rem;">' +
+      '<div style="color:var(--text-primary);font-size:0.9rem;font-weight:500;">' + (album.name || '图集 ' + (i+1)) + '</div>' +
+      '<div style="color:var(--text-dim);font-size:0.7rem;margin-top:0.2rem;">' + (album.images ? album.images.length + ' 张照片' : '') + (album.date ? ' · ' + album.date : '') + '</div>' +
+      '</div></div>';
   });
-  html += '</div><div id="albumDetailView" style="display:none;"></div>';
+  html += '</div>';
   container.innerHTML = html;
-}
-
-function escapeHtml(s) {
-  var d = document.createElement('div');
-  d.appendChild(document.createTextNode(s || ''));
-  return d.innerHTML;
-}
-
-function openAlbumDetail(idx) {
-  if (!_albumList[idx] || !_albumList[idx].images || _albumList[idx].images.length === 0) {
-    // 没有图片的图集不做操作
-    return;
-  }
-  _albumCurrentIdx = idx;
-  _albumImgIdx = 0;
-  renderAlbumDetail();
-  document.getElementById('albumListView').style.display = 'none';
-  document.getElementById('albumDetailView').style.display = 'block';
-  // 绑定键盘
-  document.addEventListener('keydown', albumKeyHandler);
-}
-
-function closeAlbumDetail() {
-  document.getElementById('albumDetailView').style.display = 'none';
-  document.getElementById('albumListView').style.display = 'block';
-  document.removeEventListener('keydown', albumKeyHandler);
-  _albumCurrentIdx = -1;
-}
-
-function navigateAlbum(dir) {
-  var album = _albumList[_albumCurrentIdx];
-  var max = album.images.length;
-  _albumImgIdx = (_albumImgIdx + dir + max) % max;
-  renderAlbumImage();
-}
-
-function albumKeyHandler(e) {
-  if (e.key === 'Escape') { closeAlbumDetail(); return; }
-  if (e.key === 'ArrowLeft') { navigateAlbum(-1); return; }
-  if (e.key === 'ArrowRight') { navigateAlbum(1); return; }
-}
-
-function renderAlbumDetail() {
-  var album = _albumList[_albumCurrentIdx];
-  var detailView = document.getElementById('albumDetailView');
-  detailView.innerHTML =
-    '<div class="album-lightbox">' +
-      '<div class="album-lightbox-header">' +
-        '<button class="album-back-btn" onclick="closeAlbumDetail()">← 返回图集</button>' +
-        '<span class="album-lightbox-title">📷 ' + escapeHtml(album.name) + '</span>' +
-        '<span class="album-lightbox-counter" id="albumCounter">' + (_albumImgIdx + 1) + ' / ' + album.images.length + '</span>' +
-      '</div>' +
-      '<div class="album-lightbox-main">' +
-        '<button class="album-nav-btn album-nav-prev" onclick="navigateAlbum(-1)">‹</button>' +
-        '<div class="album-lightbox-img-wrap">' +
-          '<img id="albumMainImg" src="../' + album.images[_albumImgIdx] + '" alt="" class="album-main-img">' +
-        '</div>' +
-        '<button class="album-nav-btn album-nav-next" onclick="navigateAlbum(1)">›</button>' +
-      '</div>' +
-      '<div class="album-lightbox-thumbs" id="albumThumbs"></div>' +
-    '</div>';
-  setTimeout(renderAlbumThumbs, 50);
-}
-
-function renderAlbumImage() {
-  var album = _albumList[_albumCurrentIdx];
-  var img = document.getElementById('albumMainImg');
-  if (img) img.src = resolveImageUrl(album.images[_albumImgIdx]);
-  var counter = document.getElementById('albumCounter');
-  if (counter) counter.textContent = (_albumImgIdx + 1) + ' / ' + album.images.length;
-  // 更新缩略图选中状态
-  var thumbs = document.querySelectorAll('.album-thumb');
-  thumbs.forEach(function(t, i) {
-    t.classList.toggle('active', i === _albumImgIdx);
-  });
-}
-
-function renderAlbumThumbs() {
-  var album = _albumList[_albumCurrentIdx];
-  var thumbsContainer = document.getElementById('albumThumbs');
-  if (!thumbsContainer || album.images.length <= 1) return;
-  var html = '';
-  album.images.forEach(function(img, i) {
-    html += '<div class="album-thumb' + (i === _albumImgIdx ? ' active' : '') + '" onclick="jumpToImage(' + i + ')">' +
-      '<img src="../' + img + '" alt="" loading="lazy"></div>';
-  });
-  thumbsContainer.innerHTML = html;
-}
-
-function jumpToImage(idx) {
-  _albumImgIdx = idx;
-  renderAlbumImage();
 }
 
 function renderBooks(container, item) {
   var html = '';
-  
-  if (item.reading && item.reading.length > 0) {
-    html += '<h3 style="color:var(--neon-cyan);font-weight:400;margin:1rem 0 0.6rem;">📖 正在读</h3>';
-    item.reading.forEach(function(b) {
-      html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.8rem;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:center;">' +
-        (b.cover ? '<div style="width:50px;height:70px;border-radius:4px;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));flex-shrink:0;"></div>' : '') +
-        '<div><div style="color:var(--text-primary);font-size:0.95rem;">' + b.title + '</div>' +
-        '<div style="color:var(--text-dim);font-size:0.75rem;">' + (b.author || '') + '</div>' +
-        (b.review ? '<div style="color:var(--text-muted);font-size:0.78rem;margin-top:0.3rem;line-height:1.6;">' + b.review + '</div>' : '') +
+
+  if (item.read && item.read.length > 0) {
+    html += '<h3 style="color:var(--neon-pink);font-weight:400;margin:0 0 0.6rem;">📚 已读</h3>';
+    item.read.forEach(function(b) {
+      html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.5rem;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:center;">' +
+        '<div style="width:32px;height:44px;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));"></div>' +
+        '<div>' +
+        '<div style="color:var(--text-primary);font-size:0.85rem;">' + b.title + '</div>' +
+        '<div style="color:var(--text-dim);font-size:0.7rem;">' + (b.author || '') + '</div>' +
+        (b.note ? '<div style="color:var(--text-muted);font-size:0.7rem;margin-top:0.2rem;line-height:1.5;">' + b.note + '</div>' : '') +
         '</div></div>';
     });
   }
-  
-  if (item.read && item.read.length > 0) {
-    html += '<h3 style="color:var(--neon-gold);font-weight:400;margin:1.2rem 0 0.6rem;">✅ 已读完</h3>';
-    item.read.forEach(function(b) {
-      html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.8rem;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:center;">' +
-        (b.cover ? '<div style="width:50px;height:70px;border-radius:4px;background:linear-gradient(135deg,rgba(255,184,0,0.2),rgba(255,61,113,0.2));flex-shrink:0;"></div>' : '') +
-        '<div><div style="color:var(--text-primary);font-size:0.95rem;">' + b.title + '</div>' +
-        '<div style="color:var(--text-dim);font-size:0.75rem;">' + (b.author || '') + '</div>' +
-        (b.review ? '<div style="color:var(--text-muted);font-size:0.78rem;margin-top:0.3rem;line-height:1.6;">' + b.review + '</div>' : '') +
+
+  if (item.reading && item.reading.length > 0) {
+    html += '<h3 style="color:var(--neon-cyan);font-weight:400;margin:1.2rem 0 0.6rem;">📖 在读</h3>';
+    item.reading.forEach(function(b) {
+      html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.5rem;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:center;">' +
+        '<div style="width:32px;height:44px;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(0,212,170,0.2),rgba(124,77,255,0.2));"></div>' +
+        '<div>' +
+        '<div style="color:var(--text-primary);font-size:0.85rem;">' + b.title + '</div>' +
+        '<div style="color:var(--text-dim);font-size:0.7rem;">' + (b.author || '') + '</div>' +
+        (b.progress ? '<div style="color:var(--text-muted);font-size:0.7rem;margin-top:0.2rem;">进度: ' + b.progress + '</div>' : '') +
         '</div></div>';
     });
   }
@@ -258,7 +212,7 @@ function renderBooks(container, item) {
 
 function renderHiking(container, item) {
   var html = '';
-  
+
   if (item.journal) {
     html += '<div class="gradient-border-card" style="padding:1.2rem 1.5rem;margin-bottom:1rem;">' +
       '<div style="color:var(--text-body);font-size:0.9rem;line-height:2;">' + item.journal + '</div></div>';
@@ -305,25 +259,22 @@ function renderHobbies(container, item) {
 }
 
 function getEmoji(iconName) {
-  var m = { camera:'📷', book:'📖', sparkle:'✨', mountain:'⛰️' };
+  var m = { camera:'📷', book:'📉', sparkle:'✨', mountain:'⛰️' };
   return m[iconName] || '';
 }
 function getHobbyEmoji(h) {
-  var m = { '手冲咖啡':'☕','钩织':'🧶','吉他':'🎸','烹饪':'🍳','动漫':'🎬','徒步':'🥾','想学攀岩':'🧗' };
-  return m[h] || '⭐';
+  var m = { '手冲咖啡':'☕', '钩织':'🧶', '吉他':'🎸', '烹饪':'🍳', '动漫':'🎬', '徒步':'🥾', '想学攀岩':'🧗' };
+  return m[h] || '🎯';
 }
 
 // ====== 自动初始化 ======
 document.addEventListener('DOMContentLoaded', function() {
-  // 兴趣子页渲染
   if (document.querySelector('.interest-page') || document.querySelector('.interest-content-area')) {
     if (typeof renderInterestPage === 'function') renderInterestPage();
   }
-  // 博客列表渲染
   if (document.querySelector('.blog-list')) {
     if (typeof renderBlog === 'function') renderBlog();
   }
-  // 滚动动画
   setTimeout(function() {
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.utils.toArray('.fade-in, .gradient-border-card, .blog-post-card').forEach(function(el, i) {
@@ -334,16 +285,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 400);
 });
-
-// 滚动动画
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-      gsap.utils.toArray('.fade-in, .gradient-border-card, .blog-post-card').forEach(function(el, i) {
-        gsap.fromTo(el, { opacity: 0, y: 24 }, {
-          opacity: 1, y: 0, duration: 0.6, delay: i * 0.08, ease: 'power2.out'
-        });
-      });
-    }, 400);
-  });
-}
