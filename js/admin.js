@@ -33,6 +33,9 @@ var Admin = (function() {
 
   // ====== 登录 ======
   function login() {
+    console.log('[Admin] login() 被调用');
+    document.getElementById('loginBtn').textContent = '连接中...';
+    document.getElementById('loginBtn').disabled = true;
     R = document.getElementById('repoInput').value.trim();
     T = document.getElementById('tokenInput').value.trim();
     if (!R || !T) { alert('请填写仓库名和 Token'); return; }
@@ -48,6 +51,8 @@ var Admin = (function() {
     }).then(function() {
       document.getElementById('loginPanel').style.display = 'none';
       document.getElementById('mainPanel').style.display = 'block';
+      document.getElementById('loginBtn').textContent = '连接';
+      document.getElementById('loginBtn').disabled = false;
       msg('connStatus', 'ok', '已连接');
       renderAll();
     }).catch(function(err) {
