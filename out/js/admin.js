@@ -5,7 +5,7 @@ var Admin = (function() {
   var API_BASE = 'https://latte-site-production.up.railway.app';
 
   function b64e(s) { return btoa(unescape(encodeURIComponent(s))); }
-  function b64d(s) { return decodeURIComponent(escape(atob(s.replace(/\s/g, '')))); }
+  function b64d(s) { var t = decodeURIComponent(escape(atob(s.replace(/\\s/g, '')))); return t.charCodeAt(0) === 0xFEFF ? t.slice(1) : t; }
   function esc(s) { var d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
 
   function gh(method, path, bodySha, bodyObj) {
