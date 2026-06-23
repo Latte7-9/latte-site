@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -26,22 +26,22 @@
 
 <div id="reading-progress"></div>
 
-<!-- ====== 鍏ュ満灞?====== -->
+<!-- ====== 入场层 ====== -->
 <div id="intro-layer">
   <div class="intro-bg"></div>
   <div class="intro-blob" id="introBlob"></div>
   <div class="intro-particles" id="introParticles"></div>
   <div class="intro-content">
     <h1 class="intro-title" id="introTitle">Latte</h1>
-    <p class="intro-subtitle" id="introSubtitle">璁板綍 路 鍒嗕韩 路 涓夊垎閽熺儹搴?/p>
+    <p class="intro-subtitle" id="introSubtitle">记录 · 分享 · 三分钟热度</p>
     <div class="intro-hint" id="introHint">
-      <span class="intro-hint-text">杩涘叆</span>
+      <span class="intro-hint-text">进入</span>
       <div class="intro-hint-arrow"></div>
     </div>
   </div>
 </div>
 
-<!-- ====== 涓婚〉鍐呭 ====== -->
+<!-- ====== 主页内容 ====== -->
 <div id="main-content">
   <canvas class="grid-background" id="gridCanvas"></canvas>
 
@@ -49,8 +49,8 @@
     <div class="nav-glass">
       <a class="nav-brand" href="index.html">Latte</a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link active">棣栭〉</a>
-        <a href="blog/" class="nav-link">鍗氬</a>
+        <a href="index.html" class="nav-link active">首页</a>
+        <a href="blog/" class="nav-link">博客</a>
       </div>
     </div>
   </nav>
@@ -58,20 +58,20 @@
   <section class="about section-container fade-up">
     <div class="about-layout">
       <div class="about-avatar">
-        <img src="images/avatar.jpg" alt="Latte" class="avatar-img" onerror="this.style.display='none';this.parentElement.innerHTML='馃亷';this.parentElement.style.cssText+='display:flex;align-items:center;justify-content:center;font-size:2.5rem;'">
+        <span class="avatar-emoji">🦁</span>
       </div>
       <div class="about-text">
         <h2 class="about-name">Latte</h2>
-        <p class="about-meta" id="aboutMeta">鐙瓙搴?/ ENTP / 鍏磋叮骞挎硾</p>
-        <p class="about-tagline" id="aboutTagline">涓夊垎閽熺儹搴︼紝浣嗚冻澶熺儹锛?/p>
+        <p class="about-meta" id="aboutMeta">狮子座 / ENTP / 兴趣广泛</p>
+        <p class="about-tagline" id="aboutTagline">三分钟热度，但足够热心</p>
       </div>
     </div>
   </section>
 
   <section class="blog-preview section-container fade-up">
     <div class="blog-header">
-      <span class="section-label text-shimmer">馃摝 鍗氬</span>
-      <a class="btn-ghost" href="blog/">鏌ョ湅鍏ㄩ儴 鈫?/a>
+      <span class="section-label text-shimmer">📦 博客</span>
+      <a class="btn-ghost" href="blog/">查看全部 →</a>
     </div>
     <div class="blog-scroll" id="homeBlogList"></div>
   </section>
@@ -79,11 +79,11 @@
   <section class="interests-books section-container fade-up">
     <div class="dual-grid">
       <div class="dual-col gradient-border-card tilt-card">
-        <span class="section-label" style="color:#ffb800">馃幆 鍏磋叮</span>
+        <span class="section-label" style="color:#ffb800">🎯 兴趣</span>
         <div class="interest-tags" id="interestTags"></div>
       </div>
       <div class="dual-col gradient-border-card tilt-card">
-        <span class="section-label" style="color:#00d4aa">馃摉 姝ｅ湪缈婚槄</span>
+        <span class="section-label" style="color:#00d4aa">📖 正在翻阅</span>
         <div class="book-mini-list" id="bookMiniList"></div>
       </div>
     </div>
@@ -91,50 +91,62 @@
 
   <section class="music-section fade-up">
     <div class="music-card tilt-card">
-      <div class="music-label">馃幍 鏈€杩戣€虫湹閲屼綇鐫€璋?/div>
-      <div class="music-cover" id="musicCover"></div>
-      <div class="music-title" id="musicTitle">鍔犺浇涓?..</div>
-      <div class="music-artist" id="musicArtist"></div>
-      <button class="btn-primary" id="musicPlayBtn">鈻?鍚竴鍚?/button>
+      <div class="music-label">🎍 耳机是精神输液管</div>
+      <div class="music-top5" id="musicTop5Static">
+        <div class="music-song-item" style="pointer-events:none">
+          <span class="music-song-cover no-cover"></span>
+          <span class="music-song-rank">—</span>
+          <span class="music-song-name" style="color:#666">正在连接网易云...</span>
+        </div>
+      </div>
+      <button class="btn-music-random" id="musicRandomBtn" disabled>
+        <span class="music-random-icon">🎧</span><span>加载中...</span>
+      </button>
     </div>
   </section>
 
   <section class="guestbook section-container fade-up" style="margin-top:4rem;">
     <div class="duck-pool-wrapper">
+      <div class="pool-tagline">🦆 欢迎投入小黄鸭</div>
+      <div class="pool-duck-count">池中已有 <span id="duckCount">0</span> 只鸭子</div>
       <div class="duck-pool" id="duckPool">
-        <div class="pool-water-surface"></div>
+        <div class="pool-underwater-light"></div>
         <canvas class="pool-ripple-canvas" id="poolRippleCanvas"></canvas>
         <div class="pool-ducks-layer" id="poolDucksLayer"></div>
+        <canvas class="pool-wave-canvas" id="poolWaveCanvas"></canvas>
       </div>
       <form class="gb-form" id="guestbookForm">
-        <input type="text" id="gbName" placeholder="浣犵殑鍚嶅瓧" maxlength="30">
-        <input type="text" id="gbText" placeholder="璇寸偣浠€涔堝惂..." required maxlength="500">
-        <button type="submit" class="btn-primary">涓斧瀛?/button>
+        <input type="text" id="gbName" placeholder="你的名字" maxlength="30">
+        <input type="text" id="gbText" placeholder="说点什么吧..." required maxlength="500">
+        <button type="submit" class="btn-primary">🦆 丢鸭子</button>
       </form>
       <div id="gbMsg" style="text-align:center;margin-top:0.4rem;font-size:0.75rem;"></div>
     </div>
   </section>
 
   <section class="contact section-container fade-up" style="margin-top:4rem;">
-    <span class="section-label" style="text-align:center;display:block;">馃摝 鏉ユ壘鎴戠帺鈥斺€?/span>
+    <span class="section-label" style="text-align:center;display:block;">📦 来找我玩——</span>
     <div class="contact-icons" id="contactIcons"></div>
   </section>
 
   <footer>
     <div class="footer-inner section-container">
-      <span>&copy; 2026 Latte 路 鐢?Codex 鎼缓</span>
+      <span>&copy; 2026 Latte · 由 Codex 搭建</span>
     </div>
   </footer>
 
-  <div class="vinyl-player" id="vinylPlayer" style="display:none">
+  <div class="vinyl-player" id="vinylPlayer">
+    <div class="vinyl-ripple" id="vinylRipple"></div>
     <div class="vinyl-record-neon" id="vinylRecord"></div>
-    <div class="vinyl-body" id="vinylBody">
-      <div class="vinyl-info">
-        <div class="vinyl-title" id="vinylTitle">鍔犺浇涓?..</div>
-        <div class="vinyl-artist" id="vinylArtist"></div>
-      </div>
-      <div class="vinyl-iframe-wrap" id="vinylIframe"></div>
+    <div class="vinyl-panel" id="vinylPanel">
       <button class="vinyl-close" id="vinylClose">&times;</button>
+      <div class="vinyl-panel-inner">
+        <div class="vinyl-info">
+          <div class="vinyl-title" id="vinylTitle">加载中...</div>
+          <div class="vinyl-artist" id="vinylArtist"></div>
+        </div>
+        <div class="vinyl-iframe-wrap" id="vinylIframe"><iframe id="vinylFrame" src="" frameborder="0" width="100%" height="66" allow="autoplay" style="display:none"></iframe></div>
+      </div>
     </div>
   </div>
 
