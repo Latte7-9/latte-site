@@ -1,0 +1,160 @@
+<h2>✨ 点睛之笔 — 让网站从"好看"到"惊艳"</h2>
+<p class="subtitle">这些是锦上添花的加分项，每一项都能独立提升高级感</p>
+
+<div class="cards" data-multiselect>
+  
+  <div class="card" data-choice="cursor-glow" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1.2rem;text-align:center;">
+      <div style="position:relative;display:inline-block;">
+        <div style="width:24px;height:24px;border:1.5px solid rgba(255,61,113,0.6);border-radius:50%;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;background:#ff3d71;border-radius:50%;box-shadow:0 0 12px #ff3d71;"></div>
+        <div style="position:absolute;top:-4px;left:-4px;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,rgba(255,61,113,0.15),transparent 70%);"></div>
+      </div>
+      <div style="font-size:0.6rem;color:#666;margin-top:6px;">发光自定义光标 + 拖尾</div>
+    </div>
+    <div class="card-body">
+      <h3>🖱️ 自定义霓虹光标</h3>
+      <p>替换默认鼠标箭头为霓虹发光圆点+外圈光环。hover链接/按钮时放大变色。移动时带微弱拖尾。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="tilt-card" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,61,113,0.2);border-radius:10px;padding:0.8rem;display:inline-block;transform:perspective(600px) rotateY(-3deg) rotateX(2deg);box-shadow:4px 6px 20px rgba(255,61,113,0.08);">
+        <span style="color:#ccc;font-size:0.75rem;">卡片随鼠标倾斜</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🎴 3D视差倾斜卡片</h3>
+      <p>鼠标悬停时卡片跟随鼠标位置轻微3D倾斜，光泽随之移动。毛玻璃卡片特别适合这种效果。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="text-gradient-animate" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:700;background:linear-gradient(90deg,#ff3d71,#ffb800,#00d4aa,#ff3d71);background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        Latte
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🌈 流光渐变文字</h3>
+      <p>关键标题（如板块名）使用霓虹三色流动渐变文字。品红→金黄→青绿循环流动，像液体光。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="noise-texture" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;position:relative;">
+      <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:0.8rem;display:inline-block;position:relative;">
+        <span style="color:#ccc;font-size:0.75rem;">噪点纹理叠加</span>
+        <div style="position:absolute;inset:0;border-radius:10px;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📺 微噪点纹理</h3>
+      <p>整站叠加极微弱的SVG噪点纹理（opacity 0.03-0.04）。消除纯黑的"空洞感"，增加胶片质感。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="hover-glow-border" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="display:flex;gap:6px;justify-content:center;">
+        <div style="width:50px;height:50px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.06);"></div>
+        <div style="width:50px;height:50px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,61,113,0.4);box-shadow:0 0 16px rgba(255,61,113,0.2);"></div>
+        <div style="width:50px;height:50px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(0,212,170,0.4);box-shadow:0 0 16px rgba(0,212,170,0.2);"></div>
+      </div>
+      <div style="font-size:0.6rem;color:#666;margin-top:6px;">hover → 边框发光</div>
+    </div>
+    <div class="card-body">
+      <h3>💫 Hover边框呼吸</h3>
+      <p>鼠标经过任何可交互元素时，边框从暗色过渡到霓虹发光色，带柔和光晕脉冲。反馈感极强。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="particle-neon-upgrade" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="display:flex;gap:4px;justify-content:center;">
+        <div style="width:6px;height:6px;background:#ff3d71;border-radius:50%;box-shadow:0 0 8px #ff3d71;"></div>
+        <div style="width:4px;height:4px;background:#00d4aa;border-radius:50%;box-shadow:0 0 6px #00d4aa;"></div>
+        <div style="width:5px;height:5px;background:#ffb800;border-radius:50%;box-shadow:0 0 7px #ffb800;"></div>
+        <div style="width:3px;height:3px;background:#ff3d71;border-radius:50%;box-shadow:0 0 5px #ff3d71;"></div>
+        <div style="width:6px;height:6px;background:#00d4aa;border-radius:50%;box-shadow:0 0 8px #00d4aa;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>⚡ 霓虹粒子升级</h3>
+      <p>将现有WebGL粒子背景升级为霓虹色系——品红/青绿/金黄发光粒子，与整体色调统一。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="smooth-page-transition" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="display:flex;gap:4px;align-items:center;justify-content:center;">
+        <div style="font-size:0.7rem;color:#999;">首页</div>
+        <div style="color:#ff3d71;">→</div>
+        <div style="background:rgba(255,61,113,0.1);padding:2px 6px;border-radius:4px;font-size:0.7rem;color:#ff3d71;">博客</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🔄 页面切换过渡</h3>
+      <p>从首页进入博客页/兴趣页时，使用淡入+轻微上浮的平滑过渡。消除原生跳转的生硬感。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-progress-bar" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="width:80%;height:2px;background:rgba(255,255,255,0.05);border-radius:1px;margin:0 auto;position:relative;">
+        <div style="position:absolute;left:0;top:0;height:2px;width:45%;background:linear-gradient(90deg,#ff3d71,#00d4aa);border-radius:1px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📊 阅读进度条</h3>
+      <p>页面顶部一条霓虹渐变色细线，随滚动增长。告诉用户"还有多少没看"，增加浏览动力。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="mockup" style="margin-top:1rem;">
+  <div class="mockup-header">🎯 我的推荐优先级</div>
+  <div class="mockup-body" style="padding:0.8rem;">
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ff3d71;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">高优先</span>
+        <span style="color:#ccc;">🖱️ 自定义霓虹光标</span>
+        <span style="color:#666;font-size:0.75rem;">— 第一眼就感觉不一样</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ff3d71;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">高优先</span>
+        <span style="color:#ccc;">💫 Hover边框呼吸</span>
+        <span style="color:#666;font-size:0.75rem;">— 毛玻璃+霓虹发光是天作之合</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ff3d71;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">高优先</span>
+        <span style="color:#ccc;">⚡ 霓虹粒子升级</span>
+        <span style="color:#666;font-size:0.75rem;">— 粒子颜色与整体色调统一</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ffb800;color:#0a0a0a;padding:2px 8px;border-radius:10px;font-size:0.7rem;">中优先</span>
+        <span style="color:#ccc;">📺 微噪点纹理</span>
+        <span style="color:#666;font-size:0.75rem;">— 零成本提升质感</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ffb800;color:#0a0a0a;padding:2px 8px;border-radius:10px;font-size:0.7rem;">中优先</span>
+        <span style="color:#ccc;">🎴 3D视差倾斜卡片</span>
+        <span style="color:#666;font-size:0.75rem;">— 细节控最爱</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="background:#ffb800;color:#0a0a0a;padding:2px 8px;border-radius:10px;font-size:0.7rem;">中优先</span>
+        <span style="color:#ccc;">🌈 流光渐变文字 / 📊 阅读进度条</span>
+        <span style="color:#666;font-size:0.75rem;">— 锦上添花</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p style="color:#999;font-size:0.85rem;text-align:center;">
+    💡 这些加分项<strong style="color:#fff;">可多选</strong>，全选也不会冲突<br>
+    它们都在现有蓝图之上叠加，不影响核心功能
+  </p>
+</div>

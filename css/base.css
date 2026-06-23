@@ -1,0 +1,125 @@
+﻿/* ====== 全局重置 & 基础样式 ====== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-deep);
+  color: var(--text-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* 微噪点纹理 */
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 自定义霓虹光标 */
+body, a, button, input, textarea, [data-clickable] { cursor: none; }
+
+#neon-cursor {
+  position: fixed; pointer-events: none; z-index: 10000;
+  width: 20px; height: 20px;
+  border: 1.5px solid rgba(255, 61, 113, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-fast), height var(--duration-fast), border-color var(--duration-fast);
+}
+#neon-cursor::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px; height: 4px;
+  background: var(--neon-pink); border-radius: 50%;
+  box-shadow: 0 0 12px var(--neon-pink);
+}
+#neon-cursor.hover {
+  width: 40px; height: 40px;
+  border-color: var(--neon-cyan);
+}
+
+/* 阅读进度条 */
+#reading-progress {
+  position: fixed; top: 0; left: 0; height: 2px; z-index: 10001;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-gold), var(--neon-cyan));
+  width: 0; transition: width 0.1s linear;
+}
+
+/* 网格背景 */
+.grid-background {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none; opacity: 0.4;
+}
+
+/* 毛玻璃卡片基础类 */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+/* 渐变边框卡片 */
+.gradient-border-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+.gradient-border-card::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit; padding: 1px;
+  background: var(--border-gradient);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none; opacity: 0.5;
+  transition: opacity var(--duration-fast);
+}
+.gradient-border-card:hover::before { opacity: 1; }
+.gradient-border-card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 20px rgba(255, 61, 113, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* 3D 倾斜 */
+.tilt-card {
+  transition: transform 0.1s ease-out;
+  transform-style: preserve-3d;
+}
+
+/* 淡入上浮 */
+.fade-up { opacity: 0; transform: translateY(30px); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* section 通用 */
+.section-container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+.section-label {
+  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+  margin-bottom: 1.2rem; display: block;
+}
+
+/* 按钮 */
+.btn-primary {
+  display: inline-block; padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-sm); color: #fff; font-size: 0.82rem;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  border: none; cursor: pointer;
+  transition: opacity var(--duration-fast), transform var(--duration-fast);
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-block; padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm); color: var(--text-muted); font-size: 0.78rem;
+  background: transparent; border: 1px solid var(--border-subtle); cursor: pointer;
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--neon-pink); color: var(--neon-pink); }

@@ -1,35 +1,45 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>第一次夜爬泰山 - Latte</title>
-<link rel="stylesheet" href="../../css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泰山夜爬记 - Latte</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../../css/nav.css">
+<link rel="stylesheet" href="../../css/contact-footer.css">
 </head>
 <body>
-<nav class="site-nav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="../../index.html">Latte</a>
-    <ul class="nav-links">
-      <li><a href="../../index.html">首页</a></li>
-      <li><a href="../index.html">博客</a></li>
-    </ul>
+
+<div id="reading-progress"></div>
+
+<nav class="site-nav"><div class="nav-glass">
+  <a class="nav-brand" href="../../index.html">Latte</a>
+  <div class="nav-links">
+    <a href="../../index.html" class="nav-link">首页</a>
+    <a href="../index.html" class="nav-link">博客</a>
   </div>
-</nav>
-<section class="blog-post" style="padding:7rem 0 4rem;">
-  <div class="container">
-    <h1>第一次夜爬泰山</h1>
-    <div class="meta">2025-05-20</div>
-    <div class="content">
-      <p>凌晨两点出发，头灯的光只够照亮脚下三米。</p>
-      <p>十八盘比想象中更漫长。走过一半的时候小腿开始发抖，同行的朋友把热水递过来——那种在黑暗中和朋友互相打气的感觉，比山顶的日出还要温暖。</p>
-      <p>六点二十分，天边开始泛白。然后是一线金色，然后是整片天空被点燃。站在山顶上，说不清是因为累还是因为美，眼眶有点发热。</p>
-      <p>下次还要来。冬天来。</p>
+</div></nav>
+
+<article style="max-width:700px;margin:0 auto;padding:7rem 1.5rem 3rem;">
+  <div class="gradient-border-card" style="padding:2rem 2.5rem;">
+    <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.6rem;">2026-06-15</div>
+    <h1 style="font-size:1.6rem;font-weight:300;color:var(--text-primary);margin-bottom:1.5rem;line-height:1.4;">泰山夜爬记</h1>
+    <div style="color:var(--text-body);font-size:0.95rem;line-height:2.1;">凌晨三点出发，头顶是银河，脚下是石阶，心中是期待。<br><br>夜爬泰山是我策划已久的一次出行。从红门出发，打着手电，跟着人流，一步一个台阶。<br><br>到达中天门的时候已经是凌晨四点半，山风渐起，温度骤降。但我们没有停——日出的时间不等人。<br><br>最终在五点四十分到达日观峰。天边泛起了鱼肚白，然后是一抹橙色，然后是整片天空被点燃。那一刻，所有的疲惫都值了。<br><br>下山的时候腿在抖，但心是满的。</div>
+    <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-subtle);">
+      <a href="../index.html" style="color:var(--neon-cyan);font-size:0.85rem;text-decoration:none;">← 返回博客</a>
     </div>
   </div>
-</section>
+</article>
+
 <footer>
-  <div class="container"><span>&copy; 2026 Latte</span></div>
+  <div class="footer-inner" style="max-width:900px;margin:0 auto;padding:0 1.5rem;">
+    <span>&copy; 2026 Latte · 用 Codex 搭建</span>
+  </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="../../js/cursor.js"></script>
 </body>
 </html>

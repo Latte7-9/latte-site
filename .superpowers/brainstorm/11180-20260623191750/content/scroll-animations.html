@@ -1,0 +1,121 @@
+<h2>📜 板块滚动动画 — 翻页体验</h2>
+<p class="subtitle">用户滚动页面时，每个板块如何入场？决定了浏览的节奏感和沉浸度</p>
+
+<div class="cards">
+  
+  <div class="card" data-choice="scroll-reveal-stagger" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1.2rem;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <div style="width:80%;height:10px;background:rgba(41,144,192,0.15);border-radius:3px;"></div>
+        <div style="font-size:0.7rem;color:#999;">↑ 板块1 从下方淡入 ↑</div>
+        <div style="width:80%;height:10px;background:rgba(124,77,255,0.15);border-radius:3px;margin-top:6px;"></div>
+        <div style="font-size:0.7rem;color:#999;">↑ 板块2 从下方淡入 ↑</div>
+        <div style="width:80%;height:10px;background:rgba(0,212,170,0.15);border-radius:3px;margin-top:6px;"></div>
+        <div style="font-size:0.7rem;color:#999;">↑ 板块3 从下方淡入 ↑</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📈 逐块淡入上浮</h3>
+      <p>每个板块滚入视口时从下方30px淡入+上浮。板块内部子元素stagger依次出现。<br>经典、稳健、不出错。</p>
+      <p style="color:#888;font-size:0.8rem;">
+        <strong>GSAP</strong>: ScrollTrigger + from(y:30, opacity:0) + stagger<br>
+        <strong>节奏</strong>: 每板块 ~0.6s，子元素 stagger 0.1s
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-pin-reveal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1.2rem;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <div style="border:1px dashed rgba(255,255,255,0.2);padding:0.5rem;border-radius:8px;text-align:center;width:80%;">
+          <div style="font-size:0.6rem;color:#666;">📌 钉住 →</div>
+          <div style="font-size:0.7rem;color:#ccc;">板块展开中...</div>
+        </div>
+        <div style="font-size:0.6rem;color:#555;">▼ 继续滚动 ▼</div>
+        <div style="width:80%;height:10px;background:rgba(41,144,192,0.2);border-radius:3px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📌 滚定展开</h3>
+      <p>滚动到某个板块时页面短暂"钉住"（pin），板块以特效方式展开后再释放滚动。<br>沉浸感强，像翻阅一本精心设计的画册。</p>
+      <p style="color:#888;font-size:0.8rem;">
+        <strong>GSAP</strong>: ScrollTrigger pin + scrub<br>
+        <strong>节奏</strong>: 每个重要板块 pin 0.5-1s
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-parallax-layers" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1.2rem;position:relative;overflow:hidden;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;position:relative;z-index:1;">
+        <div style="font-size:0.6rem;color:#555;">远景 · 慢速移动</div>
+        <div style="width:80%;height:8px;background:rgba(255,61,113,0.1);border-radius:3px;"></div>
+        <div style="font-size:0.6rem;color:#555;">中景 · 中速移动</div>
+        <div style="width:80%;height:8px;background:rgba(0,212,170,0.15);border-radius:3px;"></div>
+        <div style="font-size:0.6rem;color:#999;">近景 · 正常滚动</div>
+        <div style="width:80%;height:8px;background:rgba(41,144,192,0.2);border-radius:3px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🌌 视差层次</h3>
+      <p>背景网格/粒子/光晕以不同速度移动，营造深度空间感。<br>配合毛玻璃卡片，层次感拉满。</p>
+      <p style="color:#888;font-size:0.8rem;">
+        <strong>GSAP</strong>: ScrollTrigger + yPercent 不同速率<br>
+        <strong>节奏</strong>: 持续性的，随滚动实时变化
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-color-shift" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1.2rem;">
+      <div style="display:flex;gap:2px;width:100%;height:40px;border-radius:6px;overflow:hidden;">
+        <div style="flex:1;background:#0a0a0a;"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#0a0a0a,#1a0a1a);"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#1a0a1a,#0a1a1a);"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#0a1a1a,#0a0a1a);"></div>
+        <div style="flex:1;background:linear-gradient(180deg,#0a0a1a,#0a0a0a);"></div>
+      </div>
+      <div style="text-align:center;font-size:0.6rem;color:#555;margin-top:4px;">滚动时背景色调渐变变化</div>
+    </div>
+    <div class="card-body">
+      <h3>🎨 背景色渐变</h3>
+      <p>随着页面滚动，整体背景从纯黑渐变到另一种暗色调（如深紫、深蓝绿）。<br>像翻阅一本有色纸张的书。</p>
+      <p style="color:#888;font-size:0.8rem;">
+        <strong>GSAP</strong>: ScrollTrigger scrub + CSS变量或背景色<br>
+        <strong>节奏</strong>: 整个页面滚动过程持续渐变
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-top:0.8rem;">
+  <div class="card" data-choice="scroll-number-chapter" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="font-size:2rem;color:rgba(41,144,192,0.3);font-weight:300;">01</div>
+      <div style="font-size:0.6rem;color:#666;">滚动切换章节编号</div>
+    </div>
+    <div class="card-body">
+      <h3>🔢 章节编号</h3>
+      <p>页面角落显示当前板块编号(01-06)，随滚动高亮变化。增加叙事感。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="scroll-none-fast" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;text-align:center;">
+      <div style="font-size:1.2rem;color:#ccc;">⚡</div>
+      <div style="font-size:0.6rem;color:#666;">无动画 · 即刻显示 · 快速直达</div>
+    </div>
+    <div class="card-body">
+      <h3>⚡ 无滚动动画</h3>
+      <p>所有内容一次性渲染好，无滚动触发动画。性能最优，内容直达。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p style="color:#999;font-size:0.85rem;text-align:center;">
+    💡 推荐<strong style="color:#fff;">逐块淡入 + 视差层次</strong>组合——既有节奏感又有空间深度<br>
+    如果选"滚定展开"则体验感最强但实现复杂度也最高
+  </p>
+</div>

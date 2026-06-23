@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1a1410;
+  --color-ink-secondary: #4a3f35;
+  --color-ink-muted: #7a6e62;
+  --color-cream: #faf6f1;
+  --color-cream-warm: #f3ece4;
+  --color-latte: #c4956a;
+  --color-latte-light: #e8d5be;
+  --color-latte-dark: #8a6540;
+  --color-espresso: #3d2e1f;
+  --color-espresso-ink: #ede4da;
+  --color-sage: #7a8b6f;
+  --color-clay: #c47a5a;
+
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-hero: clamp(2.8rem, 6vw, 4.5rem);
+  --text-h1: 2.25rem;
+  --text-h2: 1.75rem;
+  --text-h3: 1.375rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: hsl(from var(--color-border) h s l / 0.1);
+  }
+
+  body {
+    font-family: var(--font-body), system-ui, sans-serif;
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), serif;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fade-in-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger children */
+  .stagger-children > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .stagger-children-visible > *:nth-child(1) { transition-delay: 0.05s; }
+  .stagger-children-visible > *:nth-child(2) { transition-delay: 0.1s; }
+  .stagger-children-visible > *:nth-child(3) { transition-delay: 0.15s; }
+  .stagger-children-visible > *:nth-child(4) { transition-delay: 0.2s; }
+  .stagger-children-visible > *:nth-child(5) { transition-delay: 0.25s; }
+  .stagger-children-visible > *:nth-child(6) { transition-delay: 0.3s; }
+  .stagger-children-visible > *:nth-child(7) { transition-delay: 0.35s; }
+  .stagger-children-visible > *:nth-child(8) { transition-delay: 0.4s; }
+
+  .stagger-children-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer components {
+  .container-narrow {
+    @apply mx-auto max-w-[72ch] px-4 sm:px-6;
+  }
+
+  .container-wide {
+    @apply mx-auto max-w-6xl px-4 sm:px-6;
+  }
+
+  .section {
+    @apply py-20 sm:py-16;
+  }
+
+  .section-alt {
+    @apply bg-cream-warm;
+  }
+
+  .section-dark {
+    @apply bg-espresso text-espresso-ink;
+  }
+
+  .card {
+    @apply rounded-xl border border-[#e8e0d6] bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-[3px] hover:border-latte/40 hover:shadow-md;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-latte-dark px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-ink-secondary;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-ink-secondary transition-colors duration-200 hover:text-latte-dark;
+  }
+
+  /* Milk foam wave divider */
+  .wave-divider {
+    @apply w-full overflow-hidden leading-[0];
+  }
+
+  .wave-divider svg {
+    @apply block h-6 w-full sm:h-8;
+  }
+}

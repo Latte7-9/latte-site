@@ -1,0 +1,20 @@
+﻿.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.dual-col { padding: 1.2rem; min-height: 180px; }
+.interest-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.interest-tag {
+  text-decoration: none;
+  padding: 4px 12px; border-radius: 9999px;
+  font-size: 0.72rem; border: 1px solid;
+}
+.interest-tag:nth-child(3n+1) { color: #ff3d71; border-color: rgba(255,61,113,0.3); background: rgba(255,61,113,0.08); }
+.interest-tag:nth-child(3n+2) { color: #00d4aa; border-color: rgba(0,212,170,0.3); background: rgba(0,212,170,0.08); }
+.interest-tag:nth-child(3n+3) { color: #ffb800; border-color: rgba(255,184,0,0.3); background: rgba(255,184,0,0.08); }
+.book-mini-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.5rem 0; }
+.book-mini-item + .book-mini-item { border-top: 1px solid rgba(255,255,255,0.06); }
+.book-mini-cover {
+  width: 30px; height: 42px; border-radius: 3px; flex-shrink: 0;
+  background: linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));
+}
+.book-mini-title { font-size: 0.75rem; color: #ccc; }
+.book-mini-author { font-size: 0.65rem; color: #666; }
+@media (max-width: 640px) { .dual-grid { grid-template-columns: 1fr; } }

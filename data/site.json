@@ -1,139 +1,142 @@
-{
-  "name": "LATTE",
-  "tagline": "泪流满面算不算是一种生理盐水湿敷全脸",
-  "about": "狮子座 / ENTP / 兴趣广泛 / <br>三分钟热度，但足够热！",
-  "interests": [
-    {
-      "name": "摄影",
-      "icon": "camera",
-      "page": "interests/photography.html",
-      "description": "用镜头捕捉生活中转瞬即逝的光影",
-      "albums": [
-        {
-          "name": "随拍",
-          "description": "“你怎么什么乱七八糟的都拍”“你不觉得这张构图很好吗”",
-          "cover": "images/杜甫江阁.jpg",
-          "images": [
-            "images/幸福塔.jpg"
-          ],
-          "journal": "2020年用自己的钱买了人生第一台相机，从此快门成为了我留住时间的方式。"
-        }
-      ]
-    },
-    {
-      "name": "书籍",
-      "icon": "book",
-      "page": "interests/books.html",
-      "description": "在文字里遇见另一个世界",
-      "read": [
-        {
-          "title": "《我与地坛》",
-          "author": "史铁生",
-          "cover": "images/me-and-the-earth-altar.jpg",
-          "review": "⌈ 死是一个必然会降临的节日 ⌋ 所以你不必着急"
-        },
-        {
-          "title": "《面纱》",
-          "author": "毛姆",
-          "cover": "images/the-painted-veil.jpg",
-          "review": "大多情况下大家都成不了凯蒂，只能成为包法利夫人"
-        }
-      ],
-      "reading": [
-        {
-          "title": "《罪与罚》",
-          "author": "陀思妥耶夫斯基",
-          "cover": "images/crime-and-punishment.jpg",
-          "review": "读的时候感觉自己和主角一样都得了热症"
-        }
-      ],
-      "wantToRead": [
-        {
-          "title": "《西西弗神话》",
-          "author": "加缪",
-          "cover": "",
-          "review": ""
-        }
-      ]
-    },
-    {
-      "name": "三分钟热度",
-      "icon": "sparkle",
-      "page": "interests/hobbies.html",
-      "description": "那些短暂但认真热爱过的事物",
-      "hobbies": [
-        "手冲咖啡",
-        "钩织",
-        "吉他",
-        "烹饪",
-        "动漫",
-        "徒步",
-        "想学攀岩"
-      ]
-    },
-    {
-      "name": "登山",
-      "icon": "mountain",
-      "page": "interests/hiking.html",
-      "description": "山在那里，路在脚下",
-      "climbed": [
-        {
-          "name": "会龙山",
-          "date": "2003-08",
-          "note": "如果你不知道这是什么山，那就对了，这是我家门口的山。"
-        },
-        {
-          "name": "武功山",
-          "date": "2026-05",
-          "note": "一直不停的走，以为看了高山草甸到了金顶就能将情绪掩埋。"
-        }
-      ],
-      "wantToClimb": [
-        {
-          "name": "萨武神山",
-          "reason": "想站在雪山上"
-        },
-        {
-          "name": "九华山",
-          "reason": "礼佛圣地"
-        },
-        {
-          "name": "天柱山",
-          "reason": "8月底之前能爬上吗"
-        },
-        {
-          "name": "稻城亚丁",
-          "reason": ""
-        }
-      ],
-      "journal": "<p>登山对我来说，从来不只是运动。</p><p>每一次上山，都是一次和自己的身体对话。累到极限的时候，反而能想清楚很多事情。山顶的风总是很大，但那一瞬间的辽阔——群山在你脚下，云在你腰间——所有烦恼都变得很小很小。</p><p>有人说登山是征服。我更觉得，是山允许你站在它肩上，看一会儿远方。</p>",
-      "images": []
-    }
-  ],
-  "books": [
-    {
-      "title": "《我与地坛》",
-      "author": "史铁生",
-      "cover": "images/me-and-the-earth-altar.jpg"
-    },
-    {
-      "title": "《面纱》",
-      "author": "毛姆",
-      "cover": "images/the-painted-veil.jpg"
-    },
-    {
-      "title": "《罪与罚》",
-      "author": "陀思妥耶夫斯基",
-      "cover": "images/crime-and-punishment.jpg"
-    }
-  ],
-  "contact": {
-    "email": "xqy07207903@163.com"
-  },
-  "currently": {
-    "reading": "《罪与罚》陀思妥耶夫斯基",
-    "listening": "丁世光《神探》",
-    "learning": "吉他弹唱《坏女孩》",
-    "workingOn": "Codex到底有多好玩！"
-  }
+﻿{
+    "name":  "Latte",
+    "tagline":  "泪流满面算不算是一种生理盐水湿敷全脸",
+    "about":  "狮子座 / ENTP / 兴趣广泛 / \u003cbr\u003e三分钟热度，但足够热！",
+    "interests":  [
+                      {
+                          "name":  "摄影",
+                          "icon":  "camera",
+                          "page":  "interests/photography.html",
+                          "description":  "用镜头捕捉生活中转瞬即逝的光影",
+                          "albums":  [
+                                         {
+                                             "name":  "随拍",
+                                             "description":  "“你怎么什么乱七八糟的都拍”“你不觉得这张构图很好吗”",
+                                             "cover":  "",
+                                             "images":  [
+                                                            "images/幸福塔.jpg"
+                                                        ],
+                                             "journal":  "2020年用自己的钱买了人生第一台相机，从此快门成为了我留住时间的方式。"
+                                         }
+                                     ]
+                      },
+                      {
+                          "name":  "书籍",
+                          "icon":  "book",
+                          "page":  "interests/books.html",
+                          "description":  "在文字里遇见另一个世界",
+                          "read":  [
+                                       {
+                                           "title":  "《我与地坛》",
+                                           "author":  "史铁生",
+                                           "cover":  "images/me-and-the-earth-altar.jpg",
+                                           "review":  "⌈ 死是一个必然会降临的节日 ⌋ 所以你不必着急"
+                                       },
+                                       {
+                                           "title":  "《面纱》",
+                                           "author":  "毛姆",
+                                           "cover":  "images/the-painted-veil.jpg",
+                                           "review":  "大多情况下大家都成不了凯蒂，只能成为包法利夫人"
+                                       }
+                                   ],
+                          "reading":  [
+                                          {
+                                              "title":  "《罪与罚》",
+                                              "author":  "陀思妥耶夫斯基",
+                                              "cover":  "images/crime-and-punishment.jpg",
+                                              "review":  "读的时候感觉自己和主角一样都得了热症"
+                                          }
+                                      ],
+                          "wantToRead":  [
+                                             {
+                                                 "title":  "《西西弗神话》",
+                                                 "author":  "加缪",
+                                                 "cover":  "",
+                                                 "review":  ""
+                                             }
+                                         ]
+                      },
+                      {
+                          "name":  "三分钟热度",
+                          "icon":  "sparkle",
+                          "page":  "interests/hobbies.html",
+                          "description":  "那些短暂但认真热爱过的事物",
+                          "hobbies":  [
+                                          "手冲咖啡",
+                                          "钩织",
+                                          "吉他",
+                                          "烹饪",
+                                          "动漫",
+                                          "徒步",
+                                          "想学攀岩"
+                                      ]
+                      },
+                      {
+                          "name":  "登山",
+                          "icon":  "mountain",
+                          "page":  "interests/hiking.html",
+                          "description":  "山在那里，路在脚下",
+                          "climbed":  [
+                                          {
+                                              "name":  "会龙山",
+                                              "date":  "2003-08",
+                                              "note":  "如果你不知道这是什么山，那就对了，这是我家门口的山。"
+                                          },
+                                          {
+                                              "name":  "武功山",
+                                              "date":  "2026-05",
+                                              "note":  "一直不停的走，以为看了高山草甸到了金顶就能将情绪掩埋。"
+                                          }
+                                      ],
+                          "wantToClimb":  [
+                                              {
+                                                  "name":  "萨武神山",
+                                                  "reason":  "想站在雪山上"
+                                              },
+                                              {
+                                                  "name":  "九华山",
+                                                  "reason":  "礼佛圣地"
+                                              },
+                                              {
+                                                  "name":  "天柱山",
+                                                  "reason":  "8月底之前能爬上吗"
+                                              },
+                                              {
+                                                  "name":  "稻城亚丁",
+                                                  "reason":  ""
+                                              }
+                                          ],
+                          "journal":  "\u003cp\u003e登山对我来说，从来不只是运动。\u003c/p\u003e\u003cp\u003e每一次上山，都是一次和自己的身体对话。累到极限的时候，反而能想清楚很多事情。山顶的风总是很大，但那一瞬间的辽阔——群山在你脚下，云在你腰间——所有烦恼都变得很小很小。\u003c/p\u003e\u003cp\u003e有人说登山是征服。我更觉得，是山允许你站在它肩上，看一会儿远方。\u003c/p\u003e",
+                          "images":  [
+
+                                     ]
+                      }
+                  ],
+    "books":  [
+                  {
+                      "title":  "《我与地坛》",
+                      "author":  "史铁生",
+                      "cover":  "images/me-and-the-earth-altar.jpg"
+                  },
+                  {
+                      "title":  "《面纱》",
+                      "author":  "毛姆",
+                      "cover":  "images/the-painted-veil.jpg"
+                  },
+                  {
+                      "title":  "《罪与罚》",
+                      "author":  "陀思妥耶夫斯基",
+                      "cover":  "images/crime-and-punishment.jpg"
+                  }
+              ],
+    "contact":  {
+                    "email":  "xqy07207903@163.com"
+                },
+    "currently":  {
+                      "reading":  "《罪与罚》陀思妥耶夫斯基",
+                      "listening":  "丁世光《神探》",
+                      "learning":  "吉他弹唱《坏女孩》",
+                      "workingOn":  "Codex到底有多好玩！"
+                  },
+    "githubRepo":  "Latte7-9/latte-site"
 }

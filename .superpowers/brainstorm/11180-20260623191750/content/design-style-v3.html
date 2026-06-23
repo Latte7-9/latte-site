@@ -1,0 +1,101 @@
+<h2>🎨 设计风格方向 — 你更喜欢哪种？</h2>
+<p class="subtitle">你的网站名 "Latte" 自带咖啡文化气质，以下四种方向各有侧重</p>
+
+<div class="cards" data-multiselect>
+  
+  <div class="card" data-choice="glassmorphism" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);padding:1.5rem;text-align:center;">
+      <div style="display:inline-block;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:20px;padding:1.5rem 2rem;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.2rem;">
+        ✨ <strong>Latte</strong><br>
+        <span style="font-size:0.7rem;opacity:0.7;">Glassmorphism</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;justify-content:center;">
+        <div style="width:40px;height:40px;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border-radius:10px;border:1px solid rgba(255,255,255,0.1);"></div>
+        <div style="width:40px;height:40px;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border-radius:10px;border:1px solid rgba(255,255,255,0.1);"></div>
+        <div style="width:40px;height:40px;background:rgba(41,144,192,0.15);backdrop-filter:blur(10px);border-radius:10px;border:1px solid rgba(41,144,192,0.3);"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🫧 毛玻璃赛博</h3>
+      <p>半透明卡片 + backdrop-blur，层次感强，科技感与现代感兼具。适合保留暗色基调但提升质感。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>层次丰富，视觉深度</li><li>保留暗色调，眼睛友好</li><li>现代、高级感</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>对性能有一定要求</li><li>文字可读性需仔细调</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="neobrutalism" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fffbeb;padding:1.5rem;text-align:center;">
+      <div style="display:inline-block;background:#ff6b35;border:3px solid #1a1a1a;border-radius:2px;padding:1.5rem 2rem;color:#1a1a1a;font-size:1.2rem;box-shadow:6px 6px 0 #1a1a1a;font-weight:700;">
+        ☕ <strong>Latte</strong><br>
+        <span style="font-size:0.65rem;">Neo-Brutalism</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;justify-content:center;">
+        <div style="width:40px;height:40px;background:#ffd166;border:3px solid #1a1a1a;box-shadow:3px 3px 0 #1a1a1a;"></div>
+        <div style="width:40px;height:40px;background:#06d6a0;border:3px solid #1a1a1a;box-shadow:3px 3px 0 #1a1a1a;"></div>
+        <div style="width:40px;height:40px;background:#118ab2;border:3px solid #1a1a1a;box-shadow:3px 3px 0 #1a1a1a;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🎯 新粗野主义</h3>
+      <p>粗黑边框+硬阴影+高饱和色块，个性鲜明、记忆点强。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>极强辨识度</li><li>活泼、有趣</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>与"Latte"调性可能冲突</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="organic" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(135deg,#fef9ef,#fce4c8,#f5d5b8);padding:1.5rem;text-align:center;">
+      <div style="display:inline-block;background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);border-radius:24px;padding:1.5rem 2rem;border:1.5px solid rgba(180,130,90,0.3);color:#5c3d2e;font-size:1.2rem;box-shadow:0 8px 32px rgba(139,90,43,0.12);">
+        🌿 <strong>Latte</strong><br>
+        <span style="font-size:0.65rem;color:#8b5a2b;">有机自然</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;justify-content:center;">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#f5d5b8,#e8c9a0);border-radius:50%;box-shadow:0 4px 12px rgba(139,90,43,0.15);"></div>
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#d4a574,#c4956a);border-radius:50%;box-shadow:0 4px 12px rgba(139,90,43,0.15);"></div>
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,#8b5a2b,#6b3a1f);border-radius:50%;box-shadow:0 4px 12px rgba(139,90,43,0.15);"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🌾 温暖咖啡调</h3>
+      <p>暖色系（奶咖/焦糖/浅棕）+ 圆角 + 有机曲线，呼应"Latte"本意。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>完美呼应品牌名</li><li>温暖舒适</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>暗色用户可能不习惯</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="minimal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0d0d0d;padding:1.5rem;text-align:center;">
+      <div style="display:inline-block;border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:1.5rem 2.5rem;color:#fff;font-size:1.2rem;font-weight:300;letter-spacing:0.3em;">
+        LATTE<br>
+        <span style="font-size:0.55rem;opacity:0.4;letter-spacing:0.2em;">MINIMAL</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;justify-content:center;">
+        <div style="width:40px;height:40px;background:rgba(255,255,255,0.04);border-radius:2px;border:1px solid rgba(255,255,255,0.06);"></div>
+        <div style="width:2px;height:40px;background:rgba(255,255,255,0.1);"></div>
+        <div style="width:40px;height:40px;background:rgba(255,255,255,0.04);border-radius:2px;border:1px solid rgba(255,255,255,0.06);"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>◼️ 极致极简</h3>
+      <p>大留白 · 细线 · 低对比 · 克制排版。内容为王。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>永不过时</li><li>内容聚焦</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>动效空间有限</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section">
+  <p style="color:#999;font-size:0.85rem;text-align:center;">
+    💡 你也可以<strong style="color:#fff;">多选融合</strong>——比如"毛玻璃 + 咖啡暖色调"的混合风格<br>
+    我会根据你的选择来设计具体的色彩方案和组件风格
+  </p>
+</div>

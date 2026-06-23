@@ -1,0 +1,138 @@
+<h2>📐 板块浏览流线 — 当前 vs 建议</h2>
+<p class="subtitle">好的排列让浏览像讲故事，差的排列让人跳着看</p>
+
+<!-- 当前排列 -->
+<div class="mockup" style="margin-bottom:1rem;">
+  <div class="mockup-header">⚠️ 当前排列 & 问题</div>
+  <div class="mockup-body" style="padding:1rem;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:0.82rem;">
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">👤 关于我</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,61,113,0.1);padding:6px 12px;border-radius:8px;color:#ff3d71;">🎵 随机听听</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">📝 博客预览</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">🎯 兴趣</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">📚 书籍</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">🦆 留言板</span>
+      <span style="color:#555;">→</span>
+      <span style="background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:8px;color:#ccc;">📬 联系</span>
+    </div>
+    <div style="margin-top:0.8rem;font-size:0.75rem;color:#999;">
+      <div style="color:#ff3d71;">❌ 音乐夹在"关于"和"博客"之间——你是谁还没讲完就放歌？</div>
+      <div style="color:#ffb800;">❌ "兴趣"和"书籍"中间隔了博客——两个相关板块被打散</div>
+      <div style="color:#00d4aa;">❌ 浏览流线：身份→音乐→思想→爱好→阅读→互动→联系，节奏混乱</div>
+    </div>
+  </div>
+</div>
+
+<!-- 建议排列 -->
+<h3 style="margin-top:1rem;">✅ 建议方案对比</h3>
+
+<div class="cards">
+  
+  <div class="card" data-choice="layout-story" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:0.75rem;">
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">👤 关于</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📝 博客</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🎯 兴趣</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📚 书籍</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(0,212,170,0.12);padding:5px 10px;border-radius:6px;color:#00d4aa;">🎵 音乐</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🦆 留言</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📬 联系</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📖 叙事流 — "先了解我，再听我推荐"</h3>
+      <p>身份 → 思想 → 爱好 → 品味 → 氛围 → 互动 → 联系</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>逻辑清晰：先认识人，再看内容</li><li>兴趣+书籍相邻，形成"品味区"</li><li>音乐作为"氛围过渡"放在互动前</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>音乐位置靠后，首屏看不到</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="layout-atmosphere" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:0.75rem;">
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">👤 关于</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,184,0,0.12);padding:5px 10px;border-radius:6px;color:#ffb800;">🎵 音乐</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📝 博客</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🎯 兴趣</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📚 书籍</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🦆 留言</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📬 联系</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>🎵 氛围优先 — "带着BGM认识我"</h3>
+      <p>身份 → 氛围 → 思想 → 爱好 → 品味 → 互动 → 联系</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>音乐紧跟身份，像个人简介的BGM</li><li>营造"边听边看"的体验</li><li>音乐在首屏可见区域</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>和当前排列类似但后续逻辑更好</li><li>兴趣+书籍仍然相邻</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="layout-compact" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a;padding:1rem;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:0.75rem;">
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">👤 关于</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📝 博客</span>
+        <span style="color:#555;">→</span>
+        <div style="background:rgba(255,61,113,0.08);border:1px dashed rgba(255,61,113,0.3);border-radius:6px;padding:5px 8px;display:flex;gap:4px;">
+          <span style="color:#ccc;">🎯兴趣</span>
+          <span style="color:#555;">+</span>
+          <span style="color:#ccc;">📚书籍</span>
+        </div>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🎵 音乐</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">🦆 留言</span>
+        <span style="color:#555;">→</span>
+        <span style="background:rgba(255,255,255,0.06);padding:5px 10px;border-radius:6px;color:#ccc;">📬 联系</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>📦 紧凑合并 — "兴趣+书籍双栏并排"</h3>
+      <p>身份 → 思想 → [兴趣 | 书籍]双栏 → 音乐 → 互动 → 联系</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优势</h4><ul><li>页面更紧凑，减少滚动疲劳</li><li>"品味区"集中展示更高效</li><li>版面更有设计感</li></ul></div>
+        <div class="cons"><h4>注意</h4><ul><li>需要更多CSS编排工作</li><li>双栏在手机上会变单栏</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="mockup" style="margin-top:1rem;">
+  <div class="mockup-header">🎯 我的推荐：方案A 叙事流</div>
+  <div class="mockup-body" style="padding:0.8rem;font-size:0.82rem;color:#ccc;">
+    <p style="margin:0 0 8px 0;"><strong style="color:#ff3d71;">核心理由</strong>：个人网站的浏览逻辑应该是"先认识这个人，再了解她的世界"</p>
+    <div style="display:flex;flex-direction:column;gap:4px;color:#999;">
+      <div>👤 <strong>关于我</strong> → 第一印象，你是谁</div>
+      <div>📝 <strong>博客预览</strong> → 你在想什么（思想的窗口）</div>
+      <div>🎯 <strong>兴趣</strong> → 你喜欢什么</div>
+      <div>📚 <strong>正在翻阅</strong> → 你的品味深度</div>
+      <div>🎵 <strong>随机听听</strong> → 此刻的氛围，作为"中场休息"</div>
+      <div>🦆 <strong>丢鸭子</strong> → 互动环节</div>
+      <div>📬 <strong>联系</strong> → 最后行动号召</div>
+    </div>
+  </div>
+</div>

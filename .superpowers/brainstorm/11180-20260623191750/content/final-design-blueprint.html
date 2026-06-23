@@ -1,0 +1,152 @@
+<h2>🎨 Latte 网站 UI 大改造 — 最终设计蓝图</h2>
+<p class="subtitle">毛玻璃赛博 × 霓虹暗夜 × 墨滴扩散</p>
+
+<!-- 设计系统 -->
+<div class="mockup" style="margin-bottom:1rem;">
+  <div class="mockup-header">🎯 设计系统一览</div>
+  <div class="mockup-body" style="padding:1rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;font-size:0.85rem;">
+      <div style="color:#ccc;"><strong style="color:#ff3d71;">主色</strong> #ff3d71 品红</div>
+      <div style="color:#ccc;"><strong style="color:#00d4aa;">辅色</strong> #00d4aa 青绿</div>
+      <div style="color:#ccc;"><strong style="color:#ffb800;">强调</strong> #ffb800 金黄</div>
+      <div style="color:#ccc;"><strong style="color:#999;">基底</strong> #0a0a0a 纯黑</div>
+      <div style="color:#ccc;"><strong>卡片底</strong> rgba(255,255,255,0.03)</div>
+      <div style="color:#ccc;"><strong>边框</strong> 蓝→紫渐变 1px</div>
+      <div style="color:#ccc;"><strong>模糊</strong> backdrop-blur 16-20px</div>
+      <div style="color:#ccc;"><strong>圆角</strong> 12-16px 统一</div>
+    </div>
+  </div>
+</div>
+
+<!-- 页面结构 -->
+<div class="mockup" style="margin-bottom:1rem;">
+  <div class="mockup-header">📐 页面结构 & 动效时序</div>
+  <div class="mockup-body" style="padding:1rem;display:flex;flex-direction:column;gap:0.5rem;">
+
+    <div style="background:rgba(255,61,113,0.08);border-left:3px solid #ff3d71;padding:0.7rem;border-radius:0 8px 8px 0;">
+      <strong style="color:#ff3d71;">🎬 阶段1 — 入场 (0-3.2s)</strong>
+      <div style="color:#999;font-size:0.8rem;margin-top:2px;">
+        墨滴扩散动画 → 3.2s后显示标题+副标题+向下箭头 → 等待用户点击/滚轮
+      </div>
+    </div>
+
+    <div style="background:rgba(0,212,170,0.08);border-left:3px solid #00d4aa;padding:0.7rem;border-radius:0 8px 8px 0;">
+      <strong style="color:#00d4aa;">🧭 阶段2 — 进入主页</strong>
+      <div style="color:#999;font-size:0.8rem;margin-top:2px;">
+        入场层淡出 → 主页淡入 → 悬浮毛玻璃导航栏从顶部落下 → 各板块依次 stagger 淡入上浮
+      </div>
+    </div>
+
+    <div style="background:rgba(255,184,0,0.08);border-left:3px solid #ffb800;padding:0.7rem;border-radius:0 8px 8px 0;">
+      <strong style="color:#ffb800;">📜 阶段3 — 滚动浏览</strong>
+      <div style="color:#999;font-size:0.8rem;margin-top:2px;">
+        多层视差（背景粒子慢速/光晕中速/内容正常）→ 每个板块入视口时逐块淡入上浮 → 子元素 stagger
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 板块改造清单 -->
+<div class="mockup" style="margin-bottom:1rem;">
+  <div class="mockup-header">📋 板块改造清单（全部保留功能，仅重塑UI）</div>
+  <div class="mockup-body" style="padding:0.8rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.8rem;">
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">🧭 <strong>导航栏</strong> → 悬浮毛玻璃卡片</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">👤 <strong>关于我</strong> → 渐变边框卡片</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">🎵 <strong>随机听听</strong> → 毛玻璃音乐卡</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">📝 <strong>博客预览</strong> → 霓虹列表卡片</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">🎯 <strong>兴趣</strong> → 渐变边框网格</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">📚 <strong>最近在读</strong> → 玻璃书封卡片</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">📬 <strong>联系方式</strong> → 霓虹图标链接</div>
+      <div style="padding:6px 10px;background:rgba(255,255,255,0.02);border-radius:6px;">⬆️ <strong>返回顶部</strong> → 渐变填充圆形按钮</div>
+    </div>
+  </div>
+</div>
+
+<!-- 特色组件 -->
+<h3 style="margin-top:1rem;">🌟 特色组件改造</h3>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">💿 黑胶唱片播放器</div>
+    <div class="mockup-body" style="padding:0.8rem;font-size:0.8rem;color:#ccc;">
+      <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);border-radius:12px;padding:0.8rem;border:1px solid rgba(255,255,255,0.08);">
+        <div style="text-align:center;margin-bottom:0.5rem;">
+          <div style="width:50px;height:50px;border-radius:50%;background:radial-gradient(circle,#1a1a1a 30%,#0a0a0a 60%,rgba(255,184,0,0.2) 61%,#0a0a0a 70%);margin:0 auto;border:2px solid rgba(255,184,0,0.3);"></div>
+        </div>
+        <ul style="color:#999;font-size:0.75rem;padding-left:1rem;">
+          <li>毛玻璃悬浮卡片，霓虹发光边框</li>
+          <li>唱片旋转保留，加入霓虹光晕</li>
+          <li>展开时卡片放大+更多信息滑入</li>
+          <li>品红/青绿双色唱片标签</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">🦆 橡皮鸭留言水池</div>
+    <div class="mockup-body" style="padding:0.8rem;font-size:0.8rem;color:#ccc;">
+      <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);border-radius:12px;padding:0.8rem;border:1px solid rgba(255,255,255,0.08);">
+        <div style="text-align:center;margin-bottom:0.5rem;">
+          <div style="display:flex;gap:3px;justify-content:center;">
+            <div style="width:16px;height:16px;background:rgba(255,184,0,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;"></div>
+            <div style="width:16px;height:16px;background:rgba(255,61,113,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;"></div>
+            <div style="width:16px;height:16px;background:rgba(0,212,170,0.5);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;"></div>
+          </div>
+        </div>
+        <ul style="color:#999;font-size:0.75rem;padding-left:1rem;">
+          <li>保留鸭群+水池核心隐喻</li>
+          <li>鸭子改成霓虹色系发光小鸭</li>
+          <li>水池底部加毛玻璃+波纹光效</li>
+          <li>点击弹出毛玻璃气泡卡片</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 实施概要 -->
+<div class="mockup" style="margin-top:1rem;">
+  <div class="mockup-header">🛠️ 技术实施概要</div>
+  <div class="mockup-body" style="padding:1rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;font-size:0.78rem;">
+      <div style="color:#ccc;">
+        <strong style="color:#2990c0;">动效引擎</strong>
+        <ul style="color:#999;margin-top:4px;padding-left:1rem;">
+          <li>GSAP 3.x (替代 Anime.js)</li>
+          <li>ScrollTrigger 插件</li>
+          <li>CustomEase 液体缓动</li>
+          <li>gsap.matchMedia 响应式</li>
+        </ul>
+      </div>
+      <div style="color:#ccc;">
+        <strong style="color:#7c4dff;">视觉技术</strong>
+        <ul style="color:#999;margin-top:4px;padding-left:1rem;">
+          <li>CSS backdrop-filter</li>
+          <li>CSS渐变边框 (mask-composite)</li>
+          <li>WebGL粒子背景（保留）</li>
+          <li>CSS自定义属性主题系统</li>
+        </ul>
+      </div>
+      <div style="color:#ccc;">
+        <strong style="color:#00d4aa;">架构</strong>
+        <ul style="color:#999;margin-top:4px;padding-left:1rem;">
+          <li>保留原生HTML/CSS/JS</li>
+          <li>模块化CSS组织</li>
+          <li>响应式移动端适配</li>
+          <li>存档当前版本后开发</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="text-align:center;margin-top:1.2rem;">
+  <p style="color:#fff;font-size:1rem;">👆 以上就是完整的设计蓝图</p>
+  <p style="color:#999;font-size:0.85rem;">
+    保留全部11个板块+2个特色组件功能<br>
+    重塑视觉风格：毛玻璃 × 霓虹暗夜 × GSAP动效
+  </p>
+</div>

@@ -1,0 +1,70 @@
+/* ====== 入场层 ====== */
+#intro-layer {
+  position: fixed; inset: 0; z-index: 2000;
+  background: #0a0a0a;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s, visibility 0.8s;
+}
+#intro-layer.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.intro-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255,61,113,0.06) 0%, transparent 70%);
+}
+
+.intro-blob {
+  position: absolute;
+  background: linear-gradient(135deg, #2990c0, #7c4dff);
+  border-radius: 50%;
+  filter: blur(16px);
+  opacity: 0;
+}
+
+.intro-particles { position: absolute; inset: 0; pointer-events: none; }
+.intro-particle { position: absolute; border-radius: 50%; pointer-events: none; }
+
+.intro-content {
+  position: relative; z-index: 2;
+  text-align: center; opacity: 0;
+}
+
+.intro-title {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 4rem; font-weight: 200;
+  color: #fff; letter-spacing: 0.12em;
+  margin-bottom: 0.4em;
+}
+
+.intro-subtitle {
+  font-size: 1rem; font-weight: 300;
+  color: #999; letter-spacing: 0.06em;
+  margin-bottom: 2.5em;
+}
+
+.intro-hint {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.5rem; cursor: pointer; opacity: 0;
+}
+.intro-hint-text {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem; letter-spacing: 0.3em;
+  transition: color 0.2s;
+}
+.intro-hint:hover .intro-hint-text { color: #ff3d71; }
+
+.intro-hint-arrow {
+  width: 20px; height: 20px;
+  border-right: 1.5px solid rgba(255,255,255,0.5);
+  border-bottom: 1.5px solid rgba(255,255,255,0.5);
+  transform: rotate(45deg);
+  animation: hint-bounce 2s ease-in-out infinite;
+}
+@keyframes hint-bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(6px); }
+}
+
+@media (max-width: 600px) {
+  .intro-title { font-size: 2.2rem; }
+}
