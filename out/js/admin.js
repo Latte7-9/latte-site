@@ -209,7 +209,7 @@ var Admin = (function() {
     var h='';
     sections.forEach(function(sec){ h+='<div class="section-group"><h3>'+sec.label+'</h3>';
       sec.arr.forEach(function(b,j){ h+='<div class="item-card"><div class="item-header"><span class="item-title">'+esc(b.title||'')+'</span><button class="btn btn-danger btn-sm" onclick="Admin.deleteBook(''"+sec.key+"','+j+')">删除</button></div><div class="form-group"><label>书名</label><input class="bk-title" value="'+esc(b.title||'')+'"></div><div class="form-group"><label>作者</label><input class="bk-author" value="'+esc(b.author||'')+'"></div><div class="form-group"><label>封面</label><input class="bk-cover" value="'+esc(b.cover||'')+'"></div><div class="form-group"><label>书评</label><textarea class="bk-review" rows="2">'+esc(b.review||'')+'</textarea></div></div>'; });
-      h+='<button class="btn btn-ghost btn-sm" onclick="Admin.newBook(''"'+sec.key+'"'')" style="margin-top:0.3rem;">+ 添加</button></div>';
+      h+='<button class="btn btn-ghost btn-sm" onclick="Admin.newBook(&apos;"+sec.key+"&apos;)" style="margin-top:0.3rem;">+ 添加</button></div>';
     });
     document.getElementById('booksList').innerHTML=h;
   }
