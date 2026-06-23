@@ -1,4 +1,4 @@
-function initScrollAnimations() {
+﻿function initScrollAnimations() {
   if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
 
@@ -11,8 +11,9 @@ function initScrollAnimations() {
 
   var gridBg = document.querySelector(".grid-background");
   if (gridBg) {
-    gsap.to(gridBg, { yPercent: 20, ease: "none",
-      scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 }
+    var isPhone = /Mobile|Android/i.test(navigator.userAgent);
+    gsap.to(gridBg, { yPercent: isPhone ? 8 : 20, ease: "none",
+      scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: isPhone ? 0.5 : 1 }
     });
   }
 

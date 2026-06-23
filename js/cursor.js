@@ -1,5 +1,8 @@
-// ====== 霓虹光标 + 拖尾 ======
+﻿// ====== 霓虹光标 + 拖尾（移动端跳过） ======
 (function() {
+  // 移动端/触摸设备直接跳过
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
   var cursor = document.createElement('div');
   cursor.id = 'neon-cursor';
   document.body.appendChild(cursor);
@@ -30,7 +33,6 @@
     cursor.style.left = mouseX + 'px';
     cursor.style.top = mouseY + 'px';
 
-    // 更新拖尾
     trails[trailIdx].x = mouseX;
     trails[trailIdx].y = mouseY;
     trails[trailIdx].el.style.opacity = '0.6';

@@ -307,7 +307,7 @@ class GridAnimation {
 		});
 	}
 
-	handleTouchMove(x, y) {
+	handleTouchMove(x, y) { if (isPhone) return;
 		const startX =
 			Math.floor(this.gridOffset.x / this.options.squareSize) *
 			this.options.squareSize;
@@ -414,7 +414,7 @@ class GridAnimation {
 		}
 	}
 
-	handleMouseMove(event) {
+	handleMouseMove(event) { if (isPhone) return;
 		const rect = this.canvas.getBoundingClientRect();
 		const mouseX = event.clientX - rect.left;
 		const mouseY = event.clientY - rect.top;

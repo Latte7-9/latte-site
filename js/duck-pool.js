@@ -1,5 +1,5 @@
-﻿// ====== 🦆 霓虹橡皮鸭蓄水池 v5.1 ======
-// v5.1 更新：移动端触摸拖拽 + 点击/拖拽区分
+﻿// ====== 🦆 霓虹橡皮鸭蓄水池 v5.2 ======
+// v5.2: 移动端防页面滚动 + 柔和碰撞 + 真实涟漪
 (function() {
   var pool, rippleCanvas, rippleCtx, waveCanvas, waveCtx, ducksLayer;
   var ducks = [];
@@ -24,9 +24,9 @@
   ];
 
   var waveLayers = [
-    { amp: 7,  freq: 0.008, speed: 0.7,  color: 'rgba(0,212,170,0.13)', width: 2 },
-    { amp: 4,  freq: 0.013, speed: 1.1,  color: 'rgba(0,180,160,0.08)', width: 1.5 },
-    { amp: 2,  freq: 0.019, speed: 1.6,  color: 'rgba(0,160,140,0.05)', width: 1 }
+    { amp: 7,  freq: 0.008, speed: 0.7,  color: 'rgba(0,212,170,0.12)', width: 2 },
+    { amp: 4,  freq: 0.013, speed: 1.1,  color: 'rgba(0,180,160,0.07)', width: 1.5 },
+    { amp: 2,  freq: 0.019, speed: 1.6,  color: 'rgba(0,140,120,0.04)', width: 1 }
   ];
 
   function duckSurfaceY(duck) {
@@ -83,7 +83,6 @@
     } else { r = 255; g = 61; b = 113; }
     var hi = 'rgba(' + r + ',' + g + ',' + b + ',0.22)';
     var lo = 'rgba(' + Math.max(0,r-30) + ',' + Math.max(0,g-30) + ',' + Math.max(0,b-30) + ',0.40)';
-
     return '<svg viewBox="0 0 80 68" width="' + s + '" height="' + (s*0.85) + '" style="display:block;pointer-events:none;">' +
       '<ellipse cx="32" cy="42" rx="23" ry="16" fill="' + color + '" opacity="0.90"/>' +
       '<ellipse cx="34" cy="38" rx="16" ry="10" fill="' + hi + '"/>' +
@@ -106,7 +105,6 @@
     var duck = { el: null, msg: msg, color: color, x: x, y: 0, vx: 0, vy: 0,
       size: size, mass: 0.4 + Math.random() * 0.6, angle: 0, av: 0,
       splashDone: initial, bobPhase: Math.random() * Math.PI * 2, _gsapAnim: null };
-
     if (initial) {
       duck.y = duckSurfaceY(duck);
       duck.vx = (Math.random() - 0.5) * 0.4;
@@ -116,7 +114,6 @@
       duck.vy = 3 + Math.random() * 4;
       duck.vx = (Math.random() - 0.5) * 2;
     }
-
     var el = document.createElement('div');
     el.className = 'duck-sprite' + (initial ? '' : ' falling');
     el.setAttribute('data-clickable', '');
@@ -174,57 +171,80 @@
     el.classList.add('bounce'); setTimeout(function() { el.classList.remove('bounce'); }, 350);
   }
 
+  // ====== 物理循环 ======
   function physicsTick() {
     var waterY = WATER_LEVEL * poolH;
+
     ducks.forEach(function(d) {
       if (d._gsapAnim) return;
       var duckBottom = d.y + d.size * 0.85;
+
       if (d.splashDone) {
         var targetY = duckSurfaceY(d);
-        d.y += (targetY - d.y) * 0.08;
-        d.y += Math.sin(d.bobPhase + time * 1.5) * 0.5;
-        d.vx += Math.sin(time * 0.7 + d.bobPhase) * 0.01;
-        d.vx += (Math.random() - 0.5) * 0.02; d.vx *= 0.985;
-        d.av += (Math.random() - 0.5) * 0.008; d.av *= 0.97; d.angle += d.av;
-        if (Math.abs(d.angle) > 20) d.av *= 0.5;
+        d.y += (targetY - d.y) * 0.06;
+        d.y += Math.sin(d.bobPhase + time * 1.5) * 0.4;
+        d.vx += Math.sin(time * 0.6 + d.bobPhase) * 0.008;
+        d.vx += (Math.random() - 0.5) * 0.015;
+        d.vx *= 0.988;
+        d.av += (Math.random() - 0.5) * 0.005;
+        d.av *= 0.97;
+        d.angle += d.av;
+        if (Math.abs(d.angle) > 15) d.av *= 0.5;
       } else {
-        d.vy += GRAVITY; d.vx *= 0.98;
+        d.vy += GRAVITY;
+        d.vx *= 0.98;
         if (duckBottom >= waterY - 5 && d.vy > 1) {
-          d.y = waterY - d.size * 0.85; d.vx *= 0.3;
-          createRipple(d.x + d.size/2, waterY, d.size * 0.9);
-          createRipple(d.x + d.size/2, waterY, d.size * 0.4, 0.3);
-          createSplash(d.x + d.size/2, waterY, d.color, d.vy * 0.4);
-          playSplashAnimation(d); return;
+          d.y = waterY - d.size * 0.85;
+          d.vx *= 0.25;
+          createRipple(d.x + d.size/2, waterY, d.size * 0.85);
+          createRipple(d.x + d.size/2, waterY, d.size * 0.35, 0.25);
+          createSplash(d.x + d.size/2, waterY, d.color, d.vy * 0.35);
+          playSplashAnimation(d);
+          return;
         }
       }
-      if (d.x < 5) { d.x = 5; d.vx *= -0.4; }
-      if (d.x > poolW - d.size - 5) { d.x = poolW - d.size - 5; d.vx *= -0.4; }
+
+      if (d.x < 5) { d.x = 5; d.vx *= -0.3; }
+      if (d.x > poolW - d.size - 5) { d.x = poolW - d.size - 5; d.vx *= -0.3; }
       if (d.y < 8) { d.y = 8; d.vy = Math.abs(d.vy) * 0.3; }
       if (d.y > poolH - d.size - 5) { d.y = poolH - d.size - 5; d.vy *= -0.3; }
-      d.x += d.vx; d.y += d.vy;
-      if (d.splashDone && Math.abs(d.vx) > 0.25 && Math.random() < 0.03) {
-        createRipple(d.x + d.size/2, waterY, 5 + Math.abs(d.vx)*2, 0.35);
+
+      d.x += d.vx;
+      d.y += d.vy;
+
+      if (d.splashDone && Math.abs(d.vx) > 0.2 && Math.random() < 0.02) {
+        createRipple(d.x + d.size/2, waterY, 4 + Math.abs(d.vx)*1.5, 0.25);
       }
     });
+
+    // ====== 鸭间碰撞（柔和版） ======
     for (var i = 0; i < ducks.length; i++) {
       for (var j = i + 1; j < ducks.length; j++) {
         var a = ducks[i], b = ducks[j];
         if (!a.splashDone || !b.splashDone || a._gsapAnim || b._gsapAnim) continue;
         var dx = (a.x + a.size/2) - (b.x + b.size/2);
-        var dy = (a.y + a.size*0.4) - (b.y + b.size*0.4);
+        var dy = (a.y + a.size*0.35) - (b.y + b.size*0.35);
         var dist = Math.sqrt(dx*dx + dy*dy);
-        var minDist = (a.size + b.size) * 0.38;
-        if (dist < minDist && dist > 0) {
-          var overlap = minDist - dist, nx = dx/dist, ny = dy/dist, tm = a.mass + b.mass;
-          a.x += nx * overlap * b.mass/tm; a.y += ny * overlap * b.mass/tm;
-          b.x -= nx * overlap * a.mass/tm; b.y -= ny * overlap * a.mass/tm;
-          var relV = (a.vx-b.vx)*nx + (a.vy-b.vy)*ny;
-          if (relV > 0) {
-            var imp = relV * 0.4;
-            a.vx -= nx*imp*b.mass/tm; a.vy -= ny*imp*b.mass/tm;
-            b.vx += nx*imp*a.mass/tm; b.vy += ny*imp*a.mass/tm;
+        var minDist = (a.size + b.size) * 0.35;
+        if (dist < minDist && dist > 0.1) {
+          var overlap = minDist - dist;
+          var nx = dx / dist, ny = dy / dist;
+          // 柔和分离：按质量比例缓慢推开
+          var tm = a.mass + b.mass;
+          a.x += nx * overlap * b.mass / tm * 0.5;
+          a.y += ny * overlap * b.mass / tm * 0.5;
+          b.x -= nx * overlap * a.mass / tm * 0.5;
+          b.y -= ny * overlap * a.mass / tm * 0.5;
+          // 轻微速度阻尼（模拟水阻）
+          a.vx *= 0.85; a.vy *= 0.85;
+          b.vx *= 0.85; b.vy *= 0.85;
+          // 微小的旋转扰动
+          a.av += (Math.random() - 0.5) * 0.6;
+          b.av += (Math.random() - 0.5) * 0.6;
+          // 碰撞涟漪
+          if (overlap > 3) {
+            createRipple((a.x + b.x)/2 + a.size/4, WATER_LEVEL * poolH, 6 + overlap*0.8, 0.25);
           }
-          a.av += (Math.random()-0.5)*1.5; b.av += (Math.random()-0.5)*1.5;
         }
       }
     }
@@ -233,25 +253,64 @@
   function renderDucks() {
     ducks.forEach(function(d) {
       if (d._gsapAnim) return;
-      d.el.style.left = d.x + 'px'; d.el.style.top = d.y + 'px';
+      d.el.style.left = d.x + 'px';
+      d.el.style.top = d.y + 'px';
       d.el.style.transform = 'rotate(' + d.angle + 'deg)';
     });
   }
 
   function decayEffects() {
-    ripples = ripples.filter(function(r) { r.radius += 1.8; r.opacity -= 0.01; return r.opacity > 0; });
-    splashes = splashes.filter(function(s) { s.x += s.vx; s.y += s.vy; s.vy += 0.12; s.opacity -= 0.02; return s.opacity > 0; });
+    ripples = ripples.filter(function(r) {
+      r.radius += 1.5 + r.radius * 0.002;
+      r.opacity -= 0.008;
+      return r.opacity > 0 && r.radius < r.maxRadius;
+    });
+    splashes = splashes.filter(function(s) {
+      s.x += s.vx; s.y += s.vy; s.vy += 0.12;
+      s.opacity -= 0.018;
+      return s.opacity > 0;
+    });
   }
 
+  // ====== 真实涟漪渲染（多层同心圆 + 渐变衰减） ======
   function renderRipples() {
     rippleCtx.clearRect(0, 0, poolW, poolH);
+
     ripples.forEach(function(r) {
-      rippleCtx.beginPath(); rippleCtx.arc(r.x, r.y, r.radius, 0, 2*Math.PI);
-      rippleCtx.strokeStyle = 'rgba(0,212,170,' + r.opacity + ')'; rippleCtx.lineWidth = 1.5; rippleCtx.stroke();
+      // 主环
+      rippleCtx.beginPath();
+      rippleCtx.arc(r.x, r.y, r.radius, 0, 2 * Math.PI);
+      rippleCtx.strokeStyle = 'rgba(0,212,170,' + (r.opacity * 0.7) + ')';
+      rippleCtx.lineWidth = Math.max(0.8, 3 * (1 - r.radius / r.maxRadius));
+      rippleCtx.stroke();
+
+      // 内环（更粗更亮）
+      var innerR = r.radius * 0.55;
+      if (innerR > 2) {
+        rippleCtx.beginPath();
+        rippleCtx.arc(r.x, r.y, innerR, 0, 2 * Math.PI);
+        rippleCtx.strokeStyle = 'rgba(0,212,170,' + (r.opacity * 0.35) + ')';
+        rippleCtx.lineWidth = Math.max(0.5, 2 * (1 - r.radius / r.maxRadius));
+        rippleCtx.stroke();
+      }
+
+      // 外环（更细更淡）
+      var outerR = r.radius * 1.35;
+      if (outerR < r.maxRadius) {
+        rippleCtx.beginPath();
+        rippleCtx.arc(r.x, r.y, outerR, 0, 2 * Math.PI);
+        rippleCtx.strokeStyle = 'rgba(0,180,160,' + (r.opacity * 0.18) + ')';
+        rippleCtx.lineWidth = Math.max(0.3, 1.2 * (1 - r.radius / r.maxRadius));
+        rippleCtx.stroke();
+      }
     });
+
+    // 水花粒子
     splashes.forEach(function(s) {
-      rippleCtx.beginPath(); rippleCtx.arc(s.x, s.y, s.size, 0, 2*Math.PI);
-      rippleCtx.fillStyle = s.color + Math.floor(Math.min(255,s.opacity*255)).toString(16).padStart(2,'0'); rippleCtx.fill();
+      rippleCtx.beginPath();
+      rippleCtx.arc(s.x, s.y, s.size, 0, 2 * Math.PI);
+      rippleCtx.fillStyle = s.color + Math.floor(Math.min(255, s.opacity * 255)).toString(16).padStart(2, '0');
+      rippleCtx.fill();
     });
   }
 
@@ -259,42 +318,55 @@
     waveCtx.clearRect(0, 0, poolW, poolH);
     var waterY = WATER_LEVEL * poolH;
     var waterGrad = waveCtx.createLinearGradient(0, waterY, 0, poolH);
-    waterGrad.addColorStop(0, 'rgba(0,40,60,0.0)'); waterGrad.addColorStop(0.12, 'rgba(0,55,75,0.06)');
-    waterGrad.addColorStop(0.4, 'rgba(0,70,90,0.10)'); waterGrad.addColorStop(1, 'rgba(0,25,45,0.18)');
+    waterGrad.addColorStop(0, 'rgba(0,40,60,0.0)');
+    waterGrad.addColorStop(0.12, 'rgba(0,55,75,0.05)');
+    waterGrad.addColorStop(0.4, 'rgba(0,70,90,0.08)');
+    waterGrad.addColorStop(1, 'rgba(0,25,45,0.15)');
+
     waveCtx.beginPath();
     for (var i = 0; i <= 1; i += 0.002) {
-      var x = i*poolW, y = waterY;
+      var x = i * poolW, y = waterY;
       for (var w = 0; w < waveLayers.length; w++) {
-        var L = waveLayers[w]; y += Math.sin(i*poolW*L.freq + time*L.speed) * L.amp;
+        var L = waveLayers[w];
+        y += Math.sin(i * poolW * L.freq + time * L.speed) * L.amp;
       }
-      if (i===0) waveCtx.moveTo(x, y); else waveCtx.lineTo(x, y);
+      if (i === 0) waveCtx.moveTo(x, y);
+      else waveCtx.lineTo(x, y);
     }
-    waveCtx.lineTo(poolW, poolH); waveCtx.lineTo(0, poolH); waveCtx.closePath();
-    waveCtx.fillStyle = waterGrad; waveCtx.fill();
+    waveCtx.lineTo(poolW, poolH);
+    waveCtx.lineTo(0, poolH);
+    waveCtx.closePath();
+    waveCtx.fillStyle = waterGrad;
+    waveCtx.fill();
+
     for (var w = 0; w < waveLayers.length; w++) {
       var L = waveLayers[w];
       waveCtx.beginPath();
       for (var i = 0; i <= 1; i += 0.003) {
-        var x = i*poolW, y = waterY + Math.sin(i*poolW*L.freq + time*L.speed)*L.amp;
-        if (i===0) waveCtx.moveTo(x, y); else waveCtx.lineTo(x, y);
+        var x = i * poolW, y = waterY + Math.sin(i * poolW * L.freq + time * L.speed) * L.amp;
+        if (i === 0) waveCtx.moveTo(x, y);
+        else waveCtx.lineTo(x, y);
       }
-      waveCtx.strokeStyle = L.color; waveCtx.lineWidth = L.width; waveCtx.stroke();
+      waveCtx.strokeStyle = L.color;
+      waveCtx.lineWidth = L.width;
+      waveCtx.stroke();
     }
   }
 
   function createRipple(x, y, maxRadius, opacity) {
-    ripples.push({ x:x, y:y, radius:0, maxRadius: maxRadius||30, opacity: opacity||0.55 });
+    ripples.push({ x: x, y: y, radius: 0, maxRadius: maxRadius || 30, opacity: opacity || 0.55 });
   }
 
   function createSplash(x, y, color, intensity) {
-    var n = Math.floor(8 + intensity*3);
-    for (var i=0; i<n; i++) {
-      var a = -Math.PI/2 + (Math.random()-0.5)*Math.PI*1.2;
+    var n = Math.floor(8 + intensity * 3);
+    for (var i = 0; i < n; i++) {
+      var a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.2;
       splashes.push({
-        x: x + (Math.random()-0.5)*20, y: y + (Math.random()-0.5)*4,
-        vx: Math.cos(a)*(1+Math.random()*intensity),
-        vy: Math.sin(a)*(1+Math.random()*intensity)-2,
-        color: color, size: 1+Math.random()*3, opacity: 0.85
+        x: x + (Math.random() - 0.5) * 20,
+        y: y + (Math.random() - 0.5) * 4,
+        vx: Math.cos(a) * (1 + Math.random() * intensity),
+        vy: Math.sin(a) * (1 + Math.random() * intensity) - 2,
+        color: color, size: 1 + Math.random() * 3, opacity: 0.85
       });
     }
   }
@@ -305,8 +377,13 @@
   }
 
   function tick() {
-    time += 0.016; physicsTick(); renderDucks(); decayEffects();
-    renderRipples(); renderWaves(); animId = requestAnimationFrame(tick);
+    time += 0.016;
+    physicsTick();
+    renderDucks();
+    decayEffects();
+    renderRipples();
+    renderWaves();
+    animId = requestAnimationFrame(tick);
   }
 
   function startLoop() {
@@ -314,7 +391,7 @@
     animId = requestAnimationFrame(tick);
   }
 
-  // ====== 交互（鼠标+触摸，6px 阈值区分点击/拖拽） ======
+  // ====== 交互（touchstart 立即 preventDefault 防页面滚动） ======
   function bindEvents() {
     ducksLayer.addEventListener('mousedown', onDragStart);
     ducksLayer.addEventListener('touchstart', onDragStart, { passive: false });
@@ -322,6 +399,8 @@
     function onDragStart(e) {
       var target = e.target.closest('.duck-sprite');
       if (!target) return;
+      // 触摸事件立即阻止默认行为（防页面滚动）
+      if (e.touches) e.preventDefault();
       var idx = ducks.findIndex(function(d) { return d.el === target; });
       if (idx < 0) return;
       dragDuck = ducks[idx];
@@ -366,15 +445,12 @@
       if (!dragDuck) return;
       dragDuck.el.style.zIndex = 2;
       dragDuck.el.style.transition = '';
-
       if (!hasMoved) {
         dragDuck.el.click();
         isDragging = false; dragDuck = null; return;
       }
-
       var waterY = WATER_LEVEL * poolH;
       var duckBottom = dragDuck.y + dragDuck.size * 0.85;
-
       if (duckBottom < waterY - 10) {
         dragDuck.splashDone = false;
         dragDuck.vy = 1;
@@ -385,7 +461,7 @@
         dragDuck.vy = 0;
         dragDuck.vx = (Math.random() - 0.5) * 0.3;
         dragDuck.el.style.top = dragDuck.y + 'px';
-        createRipple(dragDuck.x + dragDuck.size / 2, waterY, 10, 0.45);
+        createRipple(dragDuck.x + dragDuck.size / 2, waterY, 10, 0.35);
       }
       isDragging = false;
       dragDuck = null;
@@ -398,13 +474,12 @@
     });
   }
 
-  // ====== 提交留言 ======
   window.submitDuckMessage = function(name, text) {
-    var msg = { name: name||'匿名', text: text, date: new Date().toISOString().slice(0,10) };
+    var msg = { name: name || '匿名', text: text, date: new Date().toISOString().slice(0, 10) };
     var local = [];
-    try { local = JSON.parse(localStorage.getItem('gb_local')||'[]'); } catch(e) {}
+    try { local = JSON.parse(localStorage.getItem('gb_local') || '[]'); } catch(e) {}
     local.unshift(msg);
-    if (local.length > 50) local = local.slice(0,50);
+    if (local.length > 50) local = local.slice(0, 50);
     localStorage.setItem('gb_local', JSON.stringify(local));
     var duck = spawnDuck(msg, false);
     duck.vy = 3 + Math.random() * 4;

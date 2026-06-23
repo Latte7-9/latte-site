@@ -10,3 +10,21 @@
   .intro-title { font-size: 2rem !important; }
   .about-avatar { width: 80px; height: 80px; }
 }
+
+
+/* ====== 移动端性能优化 ====== */
+@media (max-width: 768px) {
+  /* 降低 Canvas 渲染负载 */
+  .grid-background { opacity: 0.3; }
+  
+  /* 移除 3D 卡片透视效果在移动端的 GPU 压力 */
+  .tilt-card, .gradient-border-card {
+    transform: none !important;
+    will-change: auto;
+  }
+  
+  /* 简化动画 */
+  .fade-up {
+    transition: opacity 0.3s ease;
+  }
+}
