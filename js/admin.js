@@ -124,23 +124,44 @@ var Admin = (function() {
       return '<div class="item-card"><div class="item-header"><div><span class="item-title">' + esc(p.title) + '</span><span class="item-meta" style="margin-left:0.5rem;">' + esc(p.date) + '</span></div><div><button class="btn btn-ghost btn-sm" onclick="Admin.editBlogPost(' + i + ')">编辑</button><button class="btn btn-danger btn-sm" onclick="Admin.deleteBlogPost(' + i + ')" style="margin-left:0.3rem;">删除</button></div></div><div class="item-body">' + (p.summary || '') + '</div></div>';
     }).join('');
   }
-  function newBlogPost() { blog.posts.unshift({ title: '新文章', date: new Date().toISOString().slice(0,10), summary: '', content: '', file: '' }); renderBlog(); editBlogPost(0); }
+  function newBlogPost() { var slug = 'post-' + new Date().toISOString().slice(0,10);
+    blog.posts.unshift({ title: '新文章', date: new Date().toISOString().slice(0,10), summary: '', content: '', file: slug + '.html' });
+    renderBlog(); editBlogPost(0);
+  }
   function deleteBlogPost(i) { if (!confirm('确定删除？')) return; blog.posts.splice(i, 1); saveBlog(); }
   function editBlogPost(i) {
     var p = blog.posts[i];
-    document.getElementById('blogList').innerHTML = '<div class="content-card" style="margin-top:0;"><h2>编辑文章</h2><div class="form-group"><label>标题</label><input id="bpTitle" value="' + esc(p.title) + '"></div><div class="form-group"><label>日期</label><input type="date" id="bpDate" value="' + esc(p.date) + '"></div><div class="form-group"><label>摘要</label><textarea id="bpSummary" rows="2">' + esc(p.summary) + '</textarea></div><div class="form-group"><label>正文 (HTML)</label><textarea id="bpContent" rows="10" data-rich="true">' + esc(p.content) + '</textarea></div><div class="action-bar"><button class="btn btn-ghost" onclick="Admin.renderBlog()">取消</button><button class="btn btn-primary" id="bpSaveBtn">保存文章</button></div></div>';
+    document.getElementById('blogList').innerHTML = '<div class="content-card" style="margin-top:0;"><h2>编辑文章</h2><div class="form-group"><label>标题</label><input id="bpTitle" value="' + esc(p.title) + '"></div><div class="form-group"><label>日期</label><input type="date" id="bpDate" value="' + esc(p.date) + '"></div><div class="form-group"><label>摘要</label><textarea id="bpSummary" rows="2">' + esc(p.summary) + '</textarea></div><div class="form-group"><label>正文 (HTML)</label><textarea id="bpContent" rows="10" data-rich="true">' + esc(p.content) + '</textarea></div>' +
+      '<div class="form-group"><label>页面文件名（如 my-post.html）</label><input id="bpFile" value="' + esc(p.file) + '"></div>' +
+      '<div class="action-bar"><button class="btn btn-ghost" onclick="Admin.renderBlog()">取消</button><button class="btn btn-primary" id="bpSaveBtn">保存文章</button></div></div>';
     document.getElementById('bpSaveBtn').addEventListener('click', function() {
       blog.posts[i].title = document.getElementById('bpTitle').value;
       blog.posts[i].date = document.getElementById('bpDate').value;
       blog.posts[i].summary = document.getElementById('bpSummary').value;
       blog.posts[i].content = document.getElementById('bpContent').value;
-      saveBlog();
+      blog.posts[i].file = document.getElementById('bpFile').value;
+      saveBlog(i);
     });
   }
-  function saveBlog() {
+  function saveBlog(editedIdx) {
     msg('blogMsg', 'info', '保存中...');
-    ghGet('data/blog.json').then(function(j) { return ghPut('data/blog.json', JSON.stringify(blog, null, 2), j.sha); })
-      .then(function() { msg('blogMsg', 'ok', '已保存'); renderBlog(); }).catch(function(err) { msg('blogMsg', 'err', '失败: ' + err.message); });
+    ghGet('data/blog.json').then(function(j) {
+      return ghPut('data/blog.json', JSON.stringify(blog, null, 2), j.sha);
+    }).then(function() {
+      if (editedIdx !== undefined && editedIdx >= 0) {
+        var p = blog.posts[editedIdx];
+        if (p.file) {
+          var html = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>' + esc(p.title) + ' - Latte</title>\n<link rel="stylesheet" href="../../css/tokens.css">\n<link rel="stylesheet" href="../../css/base.css">\n<link rel="stylesheet" href="../../css/nav.css">\n<link rel="stylesheet" href="../../css/contact-footer.css">\n</head>\n<body>\n<div id="reading-progress"></div>\n<nav class="site-nav"><div class="nav-glass">\n  <a class="nav-brand" href="../../index.html">Latte</a>\n  <div class="nav-links">\n    <a href="../../index.html" class="nav-link">首页</a>\n    <a href="../index.html" class="nav-link">博客</a>\n  </div>\n</div></nav>\n<article style="max-width:700px;margin:0 auto;padding:7rem 1.5rem 3rem;">\n  <div class="gradient-border-card" style="padding:2rem 2.5rem;">\n    <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.6rem;">' + p.date + '</div>\n    <h1 style="font-size:1.6rem;font-weight:300;color:var(--text-primary);margin-bottom:1.5rem;line-height:1.4;">' + p.title + '</h1>\n    <div style="color:var(--text-body);font-size:0.95rem;line-height:2.1;">' + (p.content || '') + '</div>\n    <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border-subtle);">\n      <a href="../index.html" style="color:var(--neon-cyan);font-size:0.85rem;text-decoration:none;">← 返回博客</a>\n    </div>\n  </div>\n</article>\n<footer>\n  <div class="footer-inner" style="max-width:900px;margin:0 auto;padding:0 1.5rem;">\n    <span>&copy; 2026 Latte · 由 Codex 搭建</span>\n  </div>\n</footer>\n<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></' + 'script>\n<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></' + 'script>\n<script src="../../js/cursor.js"></' + 'script>\n</body>\n</html>';
+          var path = 'blog/posts/' + p.file;
+          return ghGet(path).then(function(existing) {
+            return ghPut(path, html, existing.sha);
+          }).catch(function() {
+            return ghPut(path, html);
+          });
+        }
+      }
+    }).then(function() { msg('blogMsg', 'ok', '已保存'); renderBlog(); })
+      .catch(function(err) { msg('blogMsg', 'err', '失败: ' + err.message); });
   }
 
   // ====== 3. 留言板 ======
