@@ -540,30 +540,33 @@ function renderGeoGuestbook() {
 }
 
 function startWaveAnimation() {
-  var phase = 0;
-  function animate() {
-    if (!document.querySelector('[data-geo]')) return;
-    phase += 0.02;
-    // Gradually decay wave boost back to normal
+  var phase = 0, _wTimer = 0, _p1 = null, _p2 = null;
+  function animate(ts) {
+    if (document.hidden) { requestAnimationFrame(animate); return; }
+    if (ts - _wTimer < 33) { requestAnimationFrame(animate); return; }
+    _wTimer = ts;
+    if (!_p1) {
+      if (!document.querySelector('[data-geo]')) { requestAnimationFrame(animate); return; }
+      _p1 = document.querySelector('.geo-wave-path');
+      _p2 = document.querySelector('.geo-wave-path2');
+    }
+    if (!_p1) { requestAnimationFrame(animate); return; }
+    phase += 0.04;
     waterWaveBoost = waterWaveBoost * 0.97 + 1.0 * 0.03;
     var amp = waterWaveBoost;
-    var p1 = document.querySelector('.geo-wave-path');
-    var p2 = document.querySelector('.geo-wave-path2');
-    if (!p1) return;
     var y0 = geoWaterY;
-    var d = '';
-    for (var x = 0; x <= 1200; x += 120) {
+    var d = '', d2 = '';
+    for (var x = 0; x <= 800; x += 160) {
       var y = y0 + (Math.sin(x/80 + phase) * 7 + Math.cos(x/140 + phase*0.7) * 5) * amp;
       d += (x === 0 ? 'M' : 'Q') + x + ',' + Math.round(y) + ' ';
     }
-    p1.setAttribute('d', d);
-    if (p2) {
-      var d2 = '';
-      for (var x2 = 0; x2 <= 1200; x2 += 100) {
+    _p1.setAttribute('d', d);
+    if (_p2) {
+      for (var x2 = 0; x2 <= 800; x2 += 133) {
         var y2 = y0 + 4 + (Math.sin(x2/90 + phase*1.3) * 5 + Math.cos(x2/120 + phase*0.9) * 3.5) * amp;
         d2 += (x2 === 0 ? 'M' : 'Q') + x2 + ',' + Math.round(y2) + ' ';
       }
-      p2.setAttribute('d', d2);
+      _p2.setAttribute('d', d2);
     }
     requestAnimationFrame(animate);
   }
@@ -714,7 +717,7 @@ function geoLoop(W, H) {
     }
   }
 
-  geoAnimId = requestAnimationFrame(function() { geoLoop(W, H); });
+  if (!document.hidden) { geoAnimId = requestAnimationFrame(function() { geoLoop(W, H); }); } else { setTimeout(function() { geoAnimId = requestAnimationFrame(function() { geoLoop(W, H); }); }, 200); }
 }
 
 document.addEventListener('mousedown', function(e) {

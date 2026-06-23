@@ -722,6 +722,13 @@ class GridAnimation {
 
 		const deltaTime = timestamp - this.lastTimestamp;
 		this.lastTimestamp = timestamp;
+		// 30fps 节流：桌面端降低至 30fps 渲染
+		this._frameAccum = (this._frameAccum || 0) + deltaTime;
+		if (this._frameAccum < 33) {
+			this.animationFrame = requestAnimationFrame((ts) => this.updateAnimation(ts));
+			return;
+		}
+		this._frameAccum = 0;
 
 		// 更新透明度
 		if (this.currentOpacity !== this.targetOpacity) {

@@ -1,4 +1,4 @@
-﻿// ====== 🦆 霓虹橡皮鸭蓄水池 v5.2 ======
+// ====== 🦆 霓虹橡皮鸭蓄水池 v5.2 ======
 // v5.2: 移动端防页面滚动 + 柔和碰撞 + 真实涟漪
 (function() {
   var pool, rippleCanvas, rippleCtx, waveCanvas, waveCtx, ducksLayer;
@@ -376,8 +376,15 @@
     if (el) el.textContent = ducks.length;
   }
 
-  function tick() {
-    time += 0.016;
+  var _tickLast = 0, _tickAccum = 0;
+  function tick(ts) {
+    if (document.hidden) { animId = requestAnimationFrame(tick); return; }
+    if (!_tickLast) _tickLast = ts;
+    _tickAccum += ts - _tickLast;
+    _tickLast = ts;
+    if (_tickAccum < 33) { animId = requestAnimationFrame(tick); return; }
+    _tickAccum = 0;
+    time += 0.033;
     physicsTick();
     renderDucks();
     decayEffects();

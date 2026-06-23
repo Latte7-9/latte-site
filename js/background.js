@@ -959,6 +959,12 @@ let animationID = null
 
 function update(first) {
 	const dt = calcDeltaTime();
+	// 30fps 节流：降低桌面端 WebGL 渲染帧率
+	if (!first) {
+		update._fa = (update._fa || 0) + dt;
+		if (update._fa < 33) { animationID = requestAnimationFrame(update); return; }
+		update._fa = 0;
+	}
 	if (resizeCanvas())
 		initFramebuffers();
 	updateColors(dt);
