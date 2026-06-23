@@ -26,7 +26,6 @@ const mime = {
 let cacheData = null;
 let cacheTimer = null;
 
-// ====== 缓存 ======
 function writeJSON(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf-8');
 }
@@ -57,7 +56,6 @@ function startCacheTimer() {
   cacheTimer = setInterval(refreshCache, CACHE_TTL);
 }
 
-// ====== API ======
 function sendJSON(res, data, status = 200) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
   res.end(JSON.stringify(data));
@@ -89,20 +87,43 @@ async function handleAPI(req, res, apiPath) {
   return sendJSON(res, { error: 'unknown api' }, 404);
 }
 
-// ====== 静态 ======
 function serveStatic(req, res) {
   let f = req.url.split('?')[0];
   if (f === '/') f = '/index.html';
   const fp = path.join(D, f);
+
   fs.readFile(fp, (e, d) => {
-    if (e) { res.writeHead(404); res.end('404'); return; }
-    const ext = path.extname(f);
-    res.writeHead(200, { 'Content-Type': mime[ext] || 'text/plain', 'Access-Control-Allow-Origin': '*' });
-    res.end(d);
+    if (!e) {
+      const ext = path.extname(f);
+      res.writeHead(200, { 'Content-Type': mime[ext] || 'text/plain', 'Access-Control-Allow-Origin': '*' });
+      res.end(d);
+      return;
+    }
+    // 目录路径尝试 index.html
+    if (f.endsWith('/')) {
+      fs.readFile(path.join(D, f + 'index.html'), (e2, d2) => {
+        if (!e2) {
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+          res.end(d2);
+          return;
+        }
+        res.writeHead(404); res.end('404');
+      });
+    } else if (!path.extname(f)) {
+      fs.readFile(path.join(D, f + '/index.html'), (e2, d2) => {
+        if (!e2) {
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+          res.end(d2);
+          return;
+        }
+        res.writeHead(404); res.end('404');
+      });
+    } else {
+      res.writeHead(404); res.end('404');
+    }
   });
 }
 
-// ====== 启动 ======
 const server = http.createServer((req, res) => {
   const p = req.url.split('?')[0];
   if (p.startsWith('/api/netease/')) return handleAPI(req, res, p);

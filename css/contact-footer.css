@@ -1,0 +1,19 @@
+﻿.contact-icons {
+  display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;
+}
+.contact-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.contact-icon:hover {
+  border-color: #ff3d71;
+  box-shadow: 0 0 15px rgba(255,61,113,0.15);
+}
+footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 1.5rem 0; margin-top: 4rem;
+}
+.footer-inner { text-align: center; font-size: 0.72rem; color: #666; }

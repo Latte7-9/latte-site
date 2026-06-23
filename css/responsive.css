@@ -1,0 +1,12 @@
+﻿@media (max-width: 768px) {
+  :root { --section-gap: 2.5rem; --card-padding: 1rem; }
+  .section-container { padding: 0 1rem; }
+  .nav-glass { gap: 1.5rem; padding: 0.5rem 1rem; }
+  .nav-link { font-size: 0.7rem; }
+  .blog-card { min-width: 200px; }
+  .music-card { max-width: 280px; padding: 1rem; }
+}
+@media (max-width: 480px) {
+  .intro-title { font-size: 2rem !important; }
+  .about-avatar { width: 80px; height: 80px; }
+}

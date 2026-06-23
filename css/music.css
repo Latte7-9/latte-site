@@ -1,0 +1,49 @@
+.music-section { display: flex; justify-content: center; padding: 4rem 0; }
+.music-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  max-width: 380px; width: 100%;
+  position: relative;
+}
+.music-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg, rgba(255,184,0,0.3), rgba(255,61,113,0.2), rgba(0,212,170,0.2));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none;
+}
+.music-label {
+  font-size: 0.85rem; color: #ffb800; margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+.music-song-list {
+  display: flex; flex-direction: column; gap: 2px;
+  margin-bottom: 0.8rem;
+}
+.music-song-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem 0.6rem; border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.music-song-item:hover { background: rgba(255,255,255,0.04); }
+.music-song-rank {
+  width: 20px; font-size: 0.7rem; color: #666; text-align: center; flex-shrink: 0;
+}
+.music-song-item:nth-child(1) .music-song-rank { color: #ffb800; }
+.music-song-item:nth-child(2) .music-song-rank { color: #999; }
+.music-song-item:nth-child(3) .music-song-rank { color: #996600; }
+.music-song-name {
+  font-size: 0.78rem; color: #ccc; flex: 1; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.music-song-artist {
+  font-size: 0.68rem; color: #666; flex-shrink: 0;
+}
+.music-cover { display: none; }
+@media (max-width: 480px) {
+  .music-card { max-width: 100%; padding: 1rem; }
+}
