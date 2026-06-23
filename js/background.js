@@ -47,7 +47,11 @@ pointers.push(new pointerPrototype());
 const { gl, ext } = getWebGLContext(canvas);
 
 if (isMobile()) {
-	config.DYE_RESOLUTION = 512;
+	config.SIM_RESOLUTION = 64;
+	config.DYE_RESOLUTION = 256;
+	config.BLOOM = false;
+	config.SUNRAYS = false;
+	config.SHADING = false;
 }
 if (!ext.supportLinearFiltering) {
 	config.DYE_RESOLUTION = 512;
