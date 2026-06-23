@@ -1,4 +1,4 @@
-/* ====== 全局重置 & 基础样式 ====== */
+﻿/* ====== 全局重置 & 基础样式 ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -96,6 +96,7 @@ body, a, button, input, textarea, [data-clickable] { cursor: none; }
 
 /* 淡入上浮 */
 .fade-up { opacity: 0; transform: translateY(30px); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
 
 /* section 通用 */
 .section-container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }

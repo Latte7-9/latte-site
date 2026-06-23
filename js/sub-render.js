@@ -1,4 +1,4 @@
-// ====== 子页面渲染适配 v3.0 ======
+﻿// ====== 子页面渲染适配 v3.0 ======
 // 覆盖 main.js 中的 renderBlog / renderInterestPage，使用新设计类
 
 var _origRenderBlog = renderBlog;
@@ -35,6 +35,7 @@ renderInterestPage = async function() {
   if (!data || !data.interests) { if (_origRenderInterestPage) return _origRenderInterestPage(); return; }
 
   var item = data.interests.find(function(i) { return i.page && i.page.indexOf(pageName) !== -1; });
+  if (data.githubRepo) window._siteGithubRepo = data.githubRepo;
   if (!item) { if (_origRenderInterestPage) return _origRenderInterestPage(); return; }
 
   var hero = document.querySelector('.page-hero .container, .interest-page .container');
@@ -60,20 +61,160 @@ renderInterestPage = async function() {
   }
 };
 
+// ====== 图集系统：列表 + 灯箱详情 ======
+var _albumList = [];
+var _albumCurrentIdx = -1;
+var _albumImgIdx = 0;
+var _albumContainer = null;
+
+
+// ====== 图片 URL 解析（本地走 GitHub Raw，线上走相对路径） ======
+var _imageBase = null;
+function getImageBase() {
+  if (_imageBase) return _imageBase;
+  var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (isLocal) {
+    // 尝试从 site.json 获取仓库名
+    _imageBase = (window._siteGithubRepo)
+      ? 'https://raw.githubusercontent.com/' + window._siteGithubRepo + '/main/'
+      : '../';
+  } else {
+    _imageBase = '../';
+  }
+  return _imageBase;
+}
+function resolveImageUrl(imgPath) {
+  if (!imgPath) return '';
+  if (/^https?:\/\//i.test(imgPath)) return imgPath;
+  var base = getImageBase();
+  // 对中文文件名进行编码
+  var parts = imgPath.split('/');
+  var encoded = parts.map(function(p) { return encodeURIComponent(p); }).join('/');
+  return base + encoded;
+}
 function renderPhotography(container, item) {
-  if (!item.albums) return;
-  var html = '';
-  item.albums.forEach(function(album) {
-    html += '<div class="gradient-border-card tilt-card" style="margin-bottom:1.2rem;padding:1.2rem 1.5rem;">' +
-      '<h3 style="color:var(--neon-pink);font-weight:400;margin-bottom:0.5rem;">📷 ' + album.name + '</h3>' +
-      '<p style="color:var(--text-muted);font-size:0.85rem;line-height:1.7;">' + album.description + '</p>' +
-      (album.journal ? '<p style="color:var(--text-dim);font-size:0.8rem;margin-top:0.8rem;line-height:1.8;">' + album.journal + '</p>' : '') +
-      (album.images && album.images.length > 0 ? '<div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap;">' + album.images.map(function(img) {
-        return '<img src="../' + img + '" alt="" style="max-width:200px;border-radius:8px;border:1px solid var(--border-subtle);" loading="lazy">';
-      }).join('') + '</div>' : '') +
+  if (!item.albums) { container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">暂无图集</p>'; return; }
+  _albumList = item.albums;
+  _albumContainer = container;
+
+  var html = '<div id="albumListView">';
+  item.albums.forEach(function(album, i) {
+    var coverImg = '';
+    if (album.images && album.images.length > 0) {
+      coverImg = '<div style="width:100%;height:160px;overflow:hidden;border-radius:10px;margin-bottom:0.8rem;">' +
+        '<img src="../' + album.images[0] + '" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>';
+    } else if (album.cover) {
+      coverImg = '<div style="width:100%;height:160px;overflow:hidden;border-radius:10px;margin-bottom:0.8rem;">' +
+        '<img src="../' + album.cover + '" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>';
+    }
+    var imgCount = album.images ? album.images.length : 0;
+    var imgHint = imgCount > 0 ? '<span style="font-size:0.7rem;color:var(--text-dim);">🖼️ ' + imgCount + ' 张</span>' : '';
+
+    html += '<div class="gradient-border-card album-card" onclick="openAlbumDetail(' + i + ')" style="margin-bottom:1rem;padding:1.2rem 1.5rem;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;">' +
+      coverImg +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<h3 style="color:var(--neon-pink);font-weight:400;margin:0;font-size:1.05rem;">📷 ' + escapeHtml(album.name) + '</h3>' +
+        imgHint +
+      '</div>' +
+      (album.description ? '<p style="color:var(--text-muted);font-size:0.82rem;line-height:1.7;margin-top:0.4rem;">' + escapeHtml(album.description) + '</p>' : '') +
+      (album.journal ? '<p style="color:var(--text-dim);font-size:0.75rem;margin-top:0.6rem;line-height:1.8;border-top:1px solid var(--border-subtle);padding-top:0.6rem;">' + escapeHtml(album.journal) + '</p>' : '') +
+      '<div style="margin-top:0.6rem;font-size:0.72rem;color:var(--neon-cyan);text-align:right;">点击浏览 →</div>' +
       '</div>';
   });
+  html += '</div><div id="albumDetailView" style="display:none;"></div>';
   container.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(s || ''));
+  return d.innerHTML;
+}
+
+function openAlbumDetail(idx) {
+  if (!_albumList[idx] || !_albumList[idx].images || _albumList[idx].images.length === 0) {
+    // 没有图片的图集不做操作
+    return;
+  }
+  _albumCurrentIdx = idx;
+  _albumImgIdx = 0;
+  renderAlbumDetail();
+  document.getElementById('albumListView').style.display = 'none';
+  document.getElementById('albumDetailView').style.display = 'block';
+  // 绑定键盘
+  document.addEventListener('keydown', albumKeyHandler);
+}
+
+function closeAlbumDetail() {
+  document.getElementById('albumDetailView').style.display = 'none';
+  document.getElementById('albumListView').style.display = 'block';
+  document.removeEventListener('keydown', albumKeyHandler);
+  _albumCurrentIdx = -1;
+}
+
+function navigateAlbum(dir) {
+  var album = _albumList[_albumCurrentIdx];
+  var max = album.images.length;
+  _albumImgIdx = (_albumImgIdx + dir + max) % max;
+  renderAlbumImage();
+}
+
+function albumKeyHandler(e) {
+  if (e.key === 'Escape') { closeAlbumDetail(); return; }
+  if (e.key === 'ArrowLeft') { navigateAlbum(-1); return; }
+  if (e.key === 'ArrowRight') { navigateAlbum(1); return; }
+}
+
+function renderAlbumDetail() {
+  var album = _albumList[_albumCurrentIdx];
+  var detailView = document.getElementById('albumDetailView');
+  detailView.innerHTML =
+    '<div class="album-lightbox">' +
+      '<div class="album-lightbox-header">' +
+        '<button class="album-back-btn" onclick="closeAlbumDetail()">← 返回图集</button>' +
+        '<span class="album-lightbox-title">📷 ' + escapeHtml(album.name) + '</span>' +
+        '<span class="album-lightbox-counter" id="albumCounter">' + (_albumImgIdx + 1) + ' / ' + album.images.length + '</span>' +
+      '</div>' +
+      '<div class="album-lightbox-main">' +
+        '<button class="album-nav-btn album-nav-prev" onclick="navigateAlbum(-1)">‹</button>' +
+        '<div class="album-lightbox-img-wrap">' +
+          '<img id="albumMainImg" src="../' + album.images[_albumImgIdx] + '" alt="" class="album-main-img">' +
+        '</div>' +
+        '<button class="album-nav-btn album-nav-next" onclick="navigateAlbum(1)">›</button>' +
+      '</div>' +
+      '<div class="album-lightbox-thumbs" id="albumThumbs"></div>' +
+    '</div>';
+  setTimeout(renderAlbumThumbs, 50);
+}
+
+function renderAlbumImage() {
+  var album = _albumList[_albumCurrentIdx];
+  var img = document.getElementById('albumMainImg');
+  if (img) img.src = resolveImageUrl(album.images[_albumImgIdx]);
+  var counter = document.getElementById('albumCounter');
+  if (counter) counter.textContent = (_albumImgIdx + 1) + ' / ' + album.images.length;
+  // 更新缩略图选中状态
+  var thumbs = document.querySelectorAll('.album-thumb');
+  thumbs.forEach(function(t, i) {
+    t.classList.toggle('active', i === _albumImgIdx);
+  });
+}
+
+function renderAlbumThumbs() {
+  var album = _albumList[_albumCurrentIdx];
+  var thumbsContainer = document.getElementById('albumThumbs');
+  if (!thumbsContainer || album.images.length <= 1) return;
+  var html = '';
+  album.images.forEach(function(img, i) {
+    html += '<div class="album-thumb' + (i === _albumImgIdx ? ' active' : '') + '" onclick="jumpToImage(' + i + ')">' +
+      '<img src="../' + img + '" alt="" loading="lazy"></div>';
+  });
+  thumbsContainer.innerHTML = html;
+}
+
+function jumpToImage(idx) {
+  _albumImgIdx = idx;
+  renderAlbumImage();
 }
 
 function renderBooks(container, item) {

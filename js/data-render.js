@@ -1,9 +1,75 @@
-// ====== Latte v3.0 数据渲染适配器 ======
+﻿// ====== Latte v3.0 数据渲染适配器 ======
+
+// 兴趣标签和书籍渲染（独立函数，支持回退）
+function renderInterestsBooks(data) {
+  var interestTags = document.getElementById('interestTags');
+  if (interestTags && data.interests) {
+    var tagsHTML = '';
+    data.interests.forEach(function(item) {
+      if (item.hobbies && item.hobbies.length > 0) {
+        item.hobbies.forEach(function(hobby) {
+          tagsHTML += '<span class="interest-tag">' + getHobbyEmoji(hobby) + ' ' + hobby + '</span>';
+        });
+      } else {
+        var icon = getEmoji(item.icon);
+        var url = item.page || '#';
+        tagsHTML += '<a class="interest-tag" href="' + url + '">' + icon + ' ' + item.name + '</a>';
+      }
+    });
+    interestTags.innerHTML = tagsHTML;
+  }
+
+  var bookMiniList = document.getElementById('bookMiniList');
+  if (bookMiniList) {
+    var allBooks = [];
+    if (data.books) allBooks = allBooks.concat(data.books);
+    if (data.interests) {
+      data.interests.forEach(function(item) {
+        if (item.read) allBooks = allBooks.concat(item.read);
+        if (item.reading) allBooks = allBooks.concat(item.reading);
+      });
+    }
+    var seen = {};
+    allBooks = allBooks.filter(function(b) {
+      if (seen[b.title]) return false;
+      seen[b.title] = true;
+      return true;
+    });
+    if (allBooks.length > 0) {
+      var booksHTML = '';
+      allBooks.forEach(function(b) {
+        booksHTML += '<div class="book-mini-item">' +
+          '<div class="book-mini-cover" style="background:' + getBookGradient(b.title) + '"></div>' +
+          '<div><div class="book-mini-title">' + b.title + '</div>' +
+          '<div class="book-mini-author">' + (b.author || '') + '</div></div></div>';
+      });
+      bookMiniList.innerHTML = booksHTML;
+    }
+  }
+}
+
+function renderInterestsBooksFallback() {
+  var fb = {
+    interests: [
+      { name: '摄影', icon: 'camera', page: 'interests/photography.html' },
+      { name: '书籍', icon: 'book', page: 'interests/books.html' },
+      { name: '三分钟热度', icon: 'sparkle', page: 'interests/hobbies.html', hobbies: ['手冲咖啡','钩织','吉他','烹饪','动漫','徒步','想学攀岩'] },
+      { name: '登山', icon: 'mountain', page: 'interests/hiking.html' }
+    ],
+    books: [
+      { title: '《我与地坛》', author: '史铁生' },
+      { title: '《面纱》', author: '毛姆' },
+      { title: '《罪与罚》', author: '陀思妥耶夫斯基' }
+    ]
+  };
+  renderInterestsBooks(fb);
+}
+
 
 async function renderHome() {
   try {
     var data = await loadJSON('data/site.json');
-    if (!data) return;
+    if (!data) { renderInterestsBooksFallback(); return; }
 
     // 关于我
     var aboutMeta = document.getElementById('aboutMeta');
@@ -14,52 +80,7 @@ async function renderHome() {
       aboutTagline.textContent = parts[1] ? parts[1].trim() : '三分钟热度，但足够热！';
     }
 
-    // 兴趣标签 — 展开"三分钟热度"为独立标签
-    var interestTags = document.getElementById('interestTags');
-    if (interestTags && data.interests) {
-      var tagsHTML = '';
-      data.interests.forEach(function(item) {
-        // 如果这个兴趣有 hobbies 数组，展开为独立标签
-        if (item.hobbies && item.hobbies.length > 0) {
-          item.hobbies.forEach(function(hobby) {
-            tagsHTML += '<span class="interest-tag">' + getHobbyEmoji(hobby) + ' ' + hobby + '</span>';
-          });
-        } else {
-          var icon = getEmoji(item.icon);
-          var url = item.page || '#';
-          tagsHTML += '<a class="interest-tag" href="' + url + '">' + icon + ' ' + item.name + '</a>';
-        }
-      });
-      interestTags.innerHTML = tagsHTML;
-    }
-
-    // 书籍列表
-    var bookMiniList = document.getElementById('bookMiniList');
-    if (bookMiniList) {
-      var allBooks = [];
-      if (data.books) allBooks = allBooks.concat(data.books);
-      if (data.interests) {
-        data.interests.forEach(function(item) {
-          if (item.read) allBooks = allBooks.concat(item.read);
-          if (item.reading) allBooks = allBooks.concat(item.reading);
-        });
-      }
-      // 去重
-      var seen = {};
-      allBooks = allBooks.filter(function(b) {
-        if (seen[b.title]) return false;
-        seen[b.title] = true;
-        return true;
-      });
-      var booksHTML = '';
-      allBooks.forEach(function(b) {
-        booksHTML += '<div class="book-mini-item">' +
-          '<div class="book-mini-cover" style="background:' + getBookGradient(b.title) + '"></div>' +
-          '<div><div class="book-mini-title">' + b.title + '</div>' +
-          '<div class="book-mini-author">' + (b.author || '') + '</div></div></div>';
-      });
-      bookMiniList.innerHTML = booksHTML || '<div style="color:#666;font-size:0.75rem;">暂无书籍</div>';
-    }
+    renderInterestsBooks(data);
 
     // 联系方式
     var contactIcons = document.getElementById('contactIcons');
@@ -80,6 +101,7 @@ async function renderHome() {
 
   } catch(e) {
     console.error('renderHome error:', e);
+    renderInterestsBooksFallback();
     renderHomeBlogV3();
   }
 }

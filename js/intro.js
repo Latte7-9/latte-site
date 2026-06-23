@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   var introLayer = document.getElementById("intro-layer");
   var blob = document.getElementById("introBlob");
   var particles = document.getElementById("introParticles");
@@ -71,19 +71,15 @@
       document.documentElement.style.overflow = "";
       if (typeof initScrollAnimations === "function") initScrollAnimations();
       if (typeof initGridBackground === "function") initGridBackground();
+      // 触发黑胶墨滴入场
+      setTimeout(function() {
+        if (typeof triggerVinylEntrance === "function") triggerVinylEntrance();
+      }, 300);
     }
   }
 
   function initIntro() {
     if (!introLayer) return;
-    var visited = false;
-    try { visited = sessionStorage.getItem("latte_visited"); } catch(e) {}
-    if (visited) {
-      introLayer.style.display = "none";
-      var mc = document.getElementById("main-content");
-      if (mc) mc.classList.remove("intro-active");
-      return;
-    }
     var mc = document.getElementById("main-content");
     if (mc) mc.classList.add("intro-active");
     document.body.style.overflow = "hidden";

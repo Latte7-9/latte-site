@@ -1,4 +1,4 @@
-// ====== 入场层逻辑 ======
+﻿// ====== 入场层逻辑 ======
 var introLayer = document.getElementById("intro-layer");
 var mainContent = document.getElementById("main-content");
 var hasEntered = false;
@@ -15,158 +15,6 @@ function typeSubtitle(el, text) {
   });
 }
 
-function initIntroText() {
-  var titleEl = document.getElementById("introTitle");
-  var subtitleEl = document.getElementById("introSubtitle");
-  
-  fetch("data/site.json?v=" + Date.now())
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.name && titleEl) titleEl.textContent = data.name;
-      if (data.tagline && subtitleEl) typeSubtitle(subtitleEl, data.tagline);
-    })
-    .catch(function() {
-      if (titleEl) titleEl.textContent = "Latte";
-      if (subtitleEl) typeSubtitle(subtitleEl, "记录与分享");
-    });
-}
-
-function switchToMain() {
-  if (hasEntered) return;
-  hasEntered = true;
-  
-  try { sessionStorage.setItem("latte_visited", "1"); } catch(e) {}
-  if (typeof switchPage !== "undefined") switchPage.switched = true;
-  
-  if (typeof stopParticles === "function") stopParticles();
-  
-  // SVG path morphing
-  var shapePath = document.querySelector(".shape path");
-  if (shapePath && shapePath.getAttribute("data-original")) {
-    shapePath.setAttribute("d", shapePath.getAttribute("data-original"));
-  }
-  
-  // anime.js intro exit animation
-  var introWrap = document.querySelector(".intro-wrap");
-  if (introWrap && typeof anime !== "undefined") {
-    anime({
-      targets: ".intro-wrap > *",
-      opacity: 0,
-      translateY: -30,
-      delay: anime.stagger(50),
-      duration: 400,
-      easing: "easeInQuad",
-      complete: function() {
-        if (introLayer) {
-          introLayer.classList.add("hidden");
-          setTimeout(function() {
-            if (introLayer.parentNode) introLayer.style.display = "none";
-          }, 200);
-        }
-      }
-    });
-  } else {
-    if (introLayer) {
-      introLayer.classList.add("hidden");
-      setTimeout(function() {
-        if (introLayer.parentNode) introLayer.style.display = "none";
-      }, 900);
-    }
-  }
-  
-  // Show main content
-  if (mainContent) {
-    mainContent.classList.remove("intro-active");
-    
-    // anime.js fade-in for sections
-    if (typeof anime !== "undefined") {
-      anime({
-        targets: "#main-content .fade-in",
-        opacity: [0, 1],
-        translateY: [30, 0],
-        delay: anime.stagger(80, { start: 300 }),
-        duration: 600,
-        easing: "easeOutCubic",
-        begin: function() {
-          document.querySelectorAll(".fade-in").forEach(function(el) {
-            el.classList.add("visible");
-          });
-        }
-      });
-    } else {
-      setTimeout(function() {
-        document.querySelectorAll(".fade-in").forEach(function(el) {
-          el.classList.add("visible");
-        });
-      }, 300);
-    }
-    
-    // Initialize grid background
-    if (typeof initGridBackground === "function") {
-      initGridBackground();
-    }
-  }
-  
-  document.body.style.overflow = "";
-  document.documentElement.style.overflow = "";
-}
-
-function bindIntroEvents() {
-  var enterEl = document.querySelector(".intro-enter");
-  var arrowEls = document.querySelectorAll(".intro-arrow");
-  
-  if (enterEl) {
-    enterEl.addEventListener("click", function(e) {
-      e.preventDefault();
-      switchToMain();
-    });
-  }
-  
-  arrowEls.forEach(function(el) {
-    el.addEventListener("click", function(e) {
-      e.preventDefault();
-      switchToMain();
-    });
-  });
-  
-  document.addEventListener("wheel", function(e) {
-    if (!hasEntered && introLayer && introLayer.style.display !== "none") {
-      if (e.deltaY > 0) switchToMain();
-    }
-  }, { passive: true });
-  
-  var startY = 0;
-  document.addEventListener("touchstart", function(e) {
-    if (e.touches.length === 1) startY = e.touches[0].clientY;
-  }, { passive: true });
-  
-  document.addEventListener("touchend", function(e) {
-    if (!hasEntered && introLayer && introLayer.style.display !== "none") {
-      var endY = e.changedTouches[0].clientY;
-      if (startY - endY > 50) switchToMain();
-    }
-  }, { passive: true });
-}
-
-function initIntro() {
-  if (!introLayer || !mainContent) return;
-  
-  var visited = false;
-  try { visited = sessionStorage.getItem("latte_visited"); } catch(e) {}
-  
-  if (visited) {
-    introLayer.style.display = "none";
-    mainContent.classList.remove("intro-active");
-    return;
-  }
-  
-  mainContent.classList.add("intro-active");
-  document.body.style.overflow = "hidden";
-  document.documentElement.style.overflow = "hidden";
-  
-  initIntroText();
-  bindIntroEvents();
-}
 
 if (document.getElementById("intro-layer")) {
   initIntro();
@@ -310,71 +158,7 @@ function escapeHTML(str) {
 }
 
 
-// ====== 唱片悬浮播放器 ======
-var vinylReady = false;
-var vinylPlayer = null;
-var vinylRecord = null;
-var vinylIframe = null;
 
-async function initVinylPlayer() {
-  vinylPlayer = document.getElementById('vinylPlayer');
-  vinylRecord = document.getElementById('vinylRecord');
-  var titleEl = document.getElementById('vinylTitle');
-  var artistEl = document.getElementById('vinylArtist');
-  vinylIframe = document.getElementById('vinylIframe');
-  var closeBtn = document.getElementById('vinylClose');
-  if (!vinylPlayer || !vinylRecord || !titleEl || !artistEl || !vinylIframe) return;
-
-  try {
-    var resp = await fetch(API_BASE + '/api/netease/weekly');
-    var data = await resp.json();
-    if (!data.songs || data.songs.length === 0) { vinylPlayer.style.display = 'none'; return; }
-    var song = data.songs[0];
-    titleEl.textContent = song.name;
-    artistEl.textContent = song.artists;
-    vinylPlayer.style.display = 'flex';
-    vinylIframe.innerHTML = '<iframe id="vinylFrame" src="https://music.163.com/outchain/player?type=2&id=' + song.id + '&auto=0&height=66" frameborder="0" allow="autoplay"></iframe>';
-    vinylReady = true;
-    // 回访用户跳过入场动画时也自动展示
-    if (typeof hasEntered !== 'undefined' && hasEntered) { vinylAutoShow(); }
-  } catch (e2) { console.error('vinyl:', e2); vinylPlayer.style.display = 'none'; return; }
-
-  vinylRecord.addEventListener('click', function(e) {
-    e.stopPropagation();
-    vinylPlayer.classList.toggle('open');
-  });
-  if (closeBtn) {
-    closeBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      vinylPlayer.classList.remove('open');
-    });
-  }
-}
-
-function vinylAutoShow() {
-  if (!vinylReady) { setTimeout(vinylAutoShow, 500); return; }
-  if (!vinylPlayer || !vinylRecord) return;
-
-  setTimeout(function() {
-    vinylPlayer.classList.add('open');
-    vinylRecord.classList.add('playing');
-
-    var frame = document.getElementById('vinylFrame');
-    if (frame && frame.src.indexOf('auto=1') === -1) {
-      frame.src = frame.src.replace('auto=0', 'auto=1');
-    }
-
-    setTimeout(function() {
-      vinylPlayer.classList.remove('open');
-    }, 3500);
-  }, 1200);
-}
-
-var origSwitchToMain2 = switchToMain;
-switchToMain = function() {
-  origSwitchToMain2();
-  vinylAutoShow();
-};
 async function renderHomeBlog() {
   const list = document.getElementById('homeBlogList');
   if (!list) return;
@@ -1094,18 +878,14 @@ function addNewDuck(comment, inner) {
 async function submitGuestbook(name, text) {
   var comment = { name: name, text: text, date: new Date().toISOString().slice(0, 10) };
   gbComments.unshift(comment);
-  addNewDuck(comment);
+  if (typeof window.submitDuckMessage === "function") { window.submitDuckMessage(name, text); }
   var msgEl = document.getElementById("gbMsg");
-  if (msgEl) { msgEl.textContent = "留言成功！✨（等待管理员同步后公开显示）"; msgEl.style.color = "#2e7d32"; }
-  var local = JSON.parse(localStorage.getItem("gb_local") || "[]");
-  local.unshift(comment);
-  if (local.length > 50) local = local.slice(0, 50);
-  localStorage.setItem("gb_local", JSON.stringify(local));
+  if (msgEl) { msgEl.textContent = "🦆 鸭子已入水！"; msgEl.style.color = "#00d4aa"; }
 }
 
 
 function initGuestbook() {
-  loadGuestbook();
+  // duck-pool.js v5.0 自行管理留言加载与渲染
   var form = document.getElementById("guestbookForm");
   if (!form) return;
   form.addEventListener("submit", function(e) {
@@ -1129,6 +909,5 @@ document.addEventListener('DOMContentLoaded', () => { initBackToTop();
   homePromise.then(function() { initFadeIn(); });
   if (document.querySelector('.blog-list')) renderBlog();
   if (document.querySelector('.interest-page')) renderInterestPage();
-    initVinylPlayer();
   if (!document.querySelector('.blog-list') && !document.querySelector('.interest-page')) initFadeIn();
 });

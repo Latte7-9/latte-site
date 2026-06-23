@@ -1,4 +1,4 @@
-/* ====== 子页面视觉覆盖 ====== */
+﻿/* ====== 子页面视觉覆盖 ====== */
 body { background: var(--bg-deep); color: var(--text-body); }
 
 .interest-page, .blog-page {
@@ -58,3 +58,103 @@ body { background: var(--bg-deep); color: var(--text-body); }
 
 /* 页脚 */
 footer { border-top: 1px solid var(--border-subtle); }
+
+
+
+/* ====== 图集灯箱 ====== */
+.album-card { transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.album-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,61,113,0.12); border-color: var(--neon-pink) !important; }
+
+.album-lightbox {
+  width: 100%; min-height: 60vh;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.album-lightbox-header {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.album-back-btn {
+  background: none; border: 1px solid var(--border-subtle);
+  color: var(--text-muted); padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-sm); cursor: pointer;
+  font-size: 0.78rem; transition: all 0.2s;
+}
+.album-back-btn:hover { border-color: var(--neon-pink); color: var(--neon-pink); }
+
+.album-lightbox-title {
+  flex: 1; font-size: 1rem; font-weight: 500;
+  color: var(--text-primary);
+}
+
+.album-lightbox-counter {
+  font-size: 0.78rem; color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 大图区域 */
+.album-lightbox-main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  position: relative; min-height: 350px;
+  background: #0a0a0f;
+  padding: 0;
+}
+
+.album-lightbox-img-wrap {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%; max-height: 65vh;
+  padding: 0.5rem;
+}
+
+.album-main-img {
+  max-width: 100%; max-height: 65vh;
+  object-fit: contain;
+  border-radius: 4px;
+  transition: opacity 0.25s ease;
+}
+
+/* 左右导航按钮 */
+.album-nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.55); border: none;
+  color: rgba(255,255,255,0.8); font-size: 2.5rem;
+  width: 48px; height: 80px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; z-index: 5;
+  line-height: 1; padding: 0;
+}
+.album-nav-btn:hover { background: rgba(0,0,0,0.8); color: #fff; }
+.album-nav-prev { left: 0; border-radius: 0 8px 8px 0; }
+.album-nav-next { right: 0; border-radius: 8px 0 0 8px; }
+
+/* 缩略图条 */
+.album-lightbox-thumbs {
+  display: flex; gap: 0.5rem; padding: 0.8rem 1.5rem;
+  overflow-x: auto; border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.album-thumb {
+  width: 56px; height: 56px; flex-shrink: 0;
+  border-radius: 6px; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; transition: all 0.2s;
+  opacity: 0.55;
+}
+.album-thumb:hover { opacity: 0.85; border-color: var(--border-subtle); }
+.album-thumb.active { opacity: 1; border-color: var(--neon-pink); }
+.album-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .album-nav-btn { width: 36px; height: 56px; font-size: 1.8rem; }
+  .album-lightbox-main { min-height: 250px; }
+  .album-main-img { max-height: 45vh; }
+  .album-thumb { width: 42px; height: 42px; }
+}
