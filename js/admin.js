@@ -1,3 +1,4 @@
+// ADMIN_V3_LOADED_20260624
 // ====== Latte 管理后台 v3.0 ======
 var Admin = (function() {
   var R = '', T = '', site = null, blog = { posts: [] }, comments = [];
