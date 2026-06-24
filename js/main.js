@@ -168,7 +168,7 @@ async function renderHomeBlog() {
     const data = await res.json();
     if (!data.posts || !data.posts.length) { list.innerHTML = '<div class="blog-empty">还没有博客文章</div>'; return; }
     list.innerHTML = data.posts.slice(-3).reverse().map(p =>
-      '<a class="blog-card" href="blog/posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
+      '<a class="blog-card gradient-border-card tilt-card" href="blog/posts/' + p.file + '"><div class="date">' + p.date + '</div><h3>' + p.title + '</h3><div class="summary">' + p.summary + '</div></a>'
     ).join('');
   } catch(e) { list.innerHTML = '<div class="blog-empty">还没有博客文章</div>'; }
 }
