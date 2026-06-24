@@ -17,10 +17,10 @@ renderBlog = async function() {
     list.innerHTML = data.posts.reverse().map(function(p) {
       return '<a href="posts/' + p.file + '" class="blog-post-card gradient-border-card tilt-card" style="display:block;text-decoration:none;color:inherit;margin-bottom:1rem;">' +
         '<div style="padding:1.2rem 1.5rem;">' +
-        '<div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:0.4rem;">' + p.date + '</div>' +
-        '<h3 style="font-size:1.05rem;color:var(--text-primary);font-weight:500;margin-bottom:0.5rem;">' + p.title + '</h3>' +
-        '<p style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">' + (p.summary || '') + '</p>' +
-        '<div style="margin-top:0.8rem;font-size:0.75rem;color:var(--neon-cyan);">阅读文章 →</div>' +
+        '<div class="blog-card-date">' + p.date + '</div>' +
+        '<h3 class="blog-card-title">' + p.title + '</h3>' +
+        '<p class="blog-card-summary">' + (p.summary || '') + '</p>' +
+        '<div class="blog-card-link">阅读文章 →</div>' +
         '</div></a>';
     }).join('');
   } catch(e) {
