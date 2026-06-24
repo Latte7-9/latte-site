@@ -1,4 +1,4 @@
-// ====== 🦆 霓虹橡皮鸭蓄水池 v5.2 ======
+﻿// ====== 🦆 霓虹橡皮鸭蓄水池 v5.2 ======
 // v5.2: 移动端防页面滚动 + 柔和碰撞 + 真实涟漪
 (function() {
   var pool, rippleCanvas, rippleCtx, waveCanvas, waveCtx, ducksLayer;
@@ -75,29 +75,117 @@
     updateDuckCount();
   }
 
-  function createDuckSVG(color, size) {
-    var s = size;
-    var r, g, b;
-    if (color.startsWith('#')) {
-      r = parseInt(color.slice(1,3),16); g = parseInt(color.slice(3,5),16); b = parseInt(color.slice(5,7),16);
-    } else { r = 255; g = 61; b = 113; }
-    var hi = 'rgba(' + r + ',' + g + ',' + b + ',0.22)';
-    var lo = 'rgba(' + Math.max(0,r-30) + ',' + Math.max(0,g-30) + ',' + Math.max(0,b-30) + ',0.40)';
-    return '<svg viewBox="0 0 80 68" width="' + s + '" height="' + (s*0.85) + '" style="display:block;pointer-events:none;">' +
-      '<ellipse cx="32" cy="42" rx="23" ry="16" fill="' + color + '" opacity="0.90"/>' +
-      '<ellipse cx="34" cy="38" rx="16" ry="10" fill="' + hi + '"/>' +
-      '<ellipse cx="30" cy="48" rx="16" ry="7" fill="' + lo + '"/>' +
-      '<circle cx="50" cy="24" r="12" fill="' + color + '" opacity="0.90"/>' +
-      '<circle cx="52" cy="20" r="7" fill="' + hi + '"/>' +
-      '<circle cx="47" cy="26" r="6.5" fill="' + lo + '"/>' +
-      '<path d="M60,22 C64,21 68,22.5 68,24 C68,25.5 64,26 60,25 Z" fill="' + color + '" opacity="0.80"/>' +
-      '<circle cx="53" cy="21" r="3.2" fill="#0a0a0a"/>' +
-      '<circle cx="53.8" cy="20.4" r="1.2" fill="#fff" opacity="0.85"/>' +
-      '<path d="M10,38 C6,36 5,32 8,30 C10,29 12,32 10,36 Z" fill="' + color + '" opacity="0.65"/>' +
-      '<path d="M20,36 C26,32 40,32 46,38 C42,42 30,44 22,42 C19,40 19,38 20,36 Z" fill="' + color + '" opacity="0.20"/>' +
-    '</svg>';
-  }
+  function createDuckCanvas(size, color) {
+    var canvas = document.createElement('canvas');
+    canvas.width = size * 2;
+    canvas.height = size * 2;
+    var ctx = canvas.getContext('2d');
+    var cx = size, cy = size, r = size * 0.85;
 
+    // 鸭子主体颜色
+    var bodyColor = '#FFD700';   // 亮柠檬黄
+    var wingColor1 = '#FFB833';  // 橙黄渐变起点
+    var wingColor2 = '#FF9500';  // 橙黄渐变终点
+    var beakColor = '#FF8C00';   // 橙色嘴巴
+    var eyeColor = '#0a0a0a';    // 黑色眼睛
+    var whiteStroke = '#FFFFFF'; // 白色描边
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // === 白色描边（粗外轮廓）===
+    ctx.strokeStyle = whiteStroke;
+    ctx.lineWidth = 5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    // === 身体（圆润饱满的椭圆，微微昂首挺胸）===
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    // 身体：底部略平（浮在水面），前胸鼓起
+    ctx.ellipse(0, 8, 30, 26, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // === 头部（圆，位于身体右上方，微微昂首）===
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.arc(22, -18, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // === 脖子（连接头和身体）===
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.moveTo(12, -5);
+    ctx.quadraticCurveTo(18, -12, 22, -18);
+    ctx.quadraticCurveTo(26, -12, 16, -5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // === 翅膀（橙黄色渐变，身体左侧）===
+    var wingGrad = ctx.createLinearGradient(-25, 0, -10, 15);
+    wingGrad.addColorStop(0, wingColor1);
+    wingGrad.addColorStop(1, wingColor2);
+    ctx.fillStyle = wingGrad;
+    ctx.beginPath();
+    ctx.moveTo(-18, -2);
+    ctx.quadraticCurveTo(-28, -10, -22, 8);
+    ctx.quadraticCurveTo(-18, 18, -10, 12);
+    ctx.quadraticCurveTo(-14, 2, -18, -2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = whiteStroke;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // === 嘴巴（橙色扁嘴，朝右上方）===
+    ctx.fillStyle = beakColor;
+    ctx.beginPath();
+    ctx.moveTo(35, -20);
+    ctx.quadraticCurveTo(48, -26, 50, -22);
+    ctx.quadraticCurveTo(50, -18, 42, -18);
+    ctx.quadraticCurveTo(36, -16, 35, -20);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = whiteStroke;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // === 尾巴（小翘尾）===
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.moveTo(-28, 0);
+    ctx.quadraticCurveTo(-36, -8, -32, -14);
+    ctx.quadraticCurveTo(-30, -6, -28, 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = whiteStroke;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // === 眼睛（黑色圆眼，偏上）===
+    ctx.fillStyle = eyeColor;
+    ctx.beginPath();
+    ctx.arc(28, -22, 4, 0, Math.PI * 2);
+    ctx.fill();
+    // 眼睛高光
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(29.5, -23.5, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // === 腮红（淡淡的粉色）===
+    ctx.fillStyle = 'rgba(255, 150, 150, 0.3)';
+    ctx.beginPath();
+    ctx.ellipse(32, -14, 5, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    return canvas;
+  }
   function spawnDuck(msg, initial) {
     var color = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
     var size = 48 + Math.random() * 20;
@@ -115,17 +203,16 @@
       duck.vx = (Math.random() - 0.5) * 2;
     }
     var el = document.createElement('div');
-    el.className = 'duck-sprite' + (initial ? '' : ' falling');
+    el.className = 'duck-sprite';
     el.setAttribute('data-clickable', '');
-    el.style.cssText = 'position:absolute;left:' + duck.x + 'px;top:' + duck.y + 'px;' +
-      'width:' + size + 'px;height:' + (size*0.85) + 'px;cursor:pointer;z-index:2;pointer-events:auto;transform-origin:center center;';
-    el.innerHTML = createDuckSVG(color, size);
-    el.addEventListener('click', function(e) { e.stopPropagation(); showDuckCard(msg, el); });
+    el.style.cssText = 'position:absolute;left:'+duck.x+'px;top:'+duck.y+'px;width:'+size+'px;height:'+size+'px;cursor:pointer;z-index:2;pointer-events:auto;transform-origin:center center;background-size:contain;background-repeat:no-repeat;background-position:center;'
+    var canvas = createDuckCanvas(size, color);
+    el.style.backgroundImage = 'url('+canvas.toDataURL()+');'
     ducksLayer.appendChild(el);
     duck.el = el;
     ducks.push(duck);
     updateDuckCount();
-    if (!initial) setTimeout(function() { el.classList.remove('falling'); }, 700);
+    
     return duck;
   }
 
@@ -406,7 +493,6 @@
     function onDragStart(e) {
       var target = e.target.closest('.duck-sprite');
       if (!target) return;
-      // 触摸事件立即阻止默认行为（防页面滚动）
       if (e.touches) e.preventDefault();
       var idx = ducks.findIndex(function(d) { return d.el === target; });
       if (idx < 0) return;
@@ -452,17 +538,47 @@
       if (!dragDuck) return;
       dragDuck.el.style.zIndex = 2;
       dragDuck.el.style.transition = '';
+
       if (!hasMoved) {
         dragDuck.el.click();
         isDragging = false; dragDuck = null; return;
       }
+
       var waterY = WATER_LEVEL * poolH;
       var duckBottom = dragDuck.y + dragDuck.size * 0.85;
+
       if (duckBottom < waterY - 10) {
+        // 拖到空中 → 先沉入水底，再浮上来
         dragDuck.splashDone = false;
-        dragDuck.vy = 1;
-        dragDuck.vx = (Math.random() - 0.5) * 1.5;
+        dragDuck.vy = 0; dragDuck.vx = 0;
+        if (dragDuck._gsapAnim) { dragDuck._gsapAnim.kill(); dragDuck._gsapAnim = null; }
+        var sinkTarget = poolH - dragDuck.size - 5;
+        dragDuck._gsapAnim = gsap.timeline({
+          onComplete: function() {
+            dragDuck.y = duckSurfaceY(dragDuck);
+            dragDuck.vy = 0; dragDuck.splashDone = true;
+            dragDuck.bobPhase = Math.random() * Math.PI * 2;
+            dragDuck._gsapAnim = null;
+            dragDuck.el.style.top = dragDuck.y + 'px';
+            dragDuck.el.style.opacity = 1;
+          }
+        });
+        dragDuck._gsapAnim
+          .to(dragDuck, { y: waterY - dragDuck.size * 0.85, duration: 0.2, ease: 'power2.in',
+            onUpdate: function() { dragDuck.el.style.top = dragDuck.y + 'px'; dragDuck.el.style.opacity = 1; }
+          })
+          .to(dragDuck, { y: sinkTarget, duration: 0.4, ease: 'power2.in',
+            onUpdate: function() {
+              dragDuck.el.style.top = dragDuck.y + 'px';
+              var t = Math.max(0, Math.min(1, (dragDuck.y - (waterY - dragDuck.size*0.85)) / (sinkTarget - (waterY - dragDuck.size*0.85))));
+              dragDuck.el.style.opacity = Math.max(0.3, 1 - t * 0.6);
+            }
+          })
+          .to(dragDuck, { y: duckSurfaceY(dragDuck), duration: 0.5, ease: 'power2.out',
+            onUpdate: function() { dragDuck.el.style.top = dragDuck.y + 'px'; dragDuck.el.style.opacity = 1; }
+          });
       } else {
+        // 近水面松手 → 轻柔放回水面
         dragDuck.y = duckSurfaceY(dragDuck);
         dragDuck.splashDone = true;
         dragDuck.vy = 0;
@@ -482,11 +598,11 @@
   }
 
   window.submitDuckMessage = function(name, text) {
-    var msg = { name: name || '匿名', text: text, date: new Date().toISOString().slice(0, 10) };
+    var msg = { name: name || '匿名', text: text, date: new Date().toISOString().slice(0,10) };
     var local = [];
     try { local = JSON.parse(localStorage.getItem('gb_local') || '[]'); } catch(e) {}
     local.unshift(msg);
-    if (local.length > 50) local = local.slice(0, 50);
+    if (local.length > 50) local = local.slice(0,50);
     localStorage.setItem('gb_local', JSON.stringify(local));
     var duck = spawnDuck(msg, false);
     duck.vy = 3 + Math.random() * 4;

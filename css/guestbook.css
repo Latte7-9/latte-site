@@ -1,4 +1,4 @@
-/* ====== 🦆 霓虹鸭子蓄水池 v4.1 ====== */
+﻿/* ====== 🦆 霓虹鸭子蓄水池 v4.1 ====== */
 
 /* ---- 标语 ---- */
 .pool-tagline {
@@ -128,16 +128,7 @@
   filter: brightness(1.4) drop-shadow(0 0 12px currentColor) !important;
   opacity: 1 !important;
 }
-.duck-sprite.falling {
-  animation: duckFallIn 0.55s ease-out;
-}
-@keyframes duckFallIn {
-  0% { transform: scale(0.5); opacity: 0; filter: brightness(2); }
-  100% { transform: scale(1); opacity: 1; filter: brightness(1); }
-}
-
 .duck-sprite.bounce {
-  animation: duckBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes duckBounce {
   0% { transform: scale(1); }
