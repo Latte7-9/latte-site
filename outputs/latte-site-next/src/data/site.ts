@@ -24,6 +24,7 @@ export interface Book {
 
 export interface Currently {
   reading: string;
+  readingCover?: string;
   listening: string;
   learning: string;
   workingOn: string;
@@ -41,15 +42,16 @@ export const siteConfig: SiteConfig = {
     { name: "登山", icon: "mountain", page: "/interests/hiking", description: "山在那里，路在脚下" },
   ],
   books: [
-    { title: "《我与地坛》", author: "史铁生", cover: "/images/me-and-the-earth-altar.jpg", review: "死是一个必然会降临的节日。所以，你不必着急。" },
-    { title: "《面纱》", author: "毛姆", cover: "/images/the-painted-veil.jpg", review: "大多数情况下大家都成不了凯蒂，只能成为包法利夫人。" },
-    { title: "《罪与罚》", author: "陀思妥耶夫斯基", cover: "/images/crime-and-punishment.jpg", review: "读的时候感觉自己跟主角一样都得了热症" },
+    { title: "《我与地坛》", author: "史铁生", cover: "/images/me-and-the-earth-altar.svg", review: "死是一个必然会降临的节日。所以，你不必着急。" },
+    { title: "《面纱》", author: "毛姆", cover: "/images/the-painted-veil.svg", review: "大多数情况下大家都成不了凯蒂，只能成为包法利夫人。" },
+    { title: "《罪与罚》", author: "陀思妥耶夫斯基", cover: "/images/crime-and-punishment.svg", review: "读的时候感觉自己跟主角一样都得了热症" },
   ],
   currently: {
     reading: "《罪与罚》陀思妥耶夫斯基",
     listening: "丁世光《神探》",
     learning: "吉他弹唱《坏女孩》",
     workingOn: "Codex到底有多好玩",
+    readingCover: "/images/crime-and-punishment.svg",
   },
 };
 
