@@ -76,7 +76,7 @@
   }
 
   function createDuckCanvas(size, color) {
-    var canvas = document.createElement('canvas');
+  function createDuckCanvas(size, color) { console.log('createDuckCanvas called:', size, color);
     canvas.width = size * 2;
     canvas.height = size * 2;
     var ctx = canvas.getContext('2d');
@@ -185,7 +185,7 @@
     ctx.restore();
 
     return canvas;
-  }
+    return canvas; console.log('Returning canvas, width:', canvas.width, 'height:', canvas.height); }
   function spawnDuck(msg, initial) {
     var color = NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)];
     var size = 48 + Math.random() * 20;
@@ -202,7 +202,7 @@
       duck.vy = 3 + Math.random() * 4;
       duck.vx = (Math.random() - 0.5) * 2;
     }
-    var el = document.createElement('div');
+    var canvas = createDuckCanvas(size, color); console.log('Canvas created, el:', typeof canvas);
     el.className = 'duck-sprite';
     el.setAttribute('data-clickable', '');
     el.style.cssText = 'position:absolute;left:'+duck.x+'px;top:'+duck.y+'px;width:'+size+'px;height:'+size+'px;cursor:pointer;z-index:2;pointer-events:auto;transform-origin:center center;background-size:contain;background-repeat:no-repeat;background-position:center;'
