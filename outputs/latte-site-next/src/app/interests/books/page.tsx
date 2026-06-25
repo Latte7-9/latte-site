@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+// Image import removed, using native img
 import { siteConfig } from "@/data/site";
 
 export default function BooksPage() {
@@ -22,15 +22,7 @@ export default function BooksPage() {
             {siteConfig.books.filter((b) => b.cover).map((book, i) => (
               <div key={i} className="group overflow-hidden rounded-xl border border-[#e8e0d6] bg-white transition-all hover:border-latte/40 hover:shadow-md">
                 <div className="aspect-[3/4] w-full overflow-hidden bg-cream-warm">
-                  <Image
-                    src={book.cover!}
-                    alt={book.title}
-                    width={300}
-                    height={400}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAP///////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AmrRTBFww//2Q=="
-                  />
+                  <img src={book.cover!} alt={book.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div className="p-4">
                   <h3 className="text-body font-display font-medium text-ink">{book.title}</h3>

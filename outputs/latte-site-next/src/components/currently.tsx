@@ -1,7 +1,7 @@
 "use client";
 import { useFadeIn } from "@/hooks/use-fade-in";
 import { siteConfig } from "@/data/site";
-import Image from "next/image"
+
 
 const ITEMS = [
   { label: "在读", value: siteConfig.currently.reading, icon: "📚" },
@@ -39,14 +39,7 @@ export default function Currently() {
         {readingCover && (
           <div className="mt-8 flex justify-center fade-in">
             <div className="relative h-64 w-auto overflow-hidden rounded-lg shadow-lg">
-              <Image
-                src={readingCover}
-                alt={siteConfig.currently.reading.split("》")[0].replace(/[《]/g, "") + " 封面"}
-                width={400}
-                height={400}
-                className="object-cover"
-                priority
-              />
+              <img src={readingCover} alt={siteConfig.currently.reading.split("》")[0].replace(/[《]/g, "") + " 封面"} className="h-64 w-auto object-cover" />
             </div>
           </div>
         )}
