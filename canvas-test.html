@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Canvas Test</title></head>
+<body style="background:#0a0a0a;color:#0f0;font:14px monospace;padding:20px;">
+<h1>Canvas Duck Test</h1>
+<canvas id="c" width="200" height="200" style="border:1px solid #333"></canvas>
+<pre id="log"></pre>
+<script>
+var log = document.getElementById('log');
+var c = document.getElementById('c');
+var ctx = c.getContext('2d');
+
+function l(msg) { log.textContent += msg + '\\n'; }
+
+try {
+  l('Creating canvas... OK');
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath();
+  ctx.ellipse(100, 100, 60, 50, 0, 0, Math.PI * 2);
+  ctx.fill();
+  l('Drawing ellipse... OK');
+  
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath();
+  ctx.arc(140, 60, 30, 0, Math.PI * 2);
+  ctx.fill();
+  l('Drawing head... OK');
+  
+  ctx.fillStyle = '#FF8C00';
+  ctx.beginPath();
+  ctx.moveTo(160, 50);
+  ctx.quadraticCurveTo(180, 40, 185, 48);
+  ctx.quadraticCurveTo(185, 56, 160, 58);
+  ctx.closePath();
+  ctx.fill();
+  l('Drawing beak... OK');
+  
+  ctx.fillStyle = '#0a0a0a';
+  ctx.beginPath();
+  ctx.arc(150, 52, 5, 0, Math.PI * 2);
+  ctx.fill();
+  l('Drawing eye... OK');
+  
+  l('\\nAll drawings succeeded!');
+  l('Check the canvas above for a yellow blob.');
+} catch(e) {
+  l('ERROR: ' + e.message);
+  l(e.stack);
+}
+</script>
+</body></html>

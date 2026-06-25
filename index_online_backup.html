@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latte</title>
+
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/intro.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/about.css">
+<link rel="stylesheet" href="css/blog.css?v=2">
+<link rel="stylesheet" href="css/interests-books.css">
+<link rel="stylesheet" href="css/music.css">
+<link rel="stylesheet" href="css/guestbook.css">
+<link rel="stylesheet" href="css/contact-footer.css">
+<link rel="stylesheet" href="css/vinyl.css">
+<link rel="stylesheet" href="css/text-effects.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+<div id="reading-progress"></div>
+
+<!-- ====== 入场层 ====== -->
+<div id="intro-layer">
+  <div class="intro-bg"></div>
+  <div class="intro-blob" id="introBlob"></div>
+  <div class="intro-particles" id="introParticles"></div>
+  <div class="intro-content">
+    <h1 class="intro-title" id="introTitle">Latte</h1>
+    <p class="intro-subtitle" id="introSubtitle">记录 · 分享 · 三分钟热度</p>
+    <div class="intro-hint" id="introHint">
+      <span class="intro-hint-text">进入</span>
+      <div class="intro-hint-arrow"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 主页内容 ====== -->
+<div id="main-content">
+  <canvas class="grid-background" id="gridCanvas"></canvas>
+
+  <nav class="site-nav" id="siteNav">
+    <div class="nav-glass">
+      <a class="nav-brand" href="index.html">Latte</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">首页</a>
+        <a href="blog/" class="nav-link">博客</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="about section-container fade-up">
+    <div class="about-layout">
+      <div class="about-avatar">
+        <span class="avatar-emoji">🦁</span>
+      </div>
+      <div class="about-text">
+        <h2 class="about-name">Latte</h2>
+        <p class="about-meta" id="aboutMeta">狮子座 / ENTP / 兴趣广泛</p>
+        <p class="about-tagline" id="aboutTagline">三分钟热度，但足够热心</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="blog-preview section-container fade-up">
+    <div class="blog-header">
+      <span class="section-label text-shimmer">📦 博客</span>
+      <a class="btn-ghost" href="blog/">查看全部 →</a>
+    </div>
+    <div class="blog-scroll" id="homeBlogList"></div>
+  </section>
+
+  <section class="interests-books section-container fade-up">
+    <div class="dual-grid">
+      <div class="dual-col gradient-border-card tilt-card">
+        <span class="section-label" style="color:#ffb800">🎯 兴趣</span>
+        <div class="interest-tags" id="interestTags"></div>
+      </div>
+      <div class="dual-col gradient-border-card tilt-card">
+        <span class="section-label" style="color:#00d4aa">📖 正在翻阅</span>
+        <div class="book-mini-list" id="bookMiniList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="music-section fade-up">
+    <div class="music-card tilt-card">
+      <div class="music-label">🎍 耳机是精神输液管</div>
+      <div class="music-top5" id="musicTop5Static">
+        <div class="music-song-item" style="pointer-events:none">
+          <span class="music-song-cover no-cover"></span>
+          <span class="music-song-rank">—</span>
+          <span class="music-song-name" style="color:#666">正在连接网易云...</span>
+        </div>
+      </div>
+      <button class="btn-music-random" id="musicRandomBtn" disabled>
+        <span class="music-random-icon">🎧</span><span>加载中...</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="guestbook section-container fade-up" style="margin-top:4rem;">
+    <div class="duck-pool-wrapper">
+      <div class="pool-tagline">🦆 欢迎投入小黄鸭</div>
+      <div class="pool-duck-count">池中已有 <span id="duckCount">0</span> 只鸭子</div>
+      <div class="duck-pool" id="duckPool">
+        <div class="pool-underwater-light"></div>
+        <canvas class="pool-ripple-canvas" id="poolRippleCanvas"></canvas>
+        <div class="pool-ducks-layer" id="poolDucksLayer"></div>
+        <canvas class="pool-wave-canvas" id="poolWaveCanvas"></canvas>
+      </div>
+      <form class="gb-form" id="guestbookForm">
+        <input type="text" id="gbName" placeholder="你的名字" maxlength="30">
+        <input type="text" id="gbText" placeholder="说点什么吧..." required maxlength="500">
+        <button type="submit" class="btn-primary">🦆 丢鸭子</button>
+      </form>
+      <div id="gbMsg" style="text-align:center;margin-top:0.4rem;font-size:0.75rem;"></div>
+    </div>
+  </section>
+
+  <section class="contact section-container fade-up" style="margin-top:4rem;">
+    <span class="section-label" style="text-align:center;display:block;">📦 来找我玩——</span>
+    <div class="contact-icons" id="contactIcons"></div>
+  </section>
+
+  <footer>
+    <div class="footer-inner section-container">
+      <span>&copy; 2026 Latte · 由 Codex 搭建</span>
+    </div>
+  </footer>
+
+  <div class="vinyl-player" id="vinylPlayer">
+    <div class="vinyl-ripple" id="vinylRipple"></div>
+    <div class="vinyl-record-neon" id="vinylRecord"></div>
+    <div class="vinyl-panel" id="vinylPanel">
+      <button class="vinyl-close" id="vinylClose">&times;</button>
+      <div class="vinyl-panel-inner">
+        <div class="vinyl-info">
+          <div class="vinyl-title" id="vinylTitle">加载中...</div>
+          <div class="vinyl-artist" id="vinylArtist"></div>
+        </div>
+        <div class="vinyl-iframe-wrap" id="vinylIframe"><iframe id="vinylFrame" src="" frameborder="0" width="100%" height="66" allow="autoplay" style="display:none"></iframe></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.config = {
+  SIM_RESOLUTION: 128, DYE_RESOLUTION: 1024, CAPTURE_RESOLUTION: 512,
+  DENSITY_DISSIPATION: 1, VELOCITY_DISSIPATION: 0.2, PRESSURE: 0.8,
+  PRESSURE_ITERATIONS: 20, CURL: 30, SPLAT_RADIUS: 0.25, SPLAT_FORCE: 6000,
+  SHADING: true, COLORFUL: true, COLOR_UPDATE_SPEED: 10, PAUSED: false,
+  BACK_COLOR: { r: 10, g: 10, b: 10 }, TRANSPARENT: false,
+  BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256,
+  BLOOM_INTENSITY: 0.3, BLOOM_THRESHOLD: 0.8, BLOOM_SOFT_KNEE: 0.7,
+  SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 0.8,
+};
+</script>
+<script>
+var hiddenProperty = (function() {
+  var prefixes = ['webkit', 'moz', 'ms', 'o'];
+  if ('hidden' in document) return 'hidden';
+  for (var i = 0; i < prefixes.length; i++) {
+    if ((prefixes[i] + 'Hidden') in document) return prefixes[i] + 'Hidden';
+  }
+  return null;
+})();
+window.visibilityChangeEvent = (hiddenProperty || 'hidden').replace(/[Hh]idden/, 'visibilitychange');
+window.hiddenProperty = hiddenProperty;
+window.switchPage = { switched: false };
+</script>
+<script src="js/particles.js"></script>
+<script src="js/background.js"></script>
+<script src="js/grid-bg.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/cursor.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/intro.js"></script>
+<script src="js/scroll-anim.js"></script>
+<script src="js/vinyl.js"></script>
+<script src="js/duck-pool.js"></script>
+<script src="js/main.js"></script>
+<script src="js/data-render.js"></script>
+</body>
+</html>

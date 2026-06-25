@@ -1,18 +1,23 @@
 {
-    "name":  "Project_001_个人网站搭建",
-    "version":  "1.0.0",
-    "description":  "",
-    "main":  "api-server.js",
-    "scripts":  {
-                    "start":  "node api-server.js",
-                    "dev":  "node serve.js"
-                },
-    "keywords":  [
-
-                 ],
-    "author":  "",
-    "license":  "ISC",
-    "dependencies":  {
-                         "NeteaseCloudMusicApi":  "^4.32.0"
-                     }
+    "name": "Project_001_个人网站搭建",
+    "version": "1.0.0",
+    "description": "",
+    "main": "api-server.js",
+    "scripts": {
+        "start": "node api-server.js",
+        "dev": "node serve.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@tailwindcss/postcss": "^4.3.1",
+        "NeteaseCloudMusicApi": "^4.32.0",
+        "client-only": "^0.0.1",
+        "tailwindcss": "^4.3.1"
+    },
+    "devDependencies": {
+        "@types/node": "^26.0.0",
+        "@types/react": "^19.2.17"
+    }
 }
