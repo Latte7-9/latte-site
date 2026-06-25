@@ -1,4 +1,4 @@
-﻿// ====== 子页面渲染适配 v3.0 ======
+// ====== 子页面渲染适配 v3.0 ======
 // 覆盖 main.js 中的 renderBlog / renderInterestPage，使用新设计类
 
 var _origRenderBlog = renderBlog;
@@ -176,7 +176,7 @@ function renderBooks(container, item) {
     html += '<h3 style="color:var(--neon-pink);font-weight:400;margin:0 0 0.6rem;">📚 已读</h3>';
     item.read.forEach(function(b) {
       html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.5rem;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:center;">' +
-        '<div style="width:32px;height:44px;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));"></div>' +
+        '<img class="book-cover-img" src="" data-book-cover="' + b.cover + '" alt="' + b.title + '" style="width:32px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));"></img>' +
         '<div>' +
         '<div style="color:var(--text-primary);font-size:0.85rem;">' + b.title + '</div>' +
         '<div style="color:var(--text-dim);font-size:0.7rem;">' + (b.author || '') + '</div>' +
@@ -189,7 +189,7 @@ function renderBooks(container, item) {
     html += '<h3 style="color:var(--neon-cyan);font-weight:400;margin:1.2rem 0 0.6rem;">📖 在读</h3>';
     item.reading.forEach(function(b) {
       html += '<div class="gradient-border-card tilt-card" style="margin-bottom:0.5rem;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:center;">' +
-        '<div style="width:32px;height:44px;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(0,212,170,0.2),rgba(124,77,255,0.2));"></div>' +
+        '<img class="book-cover-img" src="" data-book-cover="' + b.cover + '" alt="' + b.title + '" style="width:32px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(0,212,170,0.2),rgba(124,77,255,0.2));"></img>' +
         '<div>' +
         '<div style="color:var(--text-primary);font-size:0.85rem;">' + b.title + '</div>' +
         '<div style="color:var(--text-dim);font-size:0.7rem;">' + (b.author || '') + '</div>' +
@@ -208,6 +208,14 @@ function renderBooks(container, item) {
   }
 
   container.innerHTML = html || '<div style="color:var(--text-dim);text-align:center;padding:2rem;">暂无书籍记录</div>';
+
+  // 加载书籍封面
+  container.querySelectorAll('[data-book-cover]').forEach(function(img) {
+    var coverPath = img.getAttribute('data-book-cover');
+    if (coverPath) {
+      img.src = resolveImageUrl(coverPath);
+    }
+  });
 }
 
 function renderHiking(container, item) {

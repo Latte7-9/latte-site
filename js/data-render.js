@@ -39,7 +39,7 @@ function renderInterestsBooks(data) {
       var booksHTML = '';
       allBooks.forEach(function(b) {
         booksHTML += '<div class="book-mini-item">' +
-          '<div class="book-mini-cover" style="background:' + getBookGradient(b.title) + '"></div>' +
+          '<img class="book-mini-cover" src="' + b.cover + '" alt="' + b.title + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';" style="width:30px;height:42px;object-fit:cover;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,61,113,0.2),rgba(0,212,170,0.2));"><div class="book-mini-cover-fallback" style="display:none;width:30px;height:42px;border-radius:3px;flex-shrink:0;background:' + getBookGradient(b.title) + ';"></div>' +
           '<div><div class="book-mini-title">' + b.title + '</div>' +
           '<div class="book-mini-author">' + (b.author || '') + '</div></div></div>';
       });
