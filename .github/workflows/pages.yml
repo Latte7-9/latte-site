@@ -1,4 +1,4 @@
-﻿name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -26,17 +26,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: npm install
         working-directory: ./outputs/latte-site-next
 
       - name: Build
-        run: pnpm build
+        run: npm run build
         working-directory: ./outputs/latte-site-next
 
       - name: Upload artifact
