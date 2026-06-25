@@ -1,3 +1,4 @@
+﻿import Intro from "@/components/intro";
 import Hero from "@/components/hero";
 import About from "@/components/about";
 import WaveDivider from "@/components/wave-divider";
@@ -12,30 +13,33 @@ import Navbar from "@/components/navbar";
 
 export default function Home() {
   return (
-    <main>
-      <Navbar />
-      <Hero />
-      
-      <About />
-      <WaveDivider />
-      
-      <BlogPreview />
-      <WaveDivider flip />
-      
-      <Interests />
-      <WaveDivider />
-      
-      <RandomListen />
-      <WaveDivider flip />
-      
-      <Currently />
-      <WaveDivider color="text-espresso-ink/20" />
-      
-      <Guestbook />
-      <WaveDivider flip color="text-[#e8e0d6]" />
-      
-      <Contact />
-      <Footer />
-    </main>
+    <>
+      <Intro />
+      <main className="main-content opacity-0" style={{ transform: "translateY(80px)", filter: "blur(4px)" }}>
+        <Navbar />
+        <Hero />
+        
+        <About />
+        <WaveDivider />
+        
+        <BlogPreview />
+        <WaveDivider flip />
+        
+        <Interests />
+        <WaveDivider />
+        
+        <RandomListen />
+        <WaveDivider flip />
+        
+        <Currently />
+        <WaveDivider color="text-espresso-ink/20" />
+        
+        <Guestbook />
+        <WaveDivider flip color="text-[#e8e0d6]" />
+        
+        <Contact />
+        <Footer />
+      </main>
+    </>
   );
 }
