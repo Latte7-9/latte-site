@@ -1,9 +1,6 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
-@theme {
-  --color-ink: #1a1410;
-  --color-ink-secondary: #4a3f35;
-  --color-ink-muted: #7a6e62;
+:root {
   --color-cream: #faf6f1;
   --color-cream-warm: #f3ece4;
   --color-latte: #c4956a;
@@ -11,30 +8,20 @@
   --color-latte-dark: #8a6540;
   --color-espresso: #3d2e1f;
   --color-espresso-ink: #ede4da;
+  --color-ink: #1a1410;
+  --color-ink-secondary: #4a3f35;
+  --color-ink-muted: #7a6e62;
   --color-sage: #7a8b6f;
   --color-clay: #c47a5a;
-
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --text-hero: clamp(2.8rem, 6vw, 4.5rem);
-  --text-h1: 2.25rem;
-  --text-h2: 1.75rem;
-  --text-h3: 1.375rem;
-  --text-body-lg: 1.125rem;
-  --text-body: 1rem;
-  --text-body-sm: 0.875rem;
-  --text-caption: 0.75rem;
 }
 
 @layer base {
   * {
-    border-color: hsl(from var(--color-border) h s l / 0.1);
+    border-color: hsl(from var(--color-ink-muted) h s l / 0.1);
   }
 
   body {
-    font-family: var(--font-body), system-ui, sans-serif;
+    font-family: "Inter", system-ui, sans-serif;
     background-color: var(--color-cream);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
@@ -42,7 +29,7 @@
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-display), serif;
+    font-family: "Playfair Display", serif;
     font-weight: 500;
     line-height: 1.2;
   }
@@ -85,43 +72,118 @@
 
 @layer components {
   .container-narrow {
-    @apply mx-auto max-w-[72ch] px-4 sm:px-6;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 72ch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-narrow {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
 
   .container-wide {
-    @apply mx-auto max-w-6xl px-4 sm:px-6;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 72rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-wide {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
 
   .section {
-    @apply py-20 sm:py-16;
+    padding-top: 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .section {
+      padding-top: 4rem;
+    }
   }
 
   .section-alt {
-    @apply bg-cream-warm;
+    background-color: var(--color-cream-warm);
   }
 
   .section-dark {
-    @apply bg-espresso text-espresso-ink;
+    background-color: var(--color-espresso);
+    color: var(--color-espresso-ink);
   }
 
   .card {
-    @apply rounded-xl border border-[#e8e0d6] bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-[3px] hover:border-latte/40 hover:shadow-md;
+    border-radius: 0.75rem;
+    border: 1px solid #e8e0d6;
+    background-color: #fff;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(196, 149, 106, 0.4);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-latte-dark px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-ink-secondary;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: var(--color-latte-dark);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    transition: color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-ink-secondary);
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-ink-secondary transition-colors duration-200 hover:text-latte-dark;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ink-secondary);
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-latte-dark);
   }
 
   /* Milk foam wave divider */
   .wave-divider {
-    @apply w-full overflow-hidden leading-[0];
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
   }
 
   .wave-divider svg {
-    @apply block h-6 w-full sm:h-8;
+    display: block;
+    height: 1.5rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .wave-divider svg {
+      height: 2rem;
+    }
   }
 }
